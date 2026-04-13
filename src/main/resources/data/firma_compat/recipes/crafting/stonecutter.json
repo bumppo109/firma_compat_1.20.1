@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "minecraft:stone_bricks"
+    },
+    "L": {
+      "tag": "firma_compat:compat_lumber"
+    },
+    "X": {
+      "item": "tfc:metal/saw_blade/wrought_iron"
+    }
+  },
+  "pattern": [
+    " X ",
+    "LBL"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:stonecutter"
+  }
+}

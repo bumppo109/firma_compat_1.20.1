@@ -1,0 +1,252 @@
+{
+  "type": "tfc:cluster_vein",
+  "config": {
+    "blocks": [
+      {
+        "replace": [
+          "minecraft:calcite"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_calcite_bismuthinite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_calcite_bismuthinite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_calcite_bismuthinite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:andesite"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_andesite_bismuthinite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_andesite_bismuthinite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_andesite_bismuthinite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:diorite"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_diorite_bismuthinite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_diorite_bismuthinite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_diorite_bismuthinite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:blackstone"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_blackstone_bismuthinite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_blackstone_bismuthinite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_blackstone_bismuthinite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:dripstone_block"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_dripstone_bismuthinite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_dripstone_bismuthinite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_dripstone_bismuthinite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:stone"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_stone_bismuthinite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_stone_bismuthinite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_stone_bismuthinite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:end_stone"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_end_stone_bismuthinite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_end_stone_bismuthinite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_end_stone_bismuthinite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:granite"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_granite_bismuthinite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_granite_bismuthinite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_granite_bismuthinite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:tuff"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_tuff_bismuthinite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_tuff_bismuthinite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_tuff_bismuthinite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:netherrack"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_netherrack_bismuthinite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_netherrack_bismuthinite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_netherrack_bismuthinite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:deepslate"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_deepslate_bismuthinite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_deepslate_bismuthinite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_deepslate_bismuthinite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:basalt"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_basalt_bismuthinite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_basalt_bismuthinite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_basalt_bismuthinite_ore",
+            "weight": 25.0
+          }
+        ]
+      }
+    ],
+    "density": 0.6,
+    "indicator": {
+      "blocks": [
+        {
+          "block": "tfc:ore/small_bismuthinite"
+        }
+      ],
+      "depth": 35,
+      "rarity": 0,
+      "underground_count": 4,
+      "underground_rarity": 1
+    },
+    "max_y": 20,
+    "min_y": -80,
+    "random_name": 6909053959620159877,
+    "rarity": 45,
+    "size": 40
+  }
+}

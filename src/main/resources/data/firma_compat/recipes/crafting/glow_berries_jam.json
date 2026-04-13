@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "firma_compat:glow_berries_jar_unsealed"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "firma_compat:glow_berries_jam"
+  }
+}

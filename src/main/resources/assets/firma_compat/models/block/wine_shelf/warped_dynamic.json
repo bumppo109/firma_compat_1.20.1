@@ -1,0 +1,6 @@
+{
+  "base": {
+    "parent": "firma_compat:block/wine_shelf/warped"
+  },
+  "loader": "firmalife:wine_shelf"
+}

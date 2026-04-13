@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "firma_compat:block/twig/dark_oak",
+        "y": 90
+      },
+      {
+        "model": "firma_compat:block/twig/dark_oak"
+      },
+      {
+        "model": "firma_compat:block/twig/dark_oak",
+        "y": 180
+      },
+      {
+        "model": "firma_compat:block/twig/dark_oak",
+        "y": 270
+      }
+    ]
+  }
+}

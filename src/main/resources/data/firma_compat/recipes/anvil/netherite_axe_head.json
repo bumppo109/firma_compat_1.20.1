@@ -1,0 +1,17 @@
+{
+  "type": "tfc:anvil",
+  "apply_bonus": true,
+  "ingredient": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "count": 1,
+    "id": "firma_compat:netherite_axe_head"
+  },
+  "rules": [
+    "upset_third_last",
+    "hit_second_last",
+    "punch_last"
+  ],
+  "tier": 5
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "firma_compat:crimson_lumber"
+    },
+    "P": {
+      "item": "minecraft:crimson_stem"
+    }
+  },
+  "pattern": [
+    "PLP",
+    "PLP"
+  ],
+  "result": {
+    "count": 8,
+    "id": "firma_compat:crimson_log_fence"
+  }
+}

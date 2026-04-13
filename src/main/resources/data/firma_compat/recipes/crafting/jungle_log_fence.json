@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "firma_compat:jungle_lumber"
+    },
+    "P": {
+      "item": "minecraft:jungle_log"
+    }
+  },
+  "pattern": [
+    "PLP",
+    "PLP"
+  ],
+  "result": {
+    "count": 8,
+    "id": "firma_compat:jungle_log_fence"
+  }
+}

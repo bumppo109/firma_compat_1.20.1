@@ -1,0 +1,12 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:stone_bricks"
+  ],
+  "item_output": {
+    "count": 1,
+    "id": "minecraft:chiseled_stone_bricks"
+  },
+  "mode": "tfc:smooth",
+  "result": "minecraft:chiseled_stone_bricks"
+}

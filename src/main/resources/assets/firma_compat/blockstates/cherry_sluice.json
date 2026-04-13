@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,upper=false": {
+      "model": "firma_compat:block/sluice/cherry/lower",
+      "y": 90
+    },
+    "facing=east,upper=true": {
+      "model": "firma_compat:block/sluice/cherry/upper",
+      "y": 90
+    },
+    "facing=north,upper=false": {
+      "model": "firma_compat:block/sluice/cherry/lower"
+    },
+    "facing=north,upper=true": {
+      "model": "firma_compat:block/sluice/cherry/upper"
+    },
+    "facing=south,upper=false": {
+      "model": "firma_compat:block/sluice/cherry/lower",
+      "y": 180
+    },
+    "facing=south,upper=true": {
+      "model": "firma_compat:block/sluice/cherry/upper",
+      "y": 180
+    },
+    "facing=west,upper=false": {
+      "model": "firma_compat:block/sluice/cherry/lower",
+      "y": 270
+    },
+    "facing=west,upper=true": {
+      "model": "firma_compat:block/sluice/cherry/upper",
+      "y": 270
+    }
+  }
+}

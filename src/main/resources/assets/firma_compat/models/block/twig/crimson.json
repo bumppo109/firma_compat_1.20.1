@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/twig",
+  "textures": {
+    "side": "minecraft:block/crimson_stem",
+    "top": "minecraft:block/crimson_stem_top"
+  }
+}

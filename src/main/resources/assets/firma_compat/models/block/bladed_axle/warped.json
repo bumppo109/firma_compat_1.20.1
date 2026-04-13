@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/bladed_axle",
+  "textures": {
+    "wood": "minecraft:block/stripped_warped_stem"
+  }
+}

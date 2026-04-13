@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/loose/loose_igneous_intrusive_2",
+  "textures": {
+    "texture": "minecraft:block/granite"
+  }
+}

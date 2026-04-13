@@ -1,0 +1,12 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:cut_sandstone"
+  ],
+  "item_output": {
+    "count": 1,
+    "id": "minecraft:chiseled_sandstone"
+  },
+  "mode": "tfc:smooth",
+  "result": "minecraft:chiseled_sandstone"
+}

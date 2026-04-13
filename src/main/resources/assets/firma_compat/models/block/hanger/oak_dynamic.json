@@ -1,0 +1,6 @@
+{
+  "base": {
+    "parent": "firma_compat:block/hanger/oak"
+  },
+  "loader": "firmalife:hanger"
+}

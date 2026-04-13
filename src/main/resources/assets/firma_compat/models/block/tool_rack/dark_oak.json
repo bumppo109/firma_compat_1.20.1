@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/tool_rack",
+  "textures": {
+    "particle": "minecraft:block/dark_oak_planks",
+    "texture": "minecraft:block/dark_oak_planks"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "cinchsmissingblocks"
+    }
+  ],
+  "type": "tfc:chisel",
+  "ingredient": [
+    "cinchsmissingblocks:mossy_dripstone_bricks"
+  ],
+  "mode": "tfc:slab",
+  "result": "cinchsmissingblocks:mossy_dripstone_brick_slab"
+}

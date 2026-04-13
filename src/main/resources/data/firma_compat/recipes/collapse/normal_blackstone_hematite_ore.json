@@ -1,0 +1,7 @@
+{
+  "type": "tfc:collapse",
+  "ingredient": [
+    "firma_compat:rich_blackstone_hematite_ore"
+  ],
+  "result": "firma_compat:normal_blackstone_hematite_ore"
+}

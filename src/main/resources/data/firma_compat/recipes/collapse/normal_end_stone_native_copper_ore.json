@@ -1,0 +1,7 @@
+{
+  "type": "tfc:collapse",
+  "ingredient": [
+    "firma_compat:rich_end_stone_native_copper_ore"
+  ],
+  "result": "firma_compat:normal_end_stone_native_copper_ore"
+}

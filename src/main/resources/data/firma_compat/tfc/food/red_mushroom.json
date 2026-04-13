@@ -1,0 +1,8 @@
+{
+  "decay_modifier": 4.9,
+  "hunger": 4,
+  "ingredient": {
+    "item": "minecraft:red_mushroom"
+  },
+  "protein": 0.5
+}

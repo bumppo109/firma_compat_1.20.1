@@ -1,0 +1,8 @@
+{
+  "forging_temperature": 870.00006,
+  "heat_capacity": 5.714286,
+  "ingredient": {
+    "tag": "c:sheets/poor_netherite"
+  },
+  "welding_temperature": 1160.0
+}

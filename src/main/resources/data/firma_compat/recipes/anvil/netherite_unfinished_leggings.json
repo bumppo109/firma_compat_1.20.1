@@ -1,0 +1,17 @@
+{
+  "type": "tfc:anvil",
+  "apply_bonus": true,
+  "ingredient": {
+    "tag": "c:double_sheets/netherite"
+  },
+  "result": {
+    "count": 1,
+    "id": "firma_compat:netherite_unfinished_leggings"
+  },
+  "rules": [
+    "bend_any",
+    "draw_any",
+    "hit_any"
+  ],
+  "tier": 5
+}

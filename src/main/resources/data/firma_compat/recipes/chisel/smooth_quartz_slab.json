@@ -1,0 +1,12 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:smooth_quartz"
+  ],
+  "item_output": {
+    "count": 1,
+    "id": "minecraft:smooth_quartz_slab"
+  },
+  "mode": "tfc:slab",
+  "result": "minecraft:smooth_quartz_slab"
+}

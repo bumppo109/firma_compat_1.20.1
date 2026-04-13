@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/ore",
+  "textures": {
+    "all": "minecraft:block/birch_planks",
+    "overlay": "firma_compat:block/template/axle_casing_front"
+  }
+}

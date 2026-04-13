@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "firma_compat:tuff_brick"
+    },
+    "X": {
+      "item": "tfc:mortar"
+    }
+  },
+  "pattern": [
+    "L L",
+    "XLX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "firma_compat:tuff_brick_aqueduct"
+  }
+}

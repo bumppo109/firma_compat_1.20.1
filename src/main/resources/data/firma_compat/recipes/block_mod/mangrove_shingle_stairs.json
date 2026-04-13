@@ -1,0 +1,16 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "rnr"
+    }
+  ],
+  "type": "rnr:block_mod",
+  "input_block": [
+    "rnr:roof_frame_stairs"
+  ],
+  "input_item": {
+    "item": "firma_compat:mangrove_shingle"
+  },
+  "output_block": "firma_compat:mangrove_shingle_stairs"
+}

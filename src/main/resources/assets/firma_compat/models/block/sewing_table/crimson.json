@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/sewing_table",
+  "textures": {
+    "0": "minecraft:block/crimson_stem",
+    "1": "minecraft:block/crimson_planks"
+  }
+}

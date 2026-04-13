@@ -1,0 +1,8 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:oak_planks"
+  ],
+  "mode": "tfc:stair",
+  "result": "minecraft:oak_stairs"
+}

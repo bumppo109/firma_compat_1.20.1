@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/loose/loose_igneous_extrusive_2",
+  "textures": {
+    "texture": "minecraft:block/basalt_side"
+  }
+}

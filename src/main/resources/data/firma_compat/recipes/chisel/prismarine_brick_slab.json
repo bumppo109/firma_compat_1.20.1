@@ -1,0 +1,12 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:prismarine_bricks"
+  ],
+  "item_output": {
+    "count": 1,
+    "id": "minecraft:prismarine_brick_slab"
+  },
+  "mode": "tfc:slab",
+  "result": "minecraft:prismarine_brick_slab"
+}

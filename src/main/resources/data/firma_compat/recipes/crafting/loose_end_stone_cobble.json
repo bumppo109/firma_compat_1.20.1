@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "firma_compat:end_stone_loose"
+    }
+  },
+  "pattern": [
+    "LL ",
+    "LL "
+  ],
+  "result": {
+    "count": 1,
+    "id": "firma_compat:loose_end_stone_cobble"
+  }
+}

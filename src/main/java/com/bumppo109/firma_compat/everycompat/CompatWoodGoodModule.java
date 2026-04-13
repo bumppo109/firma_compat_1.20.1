@@ -401,7 +401,8 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
     }
 
     @Override
-    public boolean isEntryAlreadyRegistered(String entrySetId, String blockId, BlockType blockType, Registry<?> registry) {
+    //public boolean isEntryAlreadyRegistered(String entrySetId, String blockId, BlockType blockType, Registry<?> registry) {
+    public boolean isEntryAlreadyRegistered(String entrySetId, ResourceLocation blockId, BlockType blockType, Registry<?> registry) {
         return false;
     }
 
@@ -494,7 +495,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 }
                 //TFC data
                 if(woodType.canBurn()){
-                    if(!Objects.equals(woodType.getNamespace(), "minecraft")
+                    if(!Objects.equals(woodType.getNamespace(), "assets/minecraft")
                             && !Objects.equals(woodType.getNamespace(), "tfc")
                             && !Objects.equals(woodType.getNamespace(), "afc")){
                         fuelData(woodType, sink, manager);
@@ -1998,8 +1999,8 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         String namespace = wood.getNamespace();
         String typeName = wood.getTypeName();
 
-        if ("minecraft".equals(namespace)) {
-            return ResourceLocation.fromNamespaceAndPath("minecraft", "block/" + typeName + "_planks");
+        if ("assets/minecraft".equals(namespace)) {
+            return ResourceLocation.fromNamespaceAndPath("assets/minecraft", "block/" + typeName + "_planks");
         } else if ("tfc".equals(namespace)) {
             return ResourceLocation.fromNamespaceAndPath("tfc", "block/wood/planks/" + typeName);
         } else {

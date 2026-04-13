@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "cinchsmissingblocks"
+    }
+  ],
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:cut_red_sandstone"
+  ],
+  "mode": "tfc:stair",
+  "result": "cinchsmissingblocks:cut_red_sandstone_stairs"
+}

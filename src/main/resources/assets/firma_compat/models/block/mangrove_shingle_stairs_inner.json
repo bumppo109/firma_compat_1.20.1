@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "firma_compat:block/mangrove_shingles",
+    "side": "firma_compat:block/mangrove_shingles",
+    "top": "firma_compat:block/mangrove_shingles"
+  }
+}

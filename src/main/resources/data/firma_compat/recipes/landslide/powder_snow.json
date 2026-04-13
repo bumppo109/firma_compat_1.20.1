@@ -1,0 +1,7 @@
+{
+  "type": "tfc:landslide",
+  "ingredient": [
+    "minecraft:powder_snow"
+  ],
+  "result": "minecraft:powder_snow"
+}

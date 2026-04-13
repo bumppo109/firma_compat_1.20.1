@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/ore",
+  "textures": {
+    "all": "minecraft:block/stone",
+    "overlay": "firma_compat:block/template/ore_overlay/rich_bismuthinite"
+  }
+}

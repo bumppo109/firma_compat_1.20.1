@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "firma_compat:polished_blackstone_brick"
+    }
+  },
+  "pattern": [
+    "LL "
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:polished_blackstone_pressure_plate"
+  }
+}

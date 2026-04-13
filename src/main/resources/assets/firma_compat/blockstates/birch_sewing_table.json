@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "firma_compat:block/sewing_table/birch",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "firma_compat:block/sewing_table/birch"
+    },
+    "facing=south": {
+      "model": "firma_compat:block/sewing_table/birch",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "firma_compat:block/sewing_table/birch",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "conditions": [
+                {
+                  "block": "firma_compat:jungle_barrel",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "sealed": "true"
+                  }
+                }
+              ],
+              "functions": [
+                {
+                  "function": "minecraft:copy_components",
+                  "include": [
+                    "minecraft:custom_name",
+                    "tfc:barrel"
+                  ],
+                  "source": "block_entity"
+                },
+                {
+                  "function": "tfc:apply_stack_size"
+                }
+              ],
+              "name": "firma_compat:jungle_barrel"
+            },
+            {
+              "type": "minecraft:item",
+              "name": "firma_compat:jungle_barrel"
+            }
+          ]
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "firma_compat:blocks/jungle_barrel"
+}

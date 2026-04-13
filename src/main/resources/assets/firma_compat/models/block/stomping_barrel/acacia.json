@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/firmalife/stomping_barrel",
+  "textures": {
+    "0": "minecraft:block/acacia_planks"
+  }
+}

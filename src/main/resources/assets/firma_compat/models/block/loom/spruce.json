@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/loom",
+  "textures": {
+    "particle": "minecraft:block/spruce_planks",
+    "texture": "minecraft:block/spruce_planks"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/firmalife/hanger_base",
+  "textures": {
+    "string": "minecraft:block/white_wool",
+    "wood": "minecraft:block/spruce_planks"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "rnr"
+    }
+  ],
+  "type": "rnr:block_mod",
+  "input_block": [
+    "firma_compat:tamped_dirt"
+  ],
+  "input_item": {
+    "item": "rnr:crushed_base_course"
+  },
+  "output_block": "rnr:base_course"
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "firma_compat:jungle_lumber"
+    }
+  },
+  "pattern": [
+    "LLL",
+    "   ",
+    "LLL"
+  ],
+  "result": {
+    "count": 1,
+    "id": "firma_compat:jungle_tool_rack"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "rnr"
+    }
+  ],
+  "type": "rnr:block_mod",
+  "input_block": [
+    "rnr:base_course"
+  ],
+  "input_item": {
+    "item": "firma_compat:calcite_loose"
+  },
+  "output_block": "firma_compat:calcite_cobbled_road"
+}

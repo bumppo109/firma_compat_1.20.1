@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "firma_compat:hardened_basalt_cobble"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "firma_compat:blocks/hardened_basalt_cobble"
+}

@@ -1,0 +1,27 @@
+{
+  "values": [
+    "firma_compat:granite_hardened",
+    "firma_compat:diorite_hardened",
+    "firma_compat:deepslate_hardened",
+    "firma_compat:andesite_hardened",
+    "firma_compat:basalt_hardened",
+    "firma_compat:calcite_hardened",
+    "firma_compat:tuff_hardened",
+    "firma_compat:dripstone_hardened",
+    "firma_compat:stone_hardened",
+    "firma_compat:blackstone_hardened",
+    "firma_compat:netherrack_hardened",
+    "firma_compat:end_stone_hardened",
+    "minecraft:stone",
+    "minecraft:deepslate",
+    "minecraft:andesite",
+    "minecraft:diorite",
+    "minecraft:dripstone_block",
+    "minecraft:granite",
+    "minecraft:tuff",
+    "minecraft:calcite",
+    "minecraft:blackstone",
+    "minecraft:end_stone",
+    "minecraft:netherrack"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/ore",
+  "textures": {
+    "all": "minecraft:block/granite",
+    "overlay": "firma_compat:block/template/ore_overlay/normal_native_silver"
+  }
+}

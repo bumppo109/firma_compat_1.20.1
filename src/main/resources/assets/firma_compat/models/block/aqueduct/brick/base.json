@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/aqueduct/base",
+  "textures": {
+    "particle": "minecraft:block/bricks",
+    "texture": "minecraft:block/bricks"
+  }
+}

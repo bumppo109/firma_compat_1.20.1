@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "tag": "minecraft:planks"
+    },
+    "X": {
+      "tag": "firma_compat:compat_lumber"
+    }
+  },
+  "pattern": [
+    "XX ",
+    "LL "
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:crafting_table"
+  }
+}

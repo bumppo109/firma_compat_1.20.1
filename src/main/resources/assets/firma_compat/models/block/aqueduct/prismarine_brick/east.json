@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/aqueduct/east",
+  "textures": {
+    "particle": "minecraft:block/prismarine_bricks",
+    "texture": "minecraft:block/prismarine_bricks"
+  }
+}

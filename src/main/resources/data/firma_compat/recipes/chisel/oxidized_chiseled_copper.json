@@ -1,0 +1,12 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "tfc:metal/oxidized_block/copper"
+  ],
+  "item_output": {
+    "count": 1,
+    "id": "minecraft:oxidized_chiseled_copper"
+  },
+  "mode": "tfc:smooth",
+  "result": "minecraft:oxidized_chiseled_copper"
+}

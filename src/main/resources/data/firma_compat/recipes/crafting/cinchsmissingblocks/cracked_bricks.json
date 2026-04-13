@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "cinchsmissingblocks"
+    }
+  ],
+  "type": "tfc:advanced_shapeless_crafting",
+  "ingredients": [
+    {
+      "item": "minecraft:bricks"
+    },
+    {
+      "tag": "c:tools/hammer"
+    }
+  ],
+  "primary_ingredient": {
+    "item": "minecraft:bricks"
+  },
+  "result": {
+    "count": 1,
+    "id": "cinchsmissingblocks:cracked_bricks"
+  }
+}

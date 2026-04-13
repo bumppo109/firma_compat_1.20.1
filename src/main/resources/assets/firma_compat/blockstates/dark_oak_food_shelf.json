@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "firma_compat:block/food_shelf/dark_oak_dynamic",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "firma_compat:block/food_shelf/dark_oak_dynamic",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "firma_compat:block/food_shelf/dark_oak_dynamic"
+    },
+    "facing=west": {
+      "model": "firma_compat:block/food_shelf/dark_oak_dynamic",
+      "y": 90
+    }
+  }
+}

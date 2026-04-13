@@ -1,0 +1,8 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:polished_tuff"
+  ],
+  "mode": "tfc:stair",
+  "result": "minecraft:polished_tuff_stairs"
+}

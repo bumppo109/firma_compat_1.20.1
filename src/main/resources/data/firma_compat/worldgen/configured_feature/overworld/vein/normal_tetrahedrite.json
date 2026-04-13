@@ -1,0 +1,252 @@
+{
+  "type": "tfc:cluster_vein",
+  "config": {
+    "blocks": [
+      {
+        "replace": [
+          "minecraft:basalt"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_basalt_tetrahedrite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_basalt_tetrahedrite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_basalt_tetrahedrite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:end_stone"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_end_stone_tetrahedrite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_end_stone_tetrahedrite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_end_stone_tetrahedrite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:deepslate"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_deepslate_tetrahedrite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_deepslate_tetrahedrite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_deepslate_tetrahedrite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:dripstone_block"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_dripstone_tetrahedrite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_dripstone_tetrahedrite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_dripstone_tetrahedrite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:stone"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_stone_tetrahedrite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_stone_tetrahedrite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_stone_tetrahedrite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:netherrack"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_netherrack_tetrahedrite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_netherrack_tetrahedrite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_netherrack_tetrahedrite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:calcite"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_calcite_tetrahedrite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_calcite_tetrahedrite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_calcite_tetrahedrite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:blackstone"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_blackstone_tetrahedrite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_blackstone_tetrahedrite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_blackstone_tetrahedrite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:diorite"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_diorite_tetrahedrite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_diorite_tetrahedrite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_diorite_tetrahedrite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:andesite"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_andesite_tetrahedrite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_andesite_tetrahedrite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_andesite_tetrahedrite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:granite"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_granite_tetrahedrite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_granite_tetrahedrite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_granite_tetrahedrite_ore",
+            "weight": 25.0
+          }
+        ]
+      },
+      {
+        "replace": [
+          "minecraft:tuff"
+        ],
+        "with": [
+          {
+            "block": "firma_compat:poor_tuff_tetrahedrite_ore",
+            "weight": 35.0
+          },
+          {
+            "block": "firma_compat:normal_tuff_tetrahedrite_ore",
+            "weight": 40.0
+          },
+          {
+            "block": "firma_compat:rich_tuff_tetrahedrite_ore",
+            "weight": 25.0
+          }
+        ]
+      }
+    ],
+    "density": 0.5,
+    "indicator": {
+      "blocks": [
+        {
+          "block": "tfc:ore/small_tetrahedrite"
+        }
+      ],
+      "depth": 35,
+      "rarity": 25,
+      "underground_count": 0,
+      "underground_rarity": 1
+    },
+    "max_y": 70,
+    "min_y": -30,
+    "random_name": 7363158173692159221,
+    "rarity": 40,
+    "size": 30
+  }
+}

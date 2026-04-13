@@ -1,0 +1,8 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:andesite"
+  ],
+  "mode": "tfc:stair",
+  "result": "minecraft:andesite_stairs"
+}

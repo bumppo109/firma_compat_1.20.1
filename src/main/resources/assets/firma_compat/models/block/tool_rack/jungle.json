@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/tool_rack",
+  "textures": {
+    "particle": "minecraft:block/jungle_planks",
+    "texture": "minecraft:block/jungle_planks"
+  }
+}

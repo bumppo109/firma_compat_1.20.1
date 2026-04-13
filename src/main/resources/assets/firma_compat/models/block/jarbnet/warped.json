@@ -1,0 +1,8 @@
+{
+  "parent": "firma_compat:block/template/firmalife/jarbnet",
+  "textures": {
+    "log": "minecraft:block/warped_stem",
+    "planks": "minecraft:block/warped_planks",
+    "sheet": "minecraft:block/stripped_warped_stem"
+  }
+}

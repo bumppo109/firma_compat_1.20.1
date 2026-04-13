@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "firma_compat:block/shelf/jungle",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "firma_compat:block/shelf/jungle"
+    },
+    "facing=south": {
+      "model": "firma_compat:block/shelf/jungle",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "firma_compat:block/shelf/jungle",
+      "y": 270
+    }
+  }
+}

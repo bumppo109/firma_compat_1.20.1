@@ -1,0 +1,7 @@
+{
+  "type": "tfc:collapse",
+  "ingredient": [
+    "firma_compat:normal_andesite_native_silver_ore"
+  ],
+  "result": "firma_compat:poor_andesite_native_silver_ore"
+}

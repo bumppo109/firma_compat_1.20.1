@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/jar_no_lid",
+  "textures": {
+    "1": "firma_compat:block/sweet_berries_jar",
+    "2": "firma_compat:block/template/jar_no_lid"
+  }
+}

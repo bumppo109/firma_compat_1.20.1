@@ -1,0 +1,16 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "rnr"
+    }
+  ],
+  "type": "rnr:block_mod",
+  "input_block": [
+    "rnr:roof_frame_slab"
+  ],
+  "input_item": {
+    "item": "firma_compat:jungle_shingle"
+  },
+  "output_block": "firma_compat:jungle_shingle_slab"
+}

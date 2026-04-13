@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "H": {
+      "item": "firma_compat:netherite_shovel_head"
+    },
+    "R": {
+      "tag": "c:rods/wooden"
+    }
+  },
+  "pattern": [
+    "H  ",
+    "R  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:netherite_shovel"
+  }
+}

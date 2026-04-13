@@ -1,0 +1,31 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "firmalife"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "jungle",
+  "key": {
+    "A": {
+      "item": "minecraft:jungle_log"
+    },
+    "B": {
+      "item": "tfc:metal/rod/brass"
+    },
+    "C": {
+      "item": "firma_compat:jungle_lumber"
+    }
+  },
+  "pattern": [
+    "A  ",
+    "BCC",
+    "A  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "firma_compat:jungle_jarbnet"
+  }
+}

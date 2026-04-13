@@ -1,0 +1,8 @@
+{
+  "forging_temperature": 870.00006,
+  "heat_capacity": 2.857143,
+  "ingredient": {
+    "item": "firma_compat:netherite_scrap_ingot"
+  },
+  "welding_temperature": 1160.0
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/drying_bricks/1",
+  "textures": {
+    "mud": "minecraft:block/mud_bricks"
+  }
+}

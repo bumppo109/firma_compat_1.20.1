@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "minecraft:bowl"
+    },
+    "M": {
+      "tag": "c:mushrooms"
+    }
+  },
+  "pattern": [
+    "MM ",
+    "G  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:mushroom_stew"
+  }
+}

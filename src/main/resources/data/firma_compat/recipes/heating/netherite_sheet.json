@@ -1,0 +1,11 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "tag": "c:sheets/netherite"
+  },
+  "result_fluid": {
+    "amount": 200,
+    "id": "firma_compat:metal/netherite"
+  },
+  "temperature": 1485.0
+}

@@ -1,0 +1,12 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "tfc:metal/weathered_block/copper"
+  ],
+  "item_output": {
+    "count": 1,
+    "id": "minecraft:weathered_chiseled_copper"
+  },
+  "mode": "tfc:smooth",
+  "result": "minecraft:weathered_chiseled_copper"
+}

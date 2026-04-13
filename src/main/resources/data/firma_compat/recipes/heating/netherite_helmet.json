@@ -1,0 +1,11 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "minecraft:netherite_helmet"
+  },
+  "result_fluid": {
+    "amount": 600,
+    "id": "firma_compat:metal/netherite"
+  },
+  "temperature": 1485.0
+}

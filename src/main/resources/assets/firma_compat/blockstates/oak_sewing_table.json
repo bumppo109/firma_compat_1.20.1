@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "firma_compat:block/sewing_table/oak",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "firma_compat:block/sewing_table/oak"
+    },
+    "facing=south": {
+      "model": "firma_compat:block/sewing_table/oak",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "firma_compat:block/sewing_table/oak",
+      "y": 270
+    }
+  }
+}

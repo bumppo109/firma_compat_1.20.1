@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "rnr"
+    }
+  ],
+  "type": "tfc:advanced_shapeless_crafting",
+  "ingredients": [
+    {
+      "item": "minecraft:basalt"
+    },
+    {
+      "tag": "c:tools/chisel"
+    }
+  ],
+  "primary_ingredient": {
+    "item": "minecraft:basalt"
+  },
+  "result": {
+    "count": 12,
+    "id": "firma_compat:basalt_flagstone"
+  }
+}

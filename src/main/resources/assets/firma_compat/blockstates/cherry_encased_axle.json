@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "firma_compat:block/encased_axle/cherry",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "firma_compat:block/encased_axle/cherry"
+    },
+    "axis=z": {
+      "model": "firma_compat:block/encased_axle/cherry",
+      "x": 90
+    }
+  }
+}

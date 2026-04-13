@@ -1,0 +1,41 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "firma_compat:block/aqueduct/polished_blackstone_brick/base"
+      }
+    },
+    {
+      "apply": {
+        "model": "firma_compat:block/aqueduct/polished_blackstone_brick/north"
+      },
+      "when": {
+        "north": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "firma_compat:block/aqueduct/polished_blackstone_brick/south"
+      },
+      "when": {
+        "south": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "firma_compat:block/aqueduct/polished_blackstone_brick/east"
+      },
+      "when": {
+        "east": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "firma_compat:block/aqueduct/polished_blackstone_brick/west"
+      },
+      "when": {
+        "west": "false"
+      }
+    }
+  ]
+}

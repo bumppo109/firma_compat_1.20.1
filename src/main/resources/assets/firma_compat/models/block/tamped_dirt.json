@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/rnr/tamped_block",
+  "textures": {
+    "dirt": "minecraft:block/dirt"
+  }
+}

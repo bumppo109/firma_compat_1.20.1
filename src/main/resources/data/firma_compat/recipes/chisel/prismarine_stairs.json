@@ -1,0 +1,8 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:prismarine"
+  ],
+  "mode": "tfc:stair",
+  "result": "minecraft:prismarine_stairs"
+}

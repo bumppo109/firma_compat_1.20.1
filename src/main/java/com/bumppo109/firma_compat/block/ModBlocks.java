@@ -108,13 +108,13 @@ public class ModBlocks {
 
     public static final Map<CompatRock, Map<CompatOre, RegistryObject<Block>>> ORES = Helpers.mapOfKeys(CompatRock.class, rock ->
             Helpers.mapOfKeys(CompatOre.class, ore -> !ore.isGraded(), ore ->
-                    register(("ore/" + ore.name() + "/" + rock.name()), () -> ore.create(rock))
+                    register((rock.name() + "_" + ore.name() + "_ore"), () -> ore.create(rock))
             )
     );
     public static final Map<CompatRock, Map<CompatOre, Map<CompatOre.Grade, RegistryObject<Block>>>> GRADED_ORES = Helpers.mapOfKeys(CompatRock.class, rock ->
             Helpers.mapOfKeys(CompatOre.class, CompatOre::isGraded, ore ->
                     Helpers.mapOfKeys(CompatOre.Grade.class, grade ->
-                            register(("ore/" + grade.name() + "_" + ore.name() + "/" + rock.name()), () -> ore.create(rock))
+                            register((grade.name() + "_" + rock.name() + "_" + ore.name() + "_ore"), () -> ore.create(rock))
                     )
             )
     );
@@ -135,7 +135,7 @@ public class ModBlocks {
 
     public static final Map<CompatRock, Map<CompatRock.BlockType, RegistryObject<Block>>> ROCK_BLOCKS = Helpers.mapOfKeys(CompatRock.class, rock ->
             Helpers.mapOfKeys(CompatRock.BlockType.class, type ->
-                    register(("rock/" + type.name() + "/" + rock.name()), () -> type.create(rock))
+                    register(rock.name() + "_" + (type.name()), () -> type.create(rock))
             )
     );
 

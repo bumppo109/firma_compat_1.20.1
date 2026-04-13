@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "rnr"
+    }
+  ],
+  "type": "tfc:chisel",
+  "ingredient": [
+    "firma_compat:jungle_shingles"
+  ],
+  "mode": "tfc:slab",
+  "result": "firma_compat:jungle_shingle_slab"
+}

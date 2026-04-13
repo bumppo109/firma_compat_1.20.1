@@ -1,0 +1,10 @@
+{
+  "parent": "firma_compat:block/template/ore_column",
+  "textures": {
+    "end": "minecraft:block/birch_planks",
+    "overlay": "firma_compat:block/template/axle_casing_unpowered",
+    "overlay_end": "firma_compat:block/template/axle_casing_front",
+    "particle": "minecraft:block/stripped_birch_log",
+    "side": "minecraft:block/stripped_birch_log"
+  }
+}

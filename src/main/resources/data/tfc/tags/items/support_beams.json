@@ -1,0 +1,14 @@
+{
+  "values": [
+    "firma_compat:acacia_support",
+    "firma_compat:birch_support",
+    "firma_compat:cherry_support",
+    "firma_compat:dark_oak_support",
+    "firma_compat:jungle_support",
+    "firma_compat:mangrove_support",
+    "firma_compat:oak_support",
+    "firma_compat:spruce_support",
+    "firma_compat:crimson_support",
+    "firma_compat:warped_support"
+  ]
+}

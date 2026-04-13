@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "firma_compat:granite_brick"
+    },
+    "M": {
+      "item": "tfc:mortar"
+    }
+  },
+  "pattern": [
+    "BMB",
+    "MBM",
+    "BMB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "cinchsmissingblocks:granite_bricks"
+  }
+}

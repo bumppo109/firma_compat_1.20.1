@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/shelf",
+  "textures": {
+    "0": "minecraft:block/oak_planks"
+  }
+}

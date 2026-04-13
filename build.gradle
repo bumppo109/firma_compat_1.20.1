@@ -169,15 +169,17 @@ dependencies {
 
     //Moonlight Lib
     implementation fg.deobf("curse.maven:selene-499980:7664875")
+
+    //Regions Unexplored
+    implementation fg.deobf("curse.maven:regions-unexplored-659110:5558225")
+
+    //Terrablender
+    implementation fg.deobf("curse.maven:terrablender-563928:6290448")
 }
 
 mixin {
-    // This tells MixinGradle to generate the refmap for your main sourceset
-    add sourceSets.main, "${mod_id}.refmap.json"   // replace ${mod_id} with your actual modid, e.g. "mymod"
-
-    // Register your mixin config file(s)
-    config "${mod_id}.mixins.json"                 // common mixins
-    // config "${mod_id}.client.mixins.json"       // uncomment if you have client-only mixins
+    add sourceSets.main, "${mod_id}.refmap.json"
+    config "${mod_id}.mixins.json"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

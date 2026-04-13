@@ -1,0 +1,12 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:quartz_block"
+  ],
+  "item_output": {
+    "count": 1,
+    "id": "minecraft:quartz_slab"
+  },
+  "mode": "tfc:slab",
+  "result": "minecraft:quartz_slab"
+}

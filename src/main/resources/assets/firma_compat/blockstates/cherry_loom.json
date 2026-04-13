@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "firma_compat:block/loom/cherry",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "firma_compat:block/loom/cherry",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "firma_compat:block/loom/cherry"
+    },
+    "facing=west": {
+      "model": "firma_compat:block/loom/cherry",
+      "y": 90
+    }
+  }
+}

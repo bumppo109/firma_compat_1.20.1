@@ -1,0 +1,7 @@
+{
+  "type": "tfc:landslide",
+  "ingredient": [
+    "minecraft:rooted_dirt"
+  ],
+  "result": "minecraft:dirt"
+}

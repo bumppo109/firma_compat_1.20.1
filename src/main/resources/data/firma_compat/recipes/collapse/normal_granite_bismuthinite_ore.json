@@ -1,0 +1,7 @@
+{
+  "type": "tfc:collapse",
+  "ingredient": [
+    "firma_compat:rich_granite_bismuthinite_ore"
+  ],
+  "result": "firma_compat:normal_granite_bismuthinite_ore"
+}

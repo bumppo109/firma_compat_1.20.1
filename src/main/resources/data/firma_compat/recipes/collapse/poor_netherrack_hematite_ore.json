@@ -1,0 +1,7 @@
+{
+  "type": "tfc:collapse",
+  "ingredient": [
+    "firma_compat:normal_netherrack_hematite_ore"
+  ],
+  "result": "firma_compat:poor_netherrack_hematite_ore"
+}

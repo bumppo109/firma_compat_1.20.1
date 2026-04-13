@@ -1,0 +1,17 @@
+{
+  "ingredient": [
+    "firma_compat:acacia_horizontal_support",
+    "firma_compat:birch_horizontal_support",
+    "firma_compat:cherry_horizontal_support",
+    "firma_compat:dark_oak_horizontal_support",
+    "firma_compat:jungle_horizontal_support",
+    "firma_compat:mangrove_horizontal_support",
+    "firma_compat:oak_horizontal_support",
+    "firma_compat:spruce_horizontal_support",
+    "firma_compat:crimson_horizontal_support",
+    "firma_compat:warped_horizontal_support"
+  ],
+  "support_down": 2,
+  "support_horizontal": 4,
+  "support_up": 2
+}

@@ -1,0 +1,8 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:purpur_block"
+  ],
+  "mode": "tfc:stair",
+  "result": "minecraft:purpur_stairs"
+}

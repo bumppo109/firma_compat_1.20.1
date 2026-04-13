@@ -1,0 +1,8 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:diorite"
+  ],
+  "mode": "tfc:stair",
+  "result": "minecraft:diorite_stairs"
+}

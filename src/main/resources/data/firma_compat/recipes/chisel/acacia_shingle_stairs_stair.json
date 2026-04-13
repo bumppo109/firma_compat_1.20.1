@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "rnr"
+    }
+  ],
+  "type": "tfc:chisel",
+  "ingredient": [
+    "firma_compat:acacia_shingles"
+  ],
+  "mode": "tfc:stair",
+  "result": "firma_compat:acacia_shingle_stairs"
+}

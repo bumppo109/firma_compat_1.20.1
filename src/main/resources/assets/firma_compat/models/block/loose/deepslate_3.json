@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/loose/loose_igneous_intrusive_3",
+  "textures": {
+    "texture": "minecraft:block/deepslate"
+  }
+}

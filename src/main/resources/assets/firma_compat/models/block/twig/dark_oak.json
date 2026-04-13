@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/twig",
+  "textures": {
+    "side": "minecraft:block/dark_oak_log",
+    "top": "minecraft:block/dark_oak_log_top"
+  }
+}

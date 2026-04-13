@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "firma_compat:block/dark_oak_shingle_slab"
+    },
+    "type=double": {
+      "model": "firma_compat:block/dark_oak_shingles"
+    },
+    "type=top": {
+      "model": "firma_compat:block/dark_oak_shingle_slab_top"
+    }
+  }
+}

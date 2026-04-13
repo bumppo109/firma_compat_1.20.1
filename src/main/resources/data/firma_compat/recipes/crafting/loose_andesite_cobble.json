@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "firma_compat:andesite_loose"
+    }
+  },
+  "pattern": [
+    "LL ",
+    "LL "
+  ],
+  "result": {
+    "count": 1,
+    "id": "firma_compat:loose_andesite_cobble"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "minecraft:dried_kelp"
+  },
+  "temperature": 700.0
+}

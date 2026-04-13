@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "firma_compat:block/twig/acacia",
+        "y": 90
+      },
+      {
+        "model": "firma_compat:block/twig/acacia"
+      },
+      {
+        "model": "firma_compat:block/twig/acacia",
+        "y": 180
+      },
+      {
+        "model": "firma_compat:block/twig/acacia",
+        "y": 270
+      }
+    ]
+  }
+}

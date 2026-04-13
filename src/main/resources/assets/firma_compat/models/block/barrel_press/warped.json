@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/firmalife/barrel_press",
+  "textures": {
+    "0": "minecraft:block/stripped_warped_stem"
+  }
+}

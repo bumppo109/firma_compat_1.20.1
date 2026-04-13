@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "cinchsmissingblocks"
+    }
+  ],
+  "type": "tfc:chisel",
+  "ingredient": [
+    "cinchsmissingblocks:mossy_prismarine_bricks"
+  ],
+  "mode": "tfc:stair",
+  "result": "cinchsmissingblocks:mossy_prismarine_brick_stairs"
+}

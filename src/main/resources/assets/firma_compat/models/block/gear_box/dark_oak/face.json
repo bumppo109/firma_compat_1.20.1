@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/gear_box/face",
+  "textures": {
+    "all": "minecraft:block/dark_oak_planks",
+    "overlay": "firma_compat:block/template/axle_casing_round"
+  }
+}

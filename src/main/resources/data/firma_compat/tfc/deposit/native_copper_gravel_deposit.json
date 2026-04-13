@@ -1,0 +1,11 @@
+{
+  "ingredient": {
+    "item": "firma_compat:native_copper_gravel_deposit"
+  },
+  "loot_table": "firma_compat:deposit/native_copper_gravel_deposit",
+  "model_stages": [
+    "tfc:item/pan/native_copper/andesite_full",
+    "tfc:item/pan/native_copper/andesite_half",
+    "tfc:item/pan/native_copper/result"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "tfc:food/baked_potato"
+    },
+    "C": {
+      "item": "tfc:food/carrot"
+    },
+    "G": {
+      "item": "minecraft:bowl"
+    },
+    "M": {
+      "tag": "c:mushrooms"
+    },
+    "R": {
+      "item": "tfc:food/cooked_rabbit"
+    }
+  },
+  "pattern": [
+    " R ",
+    "CBM",
+    " G "
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:rabbit_stew"
+  }
+}

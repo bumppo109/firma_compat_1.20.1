@@ -1,0 +1,12 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:cherry_planks"
+  ],
+  "item_output": {
+    "count": 1,
+    "id": "minecraft:cherry_slab"
+  },
+  "mode": "tfc:slab",
+  "result": "minecraft:cherry_slab"
+}

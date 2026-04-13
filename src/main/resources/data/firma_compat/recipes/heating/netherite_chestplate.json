@@ -1,0 +1,11 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "minecraft:netherite_chestplate"
+  },
+  "result_fluid": {
+    "amount": 800,
+    "id": "firma_compat:metal/netherite"
+  },
+  "temperature": 1485.0
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "firma_compat:spruce_axle"
+    },
+    {
+      "item": "tfc:metal/ingot/steel"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "firma_compat:spruce_bladed_axle"
+  }
+}

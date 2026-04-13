@@ -1,0 +1,8 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:bricks"
+  ],
+  "mode": "tfc:stair",
+  "result": "minecraft:brick_stairs"
+}

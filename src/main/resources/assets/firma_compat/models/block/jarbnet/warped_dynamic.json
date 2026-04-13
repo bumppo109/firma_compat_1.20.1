@@ -1,0 +1,6 @@
+{
+  "base": {
+    "parent": "firma_compat:block/jarbnet/warped"
+  },
+  "loader": "firmalife:jarbnet"
+}

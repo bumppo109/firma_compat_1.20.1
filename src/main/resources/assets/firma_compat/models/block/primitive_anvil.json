@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/rock_anvil",
+  "textures": {
+    "texture": "minecraft:block/smooth_stone"
+  }
+}

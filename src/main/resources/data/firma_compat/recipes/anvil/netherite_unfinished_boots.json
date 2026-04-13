@@ -1,0 +1,17 @@
+{
+  "type": "tfc:anvil",
+  "apply_bonus": true,
+  "ingredient": {
+    "tag": "c:sheets/netherite"
+  },
+  "result": {
+    "count": 1,
+    "id": "firma_compat:netherite_unfinished_boots"
+  },
+  "rules": [
+    "shrink_third_last",
+    "bend_second_last",
+    "bend_last"
+  ],
+  "tier": 5
+}

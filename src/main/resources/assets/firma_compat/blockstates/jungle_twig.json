@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "firma_compat:block/twig/jungle",
+        "y": 90
+      },
+      {
+        "model": "firma_compat:block/twig/jungle"
+      },
+      {
+        "model": "firma_compat:block/twig/jungle",
+        "y": 180
+      },
+      {
+        "model": "firma_compat:block/twig/jungle",
+        "y": 270
+      }
+    ]
+  }
+}

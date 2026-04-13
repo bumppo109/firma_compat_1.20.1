@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "firma_compat:crimson_lumber"
+    },
+    "S": {
+      "tag": "c:chains"
+    }
+  },
+  "pattern": [
+    "S S",
+    "LLL",
+    "LLL"
+  ],
+  "result": {
+    "count": 4,
+    "id": "minecraft:crimson_hanging_sign"
+  }
+}

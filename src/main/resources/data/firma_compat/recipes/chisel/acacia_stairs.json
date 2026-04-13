@@ -1,0 +1,8 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:acacia_planks"
+  ],
+  "mode": "tfc:stair",
+  "result": "minecraft:acacia_stairs"
+}

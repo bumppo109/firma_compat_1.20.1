@@ -1,0 +1,8 @@
+{
+  "parent": "firma_compat:block/template/rnr/path_stairs",
+  "textures": {
+    "bottom": "firma_compat:block/loose_diorite_cobble",
+    "side": "firma_compat:block/loose_diorite_cobble",
+    "top": "firma_compat:block/loose_diorite_cobble"
+  }
+}

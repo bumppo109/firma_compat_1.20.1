@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "firma_compat:mud_brick"
+    }
+  },
+  "pattern": [
+    "LL ",
+    "LL "
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:mud_bricks"
+  }
+}

@@ -1,0 +1,502 @@
+{
+  "values": [
+    "minecraft:red_sand",
+    "minecraft:grass_block",
+    "minecraft:dirt",
+    "minecraft:dirt_path",
+    "minecraft:coarse_dirt",
+    "minecraft:rooted_dirt",
+    "firma_compat:cassiterite_gravel_deposit",
+    "firma_compat:native_gold_gravel_deposit",
+    "firma_compat:native_silver_gravel_deposit",
+    "firma_compat:native_copper_gravel_deposit",
+    "firma_compat:clay_dirt",
+    "firma_compat:clay_podzol",
+    "firma_compat:clay_grass_block",
+    "firma_compat:kaolin_clay_dirt",
+    "firma_compat:kaolin_clay_podzol",
+    "firma_compat:kaolin_clay_grass_block",
+    "firma_compat:compat_farmland",
+    "minecraft:farmland",
+    "firma_compat:loose_granite_cobble",
+    "firma_compat:loose_diorite_cobble",
+    "firma_compat:loose_deepslate_cobble",
+    "firma_compat:loose_andesite_cobble",
+    "firma_compat:loose_basalt_cobble",
+    "firma_compat:loose_calcite_cobble",
+    "firma_compat:loose_tuff_cobble",
+    "firma_compat:loose_dripstone_cobble",
+    "firma_compat:loose_stone_cobble",
+    "firma_compat:loose_blackstone_cobble",
+    "firma_compat:loose_netherrack_cobble",
+    "firma_compat:loose_end_stone_cobble",
+    {
+      "id": "firma_compat:granite_flagstones",
+      "required": false
+    },
+    {
+      "id": "firma_compat:granite_flagstone_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:granite_flagstone_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:granite_cobbled_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:granite_cobbled_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:granite_cobbled_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:granite_sett_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:granite_sett_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:granite_sett_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:diorite_flagstones",
+      "required": false
+    },
+    {
+      "id": "firma_compat:diorite_flagstone_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:diorite_flagstone_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:diorite_cobbled_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:diorite_cobbled_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:diorite_cobbled_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:diorite_sett_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:diorite_sett_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:diorite_sett_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:deepslate_flagstones",
+      "required": false
+    },
+    {
+      "id": "firma_compat:deepslate_flagstone_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:deepslate_flagstone_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:deepslate_cobbled_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:deepslate_cobbled_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:deepslate_cobbled_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:deepslate_sett_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:deepslate_sett_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:deepslate_sett_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:andesite_flagstones",
+      "required": false
+    },
+    {
+      "id": "firma_compat:andesite_flagstone_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:andesite_flagstone_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:andesite_cobbled_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:andesite_cobbled_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:andesite_cobbled_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:andesite_sett_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:andesite_sett_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:andesite_sett_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:basalt_flagstones",
+      "required": false
+    },
+    {
+      "id": "firma_compat:basalt_flagstone_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:basalt_flagstone_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:basalt_cobbled_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:basalt_cobbled_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:basalt_cobbled_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:basalt_sett_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:basalt_sett_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:basalt_sett_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:calcite_flagstones",
+      "required": false
+    },
+    {
+      "id": "firma_compat:calcite_flagstone_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:calcite_flagstone_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:calcite_cobbled_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:calcite_cobbled_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:calcite_cobbled_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:calcite_sett_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:calcite_sett_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:calcite_sett_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:tuff_flagstones",
+      "required": false
+    },
+    {
+      "id": "firma_compat:tuff_flagstone_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:tuff_flagstone_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:tuff_cobbled_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:tuff_cobbled_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:tuff_cobbled_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:tuff_sett_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:tuff_sett_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:tuff_sett_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:dripstone_flagstones",
+      "required": false
+    },
+    {
+      "id": "firma_compat:dripstone_flagstone_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:dripstone_flagstone_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:dripstone_cobbled_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:dripstone_cobbled_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:dripstone_cobbled_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:dripstone_sett_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:dripstone_sett_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:dripstone_sett_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:stone_flagstones",
+      "required": false
+    },
+    {
+      "id": "firma_compat:stone_flagstone_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:stone_flagstone_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:stone_cobbled_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:stone_cobbled_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:stone_cobbled_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:stone_sett_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:stone_sett_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:stone_sett_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:blackstone_flagstones",
+      "required": false
+    },
+    {
+      "id": "firma_compat:blackstone_flagstone_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:blackstone_flagstone_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:blackstone_cobbled_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:blackstone_cobbled_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:blackstone_cobbled_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:blackstone_sett_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:blackstone_sett_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:blackstone_sett_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:netherrack_flagstones",
+      "required": false
+    },
+    {
+      "id": "firma_compat:netherrack_flagstone_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:netherrack_flagstone_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:netherrack_cobbled_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:netherrack_cobbled_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:netherrack_cobbled_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:netherrack_sett_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:netherrack_sett_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:netherrack_sett_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:end_stone_flagstones",
+      "required": false
+    },
+    {
+      "id": "firma_compat:end_stone_flagstone_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:end_stone_flagstone_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:end_stone_cobbled_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:end_stone_cobbled_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:end_stone_cobbled_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:end_stone_sett_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:end_stone_sett_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:end_stone_sett_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:tamped_dirt",
+      "required": false
+    },
+    {
+      "id": "firma_compat:tamped_mud",
+      "required": false
+    },
+    {
+      "id": "firma_compat:overheight_gravel",
+      "required": false
+    },
+    {
+      "id": "firma_compat:gravel_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:gravel_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:gravel_road_slab",
+      "required": false
+    },
+    {
+      "id": "firma_compat:macadam_road",
+      "required": false
+    },
+    {
+      "id": "firma_compat:macadam_road_stairs",
+      "required": false
+    },
+    {
+      "id": "firma_compat:macadam_road_slab",
+      "required": false
+    }
+  ]
+}

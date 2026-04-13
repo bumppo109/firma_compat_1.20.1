@@ -1,0 +1,8 @@
+{
+  "parent": "firma_compat:block/template/firmalife/jarbnet",
+  "textures": {
+    "log": "minecraft:block/dark_oak_log",
+    "planks": "minecraft:block/dark_oak_planks",
+    "sheet": "minecraft:block/stripped_dark_oak_log"
+  }
+}

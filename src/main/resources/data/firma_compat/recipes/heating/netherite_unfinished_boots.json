@@ -1,0 +1,11 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "firma_compat:netherite_unfinished_boots"
+  },
+  "result_fluid": {
+    "amount": 200,
+    "id": "firma_compat:metal/netherite"
+  },
+  "temperature": 1485.0
+}

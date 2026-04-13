@@ -1,0 +1,12 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:red_sandstone"
+  ],
+  "item_output": {
+    "count": 1,
+    "id": "minecraft:red_sandstone_slab"
+  },
+  "mode": "tfc:slab",
+  "result": "minecraft:red_sandstone_slab"
+}

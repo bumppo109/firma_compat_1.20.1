@@ -1,0 +1,12 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:bricks"
+  ],
+  "item_output": {
+    "count": 1,
+    "id": "minecraft:brick_slab"
+  },
+  "mode": "tfc:slab",
+  "result": "minecraft:brick_slab"
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "firma_compat:block/template/barrel/barrel_side_sealed",
+  "textures": {
+    "particle": "minecraft:block/oak_planks",
+    "planks": "minecraft:block/oak_planks",
+    "sheet": "minecraft:block/stripped_oak_log"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "tfc:welding",
+  "bonus": "copy_best",
+  "first_input": {
+    "item": "firma_compat:netherite_unfinished_boots"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:netherite_boots"
+  },
+  "second_input": {
+    "tag": "c:sheets/netherite"
+  },
+  "tier": 4
+}

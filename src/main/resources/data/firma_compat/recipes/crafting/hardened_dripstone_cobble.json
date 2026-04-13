@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "firma_compat:dripstone_loose"
+    },
+    "X": {
+      "item": "tfc:mortar"
+    }
+  },
+  "pattern": [
+    "LXL",
+    "XLX",
+    "LXL"
+  ],
+  "result": {
+    "count": 4,
+    "id": "firma_compat:hardened_dripstone_cobble"
+  }
+}

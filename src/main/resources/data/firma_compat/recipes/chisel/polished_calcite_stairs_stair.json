@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "cinchsmissingblocks"
+    }
+  ],
+  "type": "tfc:chisel",
+  "ingredient": [
+    "cinchsmissingblocks:polished_calcite"
+  ],
+  "mode": "tfc:stair",
+  "result": "cinchsmissingblocks:polished_calcite_stairs"
+}

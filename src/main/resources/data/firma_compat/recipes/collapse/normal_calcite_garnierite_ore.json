@@ -1,0 +1,7 @@
+{
+  "type": "tfc:collapse",
+  "ingredient": [
+    "firma_compat:rich_calcite_garnierite_ore"
+  ],
+  "result": "firma_compat:normal_calcite_garnierite_ore"
+}

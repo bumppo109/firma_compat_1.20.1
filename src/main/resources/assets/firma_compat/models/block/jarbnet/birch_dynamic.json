@@ -1,0 +1,6 @@
+{
+  "base": {
+    "parent": "firma_compat:block/jarbnet/birch"
+  },
+  "loader": "firmalife:jarbnet"
+}

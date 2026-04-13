@@ -1,0 +1,16 @@
+{
+  "forging_temperature": 891.00006,
+  "heat_capacity": 11.428572,
+  "ingredient": [
+    {
+      "item": "firma_compat:netherite_unfinished_helmet"
+    },
+    {
+      "item": "firma_compat:netherite_unfinished_chestplate"
+    },
+    {
+      "item": "firma_compat:netherite_unfinished_leggings"
+    }
+  ],
+  "welding_temperature": 1188.0
+}

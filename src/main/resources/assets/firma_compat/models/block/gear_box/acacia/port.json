@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/gear_box/port",
+  "textures": {
+    "all": "minecraft:block/acacia_planks",
+    "overlay": "firma_compat:block/template/axle_casing_front"
+  }
+}

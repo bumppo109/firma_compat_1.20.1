@@ -1,0 +1,11 @@
+{
+  "values": [
+    "minecraft:copper_door",
+    "minecraft:copper_trapdoor",
+    "minecraft:chain",
+    "minecraft:chest",
+    "minecraft:trapped_chest",
+    "minecraft:chest_minecart",
+    "minecraft:oak_door"
+  ]
+}

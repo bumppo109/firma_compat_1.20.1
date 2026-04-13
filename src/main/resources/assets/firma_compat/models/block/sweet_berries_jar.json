@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/jar",
+  "textures": {
+    "1": "firma_compat:block/sweet_berries_jar"
+  }
+}

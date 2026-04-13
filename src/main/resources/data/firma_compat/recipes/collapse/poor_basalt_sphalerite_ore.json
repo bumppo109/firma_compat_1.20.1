@@ -1,0 +1,7 @@
+{
+  "type": "tfc:collapse",
+  "ingredient": [
+    "firma_compat:normal_basalt_sphalerite_ore"
+  ],
+  "result": "firma_compat:poor_basalt_sphalerite_ore"
+}

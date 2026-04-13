@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "cinchsmissingblocks"
+    }
+  ],
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:cracked_deepslate_tiles"
+  ],
+  "mode": "tfc:stair",
+  "result": "cinchsmissingblocks:cracked_deepslate_tile_stairs"
+}

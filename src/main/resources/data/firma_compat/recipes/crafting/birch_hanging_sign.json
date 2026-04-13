@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "firma_compat:birch_lumber"
+    },
+    "S": {
+      "tag": "c:chains"
+    }
+  },
+  "pattern": [
+    "S S",
+    "LLL",
+    "LLL"
+  ],
+  "result": {
+    "count": 4,
+    "id": "minecraft:birch_hanging_sign"
+  }
+}

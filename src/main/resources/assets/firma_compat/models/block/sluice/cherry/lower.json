@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/sluice/lower",
+  "textures": {
+    "texture": "minecraft:block/stripped_cherry_log"
+  }
+}

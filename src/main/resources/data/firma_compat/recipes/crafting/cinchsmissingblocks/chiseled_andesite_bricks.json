@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "cinchsmissingblocks"
+    }
+  ],
+  "type": "tfc:advanced_shapeless_crafting",
+  "ingredients": [
+    {
+      "item": "cinchsmissingblocks:andesite_bricks"
+    },
+    {
+      "tag": "c:tools/chisel"
+    }
+  ],
+  "primary_ingredient": {
+    "item": "cinchsmissingblocks:andesite_bricks"
+  },
+  "result": {
+    "count": 1,
+    "id": "cinchsmissingblocks:chiseled_andesite_bricks"
+  }
+}

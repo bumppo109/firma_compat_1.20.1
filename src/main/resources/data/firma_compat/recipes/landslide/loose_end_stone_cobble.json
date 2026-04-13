@@ -1,0 +1,7 @@
+{
+  "type": "tfc:landslide",
+  "ingredient": [
+    "firma_compat:loose_end_stone_cobble"
+  ],
+  "result": "firma_compat:loose_end_stone_cobble"
+}

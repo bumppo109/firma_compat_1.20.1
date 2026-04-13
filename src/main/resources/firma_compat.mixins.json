@@ -3,14 +3,13 @@
   "minVersion": "0.8",
   "package": "com.bumppo109.firma_compat.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "firma_compat.refmap.json",
   "mixins": [
-
+    "BlockEntityTypeAccessor"
   ],
-  "client": [
-
-  ],
+  "client": [],
+  "server": [],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "refmap": "firma_compat.refmap.json"
 }

@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "rnr"
+    }
+  ],
+  "type": "rnr:mattock",
+  "ingredient": [
+    "minecraft:farmland"
+  ],
+  "mode": "tfc:smooth",
+  "result": "firma_compat:tamped_dirt"
+}

@@ -1,0 +1,16 @@
+{
+  "values": [
+    "firma_compat:compat_chest",
+    "firma_compat:compat_trapped_chest",
+    "firma_compat:acacia_barrel",
+    "firma_compat:birch_barrel",
+    "firma_compat:cherry_barrel",
+    "firma_compat:dark_oak_barrel",
+    "firma_compat:jungle_barrel",
+    "firma_compat:mangrove_barrel",
+    "firma_compat:oak_barrel",
+    "firma_compat:spruce_barrel",
+    "firma_compat:crimson_barrel",
+    "firma_compat:warped_barrel"
+  ]
+}

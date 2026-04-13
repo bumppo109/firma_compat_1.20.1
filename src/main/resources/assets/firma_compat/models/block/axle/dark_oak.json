@@ -1,0 +1,6 @@
+{
+  "parent": "firma_compat:block/template/axle",
+  "textures": {
+    "wood": "minecraft:block/stripped_dark_oak_log"
+  }
+}

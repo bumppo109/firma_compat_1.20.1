@@ -1,0 +1,55 @@
+{
+  "variants": {
+    "count=1": [
+      {
+        "model": "firma_compat:block/loose/basalt_1"
+      },
+      {
+        "model": "firma_compat:block/loose/basalt_1",
+        "y": 90
+      },
+      {
+        "model": "firma_compat:block/loose/basalt_1",
+        "y": 180
+      },
+      {
+        "model": "firma_compat:block/loose/basalt_1",
+        "y": 270
+      }
+    ],
+    "count=2": [
+      {
+        "model": "firma_compat:block/loose/basalt_2"
+      },
+      {
+        "model": "firma_compat:block/loose/basalt_2",
+        "y": 90
+      },
+      {
+        "model": "firma_compat:block/loose/basalt_2",
+        "y": 180
+      },
+      {
+        "model": "firma_compat:block/loose/basalt_2",
+        "y": 270
+      }
+    ],
+    "count=3": [
+      {
+        "model": "firma_compat:block/loose/basalt_3"
+      },
+      {
+        "model": "firma_compat:block/loose/basalt_3",
+        "y": 90
+      },
+      {
+        "model": "firma_compat:block/loose/basalt_3",
+        "y": 180
+      },
+      {
+        "model": "firma_compat:block/loose/basalt_3",
+        "y": 270
+      }
+    ]
+  }
+}

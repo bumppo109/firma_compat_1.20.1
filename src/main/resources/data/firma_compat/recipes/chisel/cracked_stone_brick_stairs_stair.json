@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "cinchsmissingblocks"
+    }
+  ],
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:cracked_stone_bricks"
+  ],
+  "mode": "tfc:stair",
+  "result": "cinchsmissingblocks:cracked_stone_brick_stairs"
+}

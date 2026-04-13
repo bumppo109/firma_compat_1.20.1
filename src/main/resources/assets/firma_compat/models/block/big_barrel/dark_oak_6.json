@@ -1,0 +1,18 @@
+{
+  "parent": "firma_compat:block/template/firmalife/big_barrel_6",
+  "textures": {
+    "0": "firma_compat:block/big_barrel/dark_oak_3_side",
+    "1": "firma_compat:block/big_barrel/dark_oak_0",
+    "10": "firma_compat:block/big_barrel/dark_oak_1_top",
+    "11": "firma_compat:block/big_barrel/dark_oak_2_top",
+    "12": "minecraft:block/dark_oak_log",
+    "2": "firma_compat:block/big_barrel/dark_oak_0_side",
+    "3": "firma_compat:block/big_barrel/dark_oak_1",
+    "4": "firma_compat:block/big_barrel/dark_oak_1_side",
+    "5": "firma_compat:block/big_barrel/dark_oak_2",
+    "6": "firma_compat:block/big_barrel/dark_oak_2_side",
+    "7": "firma_compat:block/big_barrel/dark_oak_3",
+    "8": "firma_compat:block/big_barrel/dark_oak_3_top",
+    "9": "firma_compat:block/big_barrel/dark_oak_0_top"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:end_stone_bricks"
+  ],
+  "item_output": {
+    "count": 1,
+    "id": "minecraft:end_stone_brick_slab"
+  },
+  "mode": "tfc:slab",
+  "result": "minecraft:end_stone_brick_slab"
+}

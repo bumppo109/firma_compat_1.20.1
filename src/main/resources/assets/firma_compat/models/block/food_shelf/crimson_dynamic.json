@@ -1,0 +1,6 @@
+{
+  "base": {
+    "parent": "firma_compat:block/food_shelf/crimson"
+  },
+  "loader": "firmalife:food_shelf"
+}

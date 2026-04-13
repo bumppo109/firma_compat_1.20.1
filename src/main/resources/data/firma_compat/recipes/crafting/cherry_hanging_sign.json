@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "firma_compat:cherry_lumber"
+    },
+    "S": {
+      "tag": "c:chains"
+    }
+  },
+  "pattern": [
+    "S S",
+    "LLL",
+    "LLL"
+  ],
+  "result": {
+    "count": 4,
+    "id": "minecraft:cherry_hanging_sign"
+  }
+}

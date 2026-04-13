@@ -1,0 +1,7 @@
+{
+  "parent": "firma_compat:block/template/aqueduct/south",
+  "textures": {
+    "particle": "minecraft:block/nether_bricks",
+    "texture": "minecraft:block/nether_bricks"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "firmalife"
+    }
+  ],
+  "type": "tfc:collapse",
+  "ingredient": [
+    "firma_compat:normal_dripstone_chromite_ore"
+  ],
+  "result": "firma_compat:poor_dripstone_chromite_ore"
+}

@@ -1,0 +1,10 @@
+{
+  "type": "tfc:quern",
+  "ingredient": {
+    "tag": "firma_compat:makes_red_dye"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:red_dye"
+  }
+}

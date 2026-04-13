@@ -1,0 +1,6 @@
+{
+  "base": {
+    "parent": "firma_compat:block/wine_shelf/dark_oak"
+  },
+  "loader": "firmalife:wine_shelf"
+}

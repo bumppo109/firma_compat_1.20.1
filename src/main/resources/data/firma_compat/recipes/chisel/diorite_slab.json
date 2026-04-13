@@ -1,0 +1,12 @@
+{
+  "type": "tfc:chisel",
+  "ingredient": [
+    "minecraft:diorite"
+  ],
+  "item_output": {
+    "count": 1,
+    "id": "minecraft:diorite_slab"
+  },
+  "mode": "tfc:slab",
+  "result": "minecraft:diorite_slab"
+}
