@@ -1,0 +1,51 @@
+{
+  "customGroups": [
+    {
+      "name": "tfc_shears",
+      "items": [
+        "tfc:metal/shears/copper",
+        "tfc:metal/shears/bronze",
+        "tfc:metal/shears/bismuth_bronze",
+        "tfc:metal/shears/black_bronze",
+        "tfc:metal/shears/wrought_iron",
+        "tfc:metal/shears/steel",
+        "tfc:metal/shears/black_steel",
+        "tfc:metal/shears/blue_steel",
+        "tfc:metal/shears/red_steel"
+      ]
+    }
+  ],
+  "item": {
+    "tfc_shears": {
+      "kind": "INGREDIENT",
+      "customAnimation": [
+        {
+          "type": "mining",
+          "name": "shears"
+        },
+        {
+          "type": "useItem",
+          "name": "shears"
+        },
+        {
+          "type": "attack",
+          "var_1": "shears"
+        }
+      ],
+      "transforms": {
+        "right": {
+          "scale": 0.6000004,
+          "offX": 0.03,
+          "offY": -0.13999999,
+          "offZ": -0.23000002,
+          "rotX": 90.0,
+          "rotY": 45.0,
+          "rotZ": -90.0,
+          "pivotX": 0.0,
+          "pivotY": 0.0,
+          "pivotZ": 0.0
+        }
+      }
+    }
+  }
+}

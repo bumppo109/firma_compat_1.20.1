@@ -1,0 +1,37 @@
+{
+  "customGroups": [
+    {
+      "name": "tfc_shields",
+      "items": [
+        "tfc:metal/shield/copper",
+        "tfc:metal/shield/bronze",
+        "tfc:metal/shield/bismuth_bronze",
+        "tfc:metal/shield/black_bronze",
+        "tfc:metal/shield/wrought_iron",
+        "tfc:metal/shield/steel",
+        "tfc:metal/shield/black_steel",
+        "tfc:metal/shield/blue_steel",
+        "tfc:metal/shield/red_steel"
+      ]
+    }
+  ],
+  "item": {
+    "tfc_shields": {
+      "kind": "SHIELD",
+      "transforms": {
+        "right": {
+          "scale": 1.2999997,
+          "offX": 0.0,
+          "offY": 0.05999998,
+          "offZ": -0.04,
+          "rotX": 0.0,
+          "rotY": 0.0,
+          "rotZ": 0.0,
+          "pivotX": 0.0,
+          "pivotY": 0.0,
+          "pivotZ": 0.0
+        }
+      }
+    }
+  }
+}

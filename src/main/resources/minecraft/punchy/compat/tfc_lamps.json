@@ -1,0 +1,86 @@
+{
+  "customGroups": [
+    {
+      "name": "tfc_lamps",
+      "items": [
+        "tfc:metal/lamp/copper",
+        "tfc:metal/lamp/bronze",
+        "tfc:metal/lamp/bismuth_bronze",
+        "tfc:metal/lamp/black_bronze",
+        "tfc:metal/lamp/wrought_iron",
+        "tfc:metal/lamp/steel",
+        "tfc:metal/lamp/black_steel",
+        "tfc:metal/lamp/blue_steel",
+        "tfc:metal/lamp/red_steel"
+      ]
+    }
+  ],
+  "item": {
+    "tfc_lamps": {
+      "kind": "LANTERN",
+
+      "physics": [
+        {
+          "name": "FULL_PENDULUM",
+          "limitDeg": 55.0,
+          "force": 0.1,
+          "speed": 1.0,
+          "cameraSens": 0.25,
+          "gravity": 25.0
+        }
+      ],
+      "transforms": {
+        "right": {
+          "scale": 1.01,
+          "offX": 0.0,
+          "offY": -0.49999982,
+          "offZ": 0.06999999,
+          "rotX": -26.0,
+          "rotY": -11.0,
+          "rotZ": 14.0,
+          "pivotX": 1.4901161E-8,
+          "pivotY": -0.05999998,
+          "pivotZ": -0.059999995
+        },
+        "left": {
+          "scale": 1.01,
+          "offX": -0.0,
+          "offY": -0.49999982,
+          "offZ": 0.06999999,
+          "rotX": -26.0,
+          "rotY": 11.0,
+          "rotZ": -14.0,
+          "pivotX": -1.4901161E-8,
+          "pivotY": -0.05999998,
+          "pivotZ": -0.059999995
+        }
+      },
+      "armTransforms": {
+        "right": {
+          "scale": 1.0,
+          "offX": 0.0,
+          "offY": 0.21000002,
+          "offZ": -0.09999999,
+          "rotX": -23.0,
+          "rotY": 0.0,
+          "rotZ": -1.0,
+          "pivotX": 0.0,
+          "pivotY": 0.0,
+          "pivotZ": 0.0
+        },
+        "left": {
+          "scale": 1.0,
+          "offX": 0.0,
+          "offY": 0.21000002,
+          "offZ": -0.09999999,
+          "rotX": -23.0,
+          "rotY": 0.0,
+          "rotZ": -1.0,
+          "pivotX": 0.0,
+          "pivotY": 0.0,
+          "pivotZ": 0.0
+        }
+      }
+    }
+  }
+}

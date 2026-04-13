@@ -1,0 +1,44 @@
+package com.bumppo109.firma_compat.everycompat;
+
+import net.mehvahdjukaar.every_compat.api.EveryCompatAPI;
+import net.minecraftforge.fml.ModList;
+
+public class EveryCompatHandler {
+
+    private EveryCompatHandler() {} // no instances
+
+    public static void registerModules() {
+        if(ModList.get().isLoaded("everycomp")){
+            CompatWoodGoodModule woodModule = new CompatWoodGoodModule();
+            EveryCompatAPI.registerModule(woodModule);
+        }
+        /*
+        if(ModList.get().isLoaded("stonezone")){
+            CompatStoneZoneModule stoneModule = new CompatStoneZoneModule();
+            EveryCompatAPI.registerModule(stoneModule);
+        }
+        if(ModList.get().isLoaded("firmalife")){
+            if(ModList.get().isLoaded("stonezone")){
+                FLStoneZoneModule flStoneModule = new FLStoneZoneModule();
+                EveryCompatAPI.registerModule(flStoneModule);
+            }
+            if(ModList.get().isLoaded("everycomp")){
+                FLWoodGoodModule flWoodModule = new FLWoodGoodModule();
+                EveryCompatAPI.registerModule(flWoodModule);
+            }
+        }
+        if(ModList.get().isLoaded("rnr")){
+            if(ModList.get().isLoaded("stonezone")){
+                RNRStoneZoneModule rnrStoneModule = new RNRStoneZoneModule();
+                EveryCompatAPI.registerModule(rnrStoneModule);
+            }
+            if(ModList.get().isLoaded("everycomp")){
+                RNRWoodGoodModule rnrWoodGoodModule = new RNRWoodGoodModule();
+                EveryCompatAPI.registerModule(rnrWoodGoodModule);
+            }
+        }
+
+         */
+    }
+}
+

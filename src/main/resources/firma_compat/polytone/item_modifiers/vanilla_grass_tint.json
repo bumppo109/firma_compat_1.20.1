@@ -1,0 +1,7 @@
+{
+  "targets": [
+    "firma_compat:clay_grass_block",
+    "firma_compat:kaolin_clay_grass_block"
+  ],
+  "colormap": "minecraft:grass_color"
+}

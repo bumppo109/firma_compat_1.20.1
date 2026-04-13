@@ -4,6 +4,7 @@ plugins {
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id("org.spongepowered.mixin") version "0.7.+"
 }
 
 version = mod_version
@@ -144,6 +145,8 @@ dependencies {
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
     // compile against the JEI API but do not include it at runtime
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
@@ -161,8 +164,20 @@ dependencies {
     //Every Compat
     implementation fg.deobf("curse.maven:every-compat-628539:7860235")
 
+    //Stone Zone
+    implementation fg.deobf("curse.maven:stone-zone-1154622:7593368")
+
     //Moonlight Lib
     implementation fg.deobf("curse.maven:selene-499980:7664875")
+}
+
+mixin {
+    // This tells MixinGradle to generate the refmap for your main sourceset
+    add sourceSets.main, "${mod_id}.refmap.json"   // replace ${mod_id} with your actual modid, e.g. "mymod"
+
+    // Register your mixin config file(s)
+    config "${mod_id}.mixins.json"                 // common mixins
+    // config "${mod_id}.client.mixins.json"       // uncomment if you have client-only mixins
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

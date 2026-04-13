@@ -1,0 +1,99 @@
+package com.bumppo109.firma_compat.item;
+
+import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.block.CompatMetal;
+import com.bumppo109.firma_compat.block.CompatWood;
+import com.bumppo109.firma_compat.block.ModBlocks;
+import com.bumppo109.firma_compat.fluid.ModFluids;
+import net.dries007.tfc.common.TFCTiers;
+import net.dries007.tfc.common.entities.TFCEntities;
+import net.dries007.tfc.common.items.TFCItems;
+import net.dries007.tfc.common.items.TFCMinecartItem;
+import net.dries007.tfc.mixin.accessor.ItemAccessor;
+import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.Metal;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.*;
+import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Supplier;
+
+public class ModItems {
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, FirmaCompat.MODID);
+
+    // Wood
+    public static final Map<CompatWood, RegistryObject<Item>> LUMBER = Helpers.mapOfKeys(CompatWood.class, wood -> register(wood.name() + "_lumber"));
+
+    public static final Map<CompatWood, RegistryObject<Item>> SUPPORTS = Helpers.mapOfKeys(CompatWood.class, wood ->
+            register(wood.name() + "_support", () -> new StandingAndWallBlockItem(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.VERTICAL_SUPPORT).get(), ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.HORIZONTAL_SUPPORT).get(), new Item.Properties(), Direction.DOWN))
+    );
+
+    public static final RegistryObject<Item> BAMBOO_LUMBER = register("bamboo_lumber");
+
+    public static final RegistryObject<Item> COMPAT_CHEST_MINECART = register("compat_chest_minecart",
+            (() -> new TFCMinecartItem(new Item.Properties(), TFCEntities.CHEST_MINECART,
+                    () -> ModBlocks.COMPAT_CHEST.get().asItem())));
+
+
+    /*TODO - hanging signs
+    public static final Map<CompatWood, Map<Metal.Default, RegistryObject<Item>>> HANGING_SIGNS = Helpers.mapOfKeys(CompatWood.class, wood ->
+            Helpers.mapOfKeys(Metal.Default.class, Metal.Default::hasUtilities, metal ->
+                    register("wood/hanging_sign/" + metal.name() + "/" + wood.name(), () -> new HangingSignItem(ModBlocks.CEILING_HANGING_SIGNS.get(wood).get(metal).get(), ModBlocks.WALL_HANGING_SIGNS.get(wood).get(metal).get(), new Item.Properties()))
+            )
+    );
+     */
+
+    //Rock
+    public static final RegistryObject<Item> STONE_BRICK = register("stone_brick");
+    public static final RegistryObject<Item> DEEPSLATE_BRICK = register("deepslate_brick");
+    public static final RegistryObject<Item> DEEPSLATE_TILE = register("deepslate_tile");
+    public static final RegistryObject<Item> POLISHED_BLACKSTONE_BRICK = register("polished_blackstone_brick");
+    public static final RegistryObject<Item> END_STONE_BRICK = register("end_stone_brick");
+    public static final RegistryObject<Item> TUFF_BRICK = register("tuff_brick");
+    public static final RegistryObject<Item> ANDESITE_BRICK = register("andesite_brick");
+    public static final RegistryObject<Item> DIORITE_BRICK = register("diorite_brick");
+    public static final RegistryObject<Item> GRANITE_BRICK = register("granite_brick");
+    public static final RegistryObject<Item> CALCITE_BRICK = register("calcite_brick");
+    public static final RegistryObject<Item> DRIPSTONE_BRICK = register("dripstone_brick");
+    public static final RegistryObject<Item> BASALT_BRICK = register("basalt_brick");
+
+    public static final RegistryObject<Item> QUARTZ_BRICK = register("quartz_brick");
+    public static final RegistryObject<Item> PRISMARINE_BRICK = register("prismarine_brick");
+
+    //Misc
+    public static final RegistryObject<Item> MUD_BRICK = register("mud_brick");
+    public static final RegistryObject<Item> UNFIRED_POT = register("unfired_pot");
+
+    //Metals
+    public static final RegistryObject<Item> NETHERITE_SCRAP_INGOT = register("netherite_scrap_ingot");
+
+    public static final Map<CompatMetal, Map<CompatMetal.ItemType, RegistryObject<Item>>> METAL_ITEMS = Helpers.mapOfKeys(CompatMetal.class, metal ->
+            Helpers.mapOfKeys(CompatMetal.ItemType.class, type ->
+                    register("metal/" + type.name() + "/" + metal.name(), () -> type.create(metal))
+            )
+    );
+
+    public static final Map<CompatMetal, RegistryObject<BucketItem>> METAL_FLUID_BUCKETS = Helpers.mapOfKeys(CompatMetal.class, metal ->
+            register("bucket/metal/" + metal.name(), () -> new BucketItem(ModFluids.METALS.get(metal).source(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)))
+    );
+
+    private static RegistryObject<Item> register(String name)
+    {
+        return register(name, () -> new Item(new Item.Properties()));
+    }
+
+    private static <T extends Item> RegistryObject<T> register(String name, Supplier<T> item)
+    {
+        return ITEMS.register(name.toLowerCase(Locale.ROOT), item);
+    }
+
+}

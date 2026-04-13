@@ -1,5 +1,10 @@
 package com.bumppo109.firma_compat;
 
+import com.bumppo109.firma_compat.block.ModBlocks;
+import com.bumppo109.firma_compat.everycompat.EveryCompatHandler;
+import com.bumppo109.firma_compat.fluid.ModFluids;
+import com.bumppo109.firma_compat.item.ModCreativeModeTab;
+import com.bumppo109.firma_compat.item.ModItems;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -7,6 +12,7 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -21,25 +27,27 @@ public class FirmaCompat
     // Define mod id in a common place for everything to reference
     public static final String MODID = "firma_compat";
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public FirmaCompat(FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
 
-        // Register the commonSetup method for modloading
+        ModCreativeModeTab.register(modEventBus);
+
+        ModBlocks.BLOCKS.register(modEventBus);
+        ModItems.ITEMS.register(modEventBus);
+        ModFluids.FLUIDS.register(modEventBus);
+
         modEventBus.addListener(this::commonSetup);
 
+        if(ModList.get().isLoaded("everycomp") || ModList.get().isLoaded("stonezone")){
+            EveryCompatHandler.registerModules();
+        }
 
-
-        // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
-        // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
 
-        // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
-        context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
