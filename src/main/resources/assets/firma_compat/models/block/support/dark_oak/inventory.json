@@ -1,6 +1,0 @@
-{
-  "parent": "firma_compat:block/template/support/inventory",
-  "textures": {
-    "texture": "minecraft:block/stripped_dark_oak_log"
-  }
-}

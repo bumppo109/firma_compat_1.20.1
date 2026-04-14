@@ -1,6 +1,0 @@
-{
-  "parent": "firma_compat:block/template/loose/loose_metamorphic_2",
-  "textures": {
-    "texture": "minecraft:block/calcite"
-  }
-}

@@ -1,6 +1,0 @@
-{
-  "base": {
-    "parent": "firma_compat:block/hanger/acacia"
-  },
-  "loader": "firmalife:hanger"
-}

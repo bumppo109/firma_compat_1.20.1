@@ -1,6 +1,0 @@
-{
-  "base": {
-    "parent": "firma_compat:block/hanger/jungle"
-  },
-  "loader": "firmalife:hanger"
-}

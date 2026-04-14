@@ -1,6 +1,0 @@
-{
-  "base": {
-    "parent": "firma_compat:block/jarbnet/oak"
-  },
-  "loader": "firmalife:jarbnet"
-}

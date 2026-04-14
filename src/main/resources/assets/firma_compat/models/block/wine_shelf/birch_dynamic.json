@@ -1,6 +1,0 @@
-{
-  "base": {
-    "parent": "firma_compat:block/wine_shelf/birch"
-  },
-  "loader": "firmalife:wine_shelf"
-}

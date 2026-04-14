@@ -1,8 +1,0 @@
-{
-  "parent": "firma_compat:block/template/firmalife/jarbnet",
-  "textures": {
-    "log": "minecraft:block/cherry_log",
-    "planks": "minecraft:block/cherry_planks",
-    "sheet": "minecraft:block/stripped_cherry_log"
-  }
-}

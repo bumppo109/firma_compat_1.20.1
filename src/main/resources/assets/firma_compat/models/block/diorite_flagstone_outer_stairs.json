@@ -1,8 +1,0 @@
-{
-  "parent": "firma_compat:block/template/rnr/path_outer_stairs",
-  "textures": {
-    "bottom": "firma_compat:block/diorite_flagstones",
-    "side": "firma_compat:block/diorite_flagstones",
-    "top": "firma_compat:block/diorite_flagstones"
-  }
-}

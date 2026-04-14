@@ -1,6 +1,0 @@
-{
-  "parent": "firma_compat:block/template/loose/loose_sedimentary_1",
-  "textures": {
-    "texture": "minecraft:block/dripstone_block"
-  }
-}

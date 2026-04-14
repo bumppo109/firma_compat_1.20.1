@@ -1,7 +1,0 @@
-{
-  "parent": "firma_compat:block/template/support/connection",
-  "textures": {
-    "particle": "minecraft:block/stripped_crimson_stem",
-    "texture": "minecraft:block/stripped_crimson_stem"
-  }
-}

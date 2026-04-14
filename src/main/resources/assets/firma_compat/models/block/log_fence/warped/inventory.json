@@ -1,7 +1,0 @@
-{
-  "parent": "firma_compat:block/template/log_fence_inventory",
-  "textures": {
-    "log": "minecraft:block/warped_stem",
-    "planks": "minecraft:block/warped_planks"
-  }
-}

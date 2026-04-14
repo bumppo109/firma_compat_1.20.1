@@ -1,6 +1,0 @@
-{
-  "base": {
-    "parent": "firma_compat:block/food_shelf/oak"
-  },
-  "loader": "firmalife:food_shelf"
-}

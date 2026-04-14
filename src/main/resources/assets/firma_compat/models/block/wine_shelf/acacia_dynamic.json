@@ -1,6 +1,0 @@
-{
-  "base": {
-    "parent": "firma_compat:block/wine_shelf/acacia"
-  },
-  "loader": "firmalife:wine_shelf"
-}

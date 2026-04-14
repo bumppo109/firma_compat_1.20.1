@@ -1,7 +1,0 @@
-{
-  "parent": "firma_compat:block/template/twig",
-  "textures": {
-    "side": "minecraft:block/mangrove_log",
-    "top": "minecraft:block/mangrove_log_top"
-  }
-}

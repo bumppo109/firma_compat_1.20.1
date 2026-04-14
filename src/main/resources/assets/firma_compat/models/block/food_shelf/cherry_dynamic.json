@@ -1,6 +1,0 @@
-{
-  "base": {
-    "parent": "firma_compat:block/food_shelf/cherry"
-  },
-  "loader": "firmalife:food_shelf"
-}

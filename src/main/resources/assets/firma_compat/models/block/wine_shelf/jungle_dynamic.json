@@ -1,6 +1,0 @@
-{
-  "base": {
-    "parent": "firma_compat:block/wine_shelf/jungle"
-  },
-  "loader": "firmalife:wine_shelf"
-}

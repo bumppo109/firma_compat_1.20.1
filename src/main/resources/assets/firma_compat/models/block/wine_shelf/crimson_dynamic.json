@@ -1,6 +1,0 @@
-{
-  "base": {
-    "parent": "firma_compat:block/wine_shelf/crimson"
-  },
-  "loader": "firmalife:wine_shelf"
-}

@@ -1,7 +1,0 @@
-{
-  "parent": "firma_compat:block/template/log_fence_inventory",
-  "textures": {
-    "log": "minecraft:block/mangrove_log",
-    "planks": "minecraft:block/mangrove_planks"
-  }
-}

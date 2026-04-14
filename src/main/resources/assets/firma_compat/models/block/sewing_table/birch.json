@@ -1,7 +1,0 @@
-{
-  "parent": "firma_compat:block/template/sewing_table",
-  "textures": {
-    "0": "minecraft:block/birch_log",
-    "1": "minecraft:block/birch_planks"
-  }
-}

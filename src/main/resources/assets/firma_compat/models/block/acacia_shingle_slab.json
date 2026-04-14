@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "firma_compat:block/acacia_shingles",
-    "side": "firma_compat:block/acacia_shingles",
-    "top": "firma_compat:block/acacia_shingles"
-  }
-}

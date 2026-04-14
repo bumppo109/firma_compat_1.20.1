@@ -1,7 +1,0 @@
-{
-  "parent": "firma_compat:block/template/gear_box/face",
-  "textures": {
-    "all": "minecraft:block/mangrove_planks",
-    "overlay": "firma_compat:block/template/axle_casing_round"
-  }
-}

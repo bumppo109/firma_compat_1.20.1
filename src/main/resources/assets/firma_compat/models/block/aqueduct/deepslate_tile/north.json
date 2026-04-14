@@ -1,7 +1,0 @@
-{
-  "parent": "firma_compat:block/template/aqueduct/north",
-  "textures": {
-    "particle": "minecraft:block/deepslate_tiles",
-    "texture": "minecraft:block/deepslate_tiles"
-  }
-}

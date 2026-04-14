@@ -1,8 +1,0 @@
-{
-  "parent": "firma_compat:block/template/rnr/path_inner_stairs",
-  "textures": {
-    "bottom": "minecraft:block/gravel",
-    "side": "minecraft:block/gravel",
-    "top": "minecraft:block/gravel"
-  }
-}

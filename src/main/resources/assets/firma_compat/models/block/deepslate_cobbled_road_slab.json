@@ -1,7 +1,0 @@
-{
-  "parent": "firma_compat:block/template/rnr/path_slab",
-  "textures": {
-    "gravel": "minecraft:block/gravel",
-    "top": "firma_compat:block/loose_deepslate_cobble"
-  }
-}

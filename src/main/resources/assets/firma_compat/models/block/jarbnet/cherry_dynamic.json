@@ -1,6 +1,0 @@
-{
-  "base": {
-    "parent": "firma_compat:block/jarbnet/cherry"
-  },
-  "loader": "firmalife:jarbnet"
-}

@@ -1,5 +1,7 @@
 package com.bumppo109.firma_compat.block;
 
+import net.dries007.tfc.common.blocks.wood.Wood;
+import net.dries007.tfc.world.feature.tree.TFCTreeGrower;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -13,7 +15,9 @@ public interface ModRegistryWood extends StringRepresentable {
 
     MapColor barkColor();
 
-    Supplier<Integer> ticksToGrow();
+    TFCTreeGrower tree();
+
+    int daysToGrow();
 
     int autumnIndex();
 

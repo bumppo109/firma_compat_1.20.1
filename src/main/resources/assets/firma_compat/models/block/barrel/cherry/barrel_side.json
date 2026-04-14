@@ -1,8 +1,0 @@
-{
-  "parent": "firma_compat:block/template/barrel/barrel_side",
-  "textures": {
-    "particle": "minecraft:block/cherry_planks",
-    "planks": "minecraft:block/cherry_planks",
-    "sheet": "minecraft:block/stripped_cherry_log"
-  }
-}
