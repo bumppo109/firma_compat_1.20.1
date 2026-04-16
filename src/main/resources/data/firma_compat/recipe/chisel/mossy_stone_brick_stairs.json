@@ -1,8 +1,0 @@
-{
-  "type": "tfc:chisel",
-  "ingredient": [
-    "minecraft:mossy_stone_bricks"
-  ],
-  "mode": "tfc:stair",
-  "result": "minecraft:mossy_stone_brick_stairs"
-}

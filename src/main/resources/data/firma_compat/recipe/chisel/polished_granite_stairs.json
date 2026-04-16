@@ -1,8 +1,0 @@
-{
-  "type": "tfc:chisel",
-  "ingredient": [
-    "minecraft:polished_granite"
-  ],
-  "mode": "tfc:stair",
-  "result": "minecraft:polished_granite_stairs"
-}

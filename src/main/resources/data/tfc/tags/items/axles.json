@@ -9,6 +9,16 @@
     "firma_compat:oak_axle",
     "firma_compat:spruce_axle",
     "firma_compat:crimson_axle",
-    "firma_compat:warped_axle"
+    "firma_compat:warped_axle",
+    "firma_compat:acacia_bladed_axle",
+    "firma_compat:birch_bladed_axle",
+    "firma_compat:cherry_bladed_axle",
+    "firma_compat:dark_oak_bladed_axle",
+    "firma_compat:jungle_bladed_axle",
+    "firma_compat:mangrove_bladed_axle",
+    "firma_compat:oak_bladed_axle",
+    "firma_compat:spruce_bladed_axle",
+    "firma_compat:crimson_bladed_axle",
+    "firma_compat:warped_bladed_axle"
   ]
 }

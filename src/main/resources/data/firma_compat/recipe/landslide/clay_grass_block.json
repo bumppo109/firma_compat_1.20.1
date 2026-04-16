@@ -1,7 +1,0 @@
-{
-  "type": "tfc:landslide",
-  "ingredient": [
-    "firma_compat:clay_grass_block"
-  ],
-  "result": "firma_compat:clay_dirt"
-}

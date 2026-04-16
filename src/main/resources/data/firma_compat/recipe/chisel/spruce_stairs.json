@@ -1,8 +1,0 @@
-{
-  "type": "tfc:chisel",
-  "ingredient": [
-    "minecraft:spruce_planks"
-  ],
-  "mode": "tfc:stair",
-  "result": "minecraft:spruce_stairs"
-}

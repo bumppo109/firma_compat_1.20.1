@@ -1,8 +1,0 @@
-{
-  "type": "tfc:chisel",
-  "ingredient": [
-    "minecraft:warped_planks"
-  ],
-  "mode": "tfc:stair",
-  "result": "minecraft:warped_stairs"
-}

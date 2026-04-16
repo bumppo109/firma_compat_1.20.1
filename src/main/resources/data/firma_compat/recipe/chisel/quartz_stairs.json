@@ -1,8 +1,0 @@
-{
-  "type": "tfc:chisel",
-  "ingredient": [
-    "minecraft:quartz_block"
-  ],
-  "mode": "tfc:stair",
-  "result": "minecraft:quartz_stairs"
-}

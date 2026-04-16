@@ -1,8 +1,0 @@
-{
-  "type": "tfc:chisel",
-  "ingredient": [
-    "minecraft:deepslate_tiles"
-  ],
-  "mode": "tfc:stair",
-  "result": "minecraft:deepslate_tile_stairs"
-}

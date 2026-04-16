@@ -1,7 +1,0 @@
-{
-  "type": "tfc:collapse",
-  "ingredient": [
-    "firma_compat:rich_netherrack_cassiterite_ore"
-  ],
-  "result": "firma_compat:normal_netherrack_cassiterite_ore"
-}

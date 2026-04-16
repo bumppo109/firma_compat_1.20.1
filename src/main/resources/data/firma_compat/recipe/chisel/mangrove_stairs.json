@@ -1,8 +1,0 @@
-{
-  "type": "tfc:chisel",
-  "ingredient": [
-    "minecraft:mangrove_planks"
-  ],
-  "mode": "tfc:stair",
-  "result": "minecraft:mangrove_stairs"
-}

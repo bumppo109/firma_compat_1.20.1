@@ -1,7 +1,0 @@
-{
-  "type": "tfc:collapse",
-  "ingredient": [
-    "firma_compat:normal_basalt_garnierite_ore"
-  ],
-  "result": "firma_compat:poor_basalt_garnierite_ore"
-}

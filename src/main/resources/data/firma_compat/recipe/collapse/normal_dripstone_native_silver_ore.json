@@ -1,7 +1,0 @@
-{
-  "type": "tfc:collapse",
-  "ingredient": [
-    "firma_compat:rich_dripstone_native_silver_ore"
-  ],
-  "result": "firma_compat:normal_dripstone_native_silver_ore"
-}

@@ -1,8 +1,0 @@
-{
-  "type": "tfc:chisel",
-  "ingredient": [
-    "minecraft:cherry_planks"
-  ],
-  "mode": "tfc:stair",
-  "result": "minecraft:cherry_stairs"
-}

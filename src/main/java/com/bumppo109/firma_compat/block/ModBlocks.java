@@ -121,11 +121,20 @@ public class ModBlocks {
 
     // Metals
 
+    public static final Map<CompatMetal, Map<CompatMetal.BlockType, RegistryObject<Block>>> METALS = Helpers.mapOfKeys(CompatMetal.class, metal ->
+            Helpers.mapOfKeys(CompatMetal.BlockType.class, type -> type.has(metal), type ->
+                    register(("metal/" + type.name() + "/" + metal.name()), type.create(metal), type.createBlockItem(new Item.Properties()))
+            )
+    );
+
+    /*
     public static final Map<CompatMetal, Map<Metal.BlockType, RegistryObject<Block>>> METALS = Helpers.mapOfKeys(CompatMetal.class, metal ->
             Helpers.mapOfKeys(Metal.BlockType.class, type -> type.has(Metal.Default.BISMUTH), type ->
                     register(type.createName(metal), type.create(metal), type.createBlockItem(new Item.Properties()))
             )
     );
+
+     */
 
     public static final Map<CompatMetal, RegistryObject<LiquidBlock>> METAL_FLUIDS = Helpers.mapOfKeys(CompatMetal.class, metal ->
             registerNoItem("fluid/metal/" + metal.name(), () -> new LiquidBlock(ModFluids.METALS.get(metal).source(), BlockBehaviour.Properties.copy(Blocks.LAVA).noLootTable()))

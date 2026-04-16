@@ -1,7 +1,0 @@
-{
-  "type": "tfc:collapse",
-  "ingredient": [
-    "firma_compat:normal_granite_sphalerite_ore"
-  ],
-  "result": "firma_compat:poor_granite_sphalerite_ore"
-}

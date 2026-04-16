@@ -1,7 +1,0 @@
-{
-  "type": "tfc:landslide",
-  "ingredient": [
-    "minecraft:podzol"
-  ],
-  "result": "minecraft:dirt"
-}

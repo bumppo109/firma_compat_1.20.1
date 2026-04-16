@@ -1,7 +1,0 @@
-{
-  "type": "tfc:landslide",
-  "ingredient": [
-    "minecraft:grass_block"
-  ],
-  "result": "minecraft:dirt"
-}

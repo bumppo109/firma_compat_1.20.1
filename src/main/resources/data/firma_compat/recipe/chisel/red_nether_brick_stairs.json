@@ -1,8 +1,0 @@
-{
-  "type": "tfc:chisel",
-  "ingredient": [
-    "minecraft:red_nether_bricks"
-  ],
-  "mode": "tfc:stair",
-  "result": "minecraft:red_nether_brick_stairs"
-}

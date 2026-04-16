@@ -10,13 +10,7 @@ import net.dries007.tfc.common.blocks.rock.MossGrowingSlabBlock;
 import net.dries007.tfc.common.blocks.rock.MossSpreadingSlabBlock;
 import net.dries007.tfc.common.blocks.rock.RockDisplayCategory;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ButtonBlock;
-import net.minecraft.world.level.block.PressurePlateBlock;
-import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.StairBlock;
-import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -240,5 +234,22 @@ public enum CompatRock implements ModRegistryRock
         }
 
          */
+    }
+
+    public Supplier<Block> rawBlock() {
+        return switch (this) {
+            case ANDESITE -> () -> Blocks.ANDESITE;
+            case DEEPSLATE -> () -> Blocks.DEEPSLATE;
+            case DIORITE -> () -> Blocks.DIORITE;
+            case CALCITE -> () -> Blocks.CALCITE;
+            case END_STONE -> () -> Blocks.END_STONE;
+            case STONE -> () -> Blocks.STONE;
+            case BLACKSTONE -> () -> Blocks.BLACKSTONE;
+            case NETHERRACK -> () -> Blocks.NETHERRACK;
+            case GRANITE -> () -> Blocks.GRANITE;
+            case BASALT -> () -> Blocks.BASALT;
+            case TUFF -> () -> Blocks.TUFF;
+            case DRIPSTONE -> () -> Blocks.DRIPSTONE_BLOCK;
+        };
     }
 }

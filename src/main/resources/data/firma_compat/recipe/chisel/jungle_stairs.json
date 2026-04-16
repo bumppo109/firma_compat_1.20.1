@@ -1,8 +1,0 @@
-{
-  "type": "tfc:chisel",
-  "ingredient": [
-    "minecraft:jungle_planks"
-  ],
-  "mode": "tfc:stair",
-  "result": "minecraft:jungle_stairs"
-}

@@ -1,7 +1,0 @@
-{
-  "type": "tfc:collapse",
-  "ingredient": [
-    "firma_compat:rich_diorite_native_copper_ore"
-  ],
-  "result": "firma_compat:normal_diorite_native_copper_ore"
-}

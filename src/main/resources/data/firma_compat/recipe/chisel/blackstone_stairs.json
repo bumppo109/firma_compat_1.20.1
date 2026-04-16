@@ -1,8 +1,0 @@
-{
-  "type": "tfc:chisel",
-  "ingredient": [
-    "minecraft:blackstone"
-  ],
-  "mode": "tfc:stair",
-  "result": "minecraft:blackstone_stairs"
-}

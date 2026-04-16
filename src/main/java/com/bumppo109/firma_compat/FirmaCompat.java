@@ -43,7 +43,7 @@ public class FirmaCompat
         modEventBus.addListener(this::commonSetup);
 
         if(ModList.get().isLoaded("everycomp") || ModList.get().isLoaded("stonezone")){
-            EveryCompatHandler.registerModules();
+            //EveryCompatHandler.registerModules();
         }
 
         MinecraftForge.EVENT_BUS.register(this);

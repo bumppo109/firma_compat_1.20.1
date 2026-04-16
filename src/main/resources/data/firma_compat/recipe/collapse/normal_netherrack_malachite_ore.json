@@ -1,7 +1,0 @@
-{
-  "type": "tfc:collapse",
-  "ingredient": [
-    "firma_compat:rich_netherrack_malachite_ore"
-  ],
-  "result": "firma_compat:normal_netherrack_malachite_ore"
-}
