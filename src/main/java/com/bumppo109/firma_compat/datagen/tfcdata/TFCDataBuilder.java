@@ -1,20 +1,26 @@
 package com.bumppo109.firma_compat.datagen.tfcdata;
 
-import com.bumppo109.firma_compat.datagen.recipes.TFCRecipeBuilder;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Map;
 
 public abstract class TFCDataBuilder implements DataProvider {
+
     private static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .disableHtmlEscaping()
@@ -28,21 +34,16 @@ public abstract class TFCDataBuilder implements DataProvider {
         this.modId = modId;
     }
 
-    // ====================== Fuel Builder (Supports multiple ingredients) ======================
+    // ====================== Fuel Builder ======================
 
     /**
-     * Creates a TFC Fuel definition that can have 1 or more ingredients (OR logic).
-     * Example: All variants of acacia wood/logs.
-     *
+     * Creates a TFC Fuel definition (varargs version - recommended).
      * Files saved to: data/<modid>/tfc/fuels/<name>.json
-     *
-     * @param cache        CachedOutput from run()
-     * @param name         Filename (e.g. "acacia_wood")
-     * @param ingredients  One or more JsonElements (item or tag)
-     * @param duration     Burn duration in ticks
-     * @param temperature  Burn temperature in °C
-     * @param purity       Optional purity (default = 1.0). Pass null or 1.0f to omit.
      */
+    protected void fuel(CachedOutput cache, String name, JsonElement... ingredients) {
+        fuel(cache, name, ingredients, 1000, 650.0f, 0.95f);
+    }
+
     protected void fuel(CachedOutput cache, String name,
                         JsonElement[] ingredients,
                         int duration,
@@ -64,51 +65,19 @@ public abstract class TFCDataBuilder implements DataProvider {
             json.addProperty("purity", purity);
         }
 
-        saveData(cache, "tfc/fuels/" + name, json);
+        saveData(cache, "fuels/" + name, json);
     }
 
-    /**
-     * Convenience overload for a SINGLE ingredient (most common case)
-     */
-    protected void fuel(CachedOutput cache, String name,
-                        JsonElement ingredient,
-                        int duration,
-                        float temperature,
-                        @Nullable Float purity) {
+    // ====================== Support Builder ======================
 
-        fuel(cache, name, new JsonElement[]{ingredient}, duration, temperature, purity);
+    /**
+     * Creates a TFC Support definition (varargs version - recommended).
+     * Files saved to: data/<modid>/tfc/supports/<name>.json
+     */
+    protected void support(CachedOutput cache, String name, JsonElement... ingredients) {
+        support(cache, name, ingredients, 2, 2, 4);
     }
 
-    /**
-     * Convenience overload for SINGLE ingredient without purity
-     */
-    protected void fuel(CachedOutput cache, String name,
-                        JsonElement ingredient,
-                        int duration,
-                        float temperature) {
-
-        fuel(cache, name, ingredient, duration, temperature, null);
-    }
-
-    /**
-     * Creates a TFC Support definition (used for structural support / collapse prevention).
-     * Files are saved to: data/<modid>/tfc/supports/<name>.json
-     *
-     * Example JSON:
-     * {
-     *   "ingredient": [ "tfc:wood/horizontal_support/acacia", ... ],
-     *   "support_up": 2,
-     *   "support_down": 2,
-     *   "support_horizontal": 4
-     * }
-     *
-     * @param cache              CachedOutput from run()
-     * @param name               Name of the support file (e.g. "acacia_supports", "my_mod_supports")
-     * @param ingredients        One or more JsonElements (usually block items or block tags)
-     * @param supportUp          How many blocks upward this support provides
-     * @param supportDown        How many blocks downward this support provides
-     * @param supportHorizontal  How many blocks horizontally (X and Z) this support provides
-     */
     protected void support(CachedOutput cache, String name,
                            JsonElement[] ingredients,
                            int supportUp,
@@ -117,7 +86,6 @@ public abstract class TFCDataBuilder implements DataProvider {
 
         JsonObject json = new JsonObject();
 
-        // TFC expects "ingredient" as a JSON array (even for one entry)
         JsonArray ingredientArray = new JsonArray();
         for (JsonElement ing : ingredients) {
             ingredientArray.add(ing);
@@ -128,28 +96,19 @@ public abstract class TFCDataBuilder implements DataProvider {
         json.addProperty("support_down", supportDown);
         json.addProperty("support_horizontal", supportHorizontal);
 
-        saveData(cache, "tfc/supports/" + name, json);
+        saveData(cache, "supports/" + name, json);
     }
-
-    /**
-     * Convenience overload for a SINGLE ingredient
-     */
-    protected void support(CachedOutput cache, String name,
-                           JsonElement ingredient,
-                           int supportUp,
-                           int supportDown,
-                           int supportHorizontal) {
-
-        support(cache, name, new JsonElement[]{ingredient}, supportUp, supportDown, supportHorizontal);
-    }
-
 
     // ====================== Helpers ======================
 
-    protected JsonObject ingredient(String item) {
+    protected JsonObject ingredient(String itemId) {
         JsonObject obj = new JsonObject();
-        obj.addProperty("item", item);
+        obj.addProperty("item", itemId);
         return obj;
+    }
+
+    protected JsonObject ingredient(ItemLike item) {
+        return ingredient(item.asItem().toString());
     }
 
     protected JsonObject tagIngredient(String tag) {
@@ -158,50 +117,21 @@ public abstract class TFCDataBuilder implements DataProvider {
         return obj;
     }
 
-    protected JsonObject simpleResult(String item, int count) {
-        JsonObject result = new JsonObject();
-        result.addProperty("item", item);
-        if (count > 1) result.addProperty("count", count);
-        return result;
+    protected JsonObject tagIngredient(TagKey<Item> tag) {
+        return tagIngredient(tag.location().toString());
     }
 
-    protected JsonObject copyInputResult(String item, int count) {
-        JsonObject result = new JsonObject();
-        result.addProperty("item", item);
-        if (count > 1) result.addProperty("count", count);
-
-        JsonArray modifiers = new JsonArray();
-        modifiers.add(modifier("tfc:copy_heat"));
-        modifiers.add(modifier("tfc:copy_forging_bonus"));
-        result.add("modifiers", modifiers);
-        return result;
-    }
-
-    protected JsonObject modifier(String type) {
-        JsonObject mod = new JsonObject();
-        mod.addProperty("type", type);
-        return mod;
-    }
-
-    protected JsonObject blockIngredient(String block) {
-
-        JsonObject obj = new JsonObject();
-        obj.addProperty("block", block);   // or use "tag" for tags
-        return obj;
-    }
-
-    // ====================== Save Method ======================
+    // ====================== Save Method (Correct Path) ======================
 
     /**
-     * This is the key fix:
-     * Path = data/<modid>/tfc/<subfolder>/<name>.json
-     * No extra "tfc" folder inside tfc/
+     * Saves JSON under: data/<modid>/tfc/<subfolder>/<name>.json
+     * This prevents the double "tfc/tfc" folder issue.
      */
-    protected void saveData(CachedOutput cache, String path, JsonObject dataJson) {
+    protected void saveData(CachedOutput cache, String subPath, JsonObject dataJson) {
         Path targetPath = output.getOutputFolder(PackOutput.Target.DATA_PACK)
                 .resolve(modId)           // firma_compat
-                .resolve("tfc")           // ← tfc folder
-                .resolve(path + ".json"); // fuels/xxx or supports/xxx
+                .resolve("tfc")           // tfc
+                .resolve(subPath + ".json"); // fuels/xxx.json or supports/xxx.json
 
         String jsonString = GSON.toJson(dataJson);
         byte[] data = jsonString.getBytes(StandardCharsets.UTF_8);
@@ -210,7 +140,7 @@ public abstract class TFCDataBuilder implements DataProvider {
         try {
             cache.writeIfNeeded(targetPath, data, hash);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to save TFC data: " + path, e);
+            throw new RuntimeException("Failed to save TFC data: " + subPath, e);
         }
     }
 

@@ -4,8 +4,6 @@ import com.bumppo109.firma_compat.FirmaCompat;
 import com.bumppo109.firma_compat.fluid.ModFluids;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.google.common.base.Suppliers;
-import net.dries007.tfc.common.TFCTags;
-import net.dries007.tfc.common.blockentities.FarmlandBlockEntity;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.*;
 import net.dries007.tfc.common.blocks.devices.DryingBricksBlock;
@@ -14,38 +12,26 @@ import net.dries007.tfc.common.blocks.rock.RockAnvilBlock;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.dries007.tfc.common.blocks.wood.TFCChestBlock;
 import net.dries007.tfc.common.blocks.wood.TFCTrappedChestBlock;
-import net.dries007.tfc.common.fluids.IFluidLoggable;
 import net.dries007.tfc.common.items.ChestBlockItem;
 import net.dries007.tfc.util.Helpers;
-import net.dries007.tfc.util.Metal;
 import net.dries007.tfc.util.registry.RegistrationHelpers;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.WoodType;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Locale;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.function.ToIntFunction;
 
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
@@ -142,32 +128,45 @@ public class ModBlocks {
 
     // Rock Stuff
 
+    /*
     public static final Map<CompatRock, Map<CompatRock.BlockType, RegistryObject<Block>>> ROCK_BLOCKS = Helpers.mapOfKeys(CompatRock.class, rock ->
             Helpers.mapOfKeys(CompatRock.BlockType.class, type ->
                     register(rock.name() + "_" + (type.name()), () -> type.create(rock))
             )
     );
+     */
+    // ====================== MAIN ROCK BLOCKS ======================
+    public static final Map<CompatRock, Map<CompatRock.BlockType, RegistryObject<Block>>> ROCK_BLOCKS =
+            Helpers.mapOfKeys(CompatRock.class, rock ->
+                    Helpers.mapOfKeys(CompatRock.BlockType.class, type -> {
+                        String name = getRockBlockRegistryName(rock, type);
+
+                        return register(name, () -> type.create(rock));
+                    })
+            );
+
+    // ====================== ROCK DECORATIONS (slab / stairs / wall) ======================
+    public static final Map<CompatRock, Map<CompatRock.BlockType, DecorationBlockRegistryObject>> ROCK_DECORATIONS =
+            Helpers.mapOfKeys(CompatRock.class, rock ->
+                    Helpers.mapOfKeys(CompatRock.BlockType.class, CompatRock.BlockType::hasVariants, type -> {
+                        return new DecorationBlockRegistryObject(
+                                register(getRockDecorationName(rock, type, "slab"),   () -> type.createSlab(rock)),
+                                register(getRockDecorationName(rock, type, "stairs"), () -> type.createStairs(rock)),
+                                register(getRockDecorationName(rock, type, "wall"),   () -> type.createWall(rock))
+                        );
+                    })
+            );
 
     /*
-    public static final Map<CompatRock, Map<CompatRock.BlockType, DecorationBlockRegistryObject>> ROCK_DECORATIONS = Helpers.mapOfKeys(CompatRock.class, rock ->
-            Helpers.mapOfKeys(CompatRock.BlockType.class, CompatRock.BlockType::hasVariants, type -> new DecorationBlockRegistryObject(
-                    register(("rock/" + type.name() + "/" + rock.name()) + "_slab", () -> type.createSlab(rock)),
-                    register(("rock/" + type.name() + "/" + rock.name()) + "_stairs", () -> type.createStairs(rock)),
-                    register(("rock/" + type.name() + "/" + rock.name()) + "_wall", () -> type.createWall(rock))
-            ))
-    );
-
     public static final Map<Rock, RegistryObject<Block>> ROCK_ANVILS = Helpers.mapOfKeys(Rock.class, rock -> rock.category() == RockCategory.IGNEOUS_EXTRUSIVE || rock.category() == RockCategory.IGNEOUS_INTRUSIVE, rock ->
             register("rock/anvil/" + rock.name(), () -> new RockAnvilBlock(ExtendedProperties.of().mapColor(MapColor.STONE).sound(SoundType.STONE).strength(2, 10).requiresCorrectToolForDrops().blockEntity(TFCBlockEntities.ANVIL), TFCBlocks.ROCK_BLOCKS.get(rock).get(Rock.BlockType.RAW)))
     );
      */
 
     //anvil
-    /*
     public static final RegistryObject<Block> PRIMITIVE_ANVIL = register("primitive_anvil",
             () -> new RockAnvilBlock(ExtendedProperties.of().mapColor(MapColor.STONE).sound(SoundType.STONE).strength(2.0F, 10.0F).requiresCorrectToolForDrops().blockEntity(TFCBlockEntities.ANVIL), (Supplier<? extends Block>) Blocks.STONE));
 
-     */
 
     //gravel deposit
     public static final RegistryObject<Block> CASSITERITE_GRAVEL_DEPOSIT = register("cassiterite_gravel_deposit",
@@ -180,9 +179,9 @@ public class ModBlocks {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.GRAVEL)));
 
     //aqueduct
-    public static final Map<CompatBricks, RegistryObject<AqueductBlock>> AQUEDUCTS =
+    public static final Map<Aqueducts, RegistryObject<AqueductBlock>> AQUEDUCTS =
             Helpers.mapOfKeys(
-                    CompatBricks.class,
+                    Aqueducts.class,
                     brick -> register(
                             brick.getSingleName() + "_aqueduct",
                             () -> {
@@ -215,6 +214,28 @@ public class ModBlocks {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.DIRT)));
     public static final RegistryObject<Block> KAOLIN_CLAY_PODZOL = register("kaolin_clay_podzol",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.PODZOL)));
+
+    // Helper methods
+    private static String getRockBlockRegistryName(CompatRock rock, CompatRock.BlockType type) {
+        if (rock == CompatRock.BLACKSTONE && type == CompatRock.BlockType.BRICK) {
+            return "polished_blackstone_bricks";   // special case you requested
+        }
+
+        String base = rock.name().toLowerCase(Locale.ROOT) + "_" + type.name().toLowerCase(Locale.ROOT);
+
+        // Most TFC-style bricks are plural ("_bricks")
+        if (type == CompatRock.BlockType.BRICK) {
+            return base + "s";
+        }
+        return base;
+    }
+
+    private static String getRockDecorationName(CompatRock rock, CompatRock.BlockType type, String suffix) {
+        if (rock == CompatRock.BLACKSTONE && type == CompatRock.BlockType.BRICK) {
+            return "polished_blackstone_bricks_" + suffix;
+        }
+        return rock.name().toLowerCase(Locale.ROOT) + type.name().toLowerCase(Locale.ROOT) + "_" + suffix;
+    }
 
     private static <T extends Block> RegistryObject<T> registerNoItem(String name, Supplier<T> blockSupplier)
     {

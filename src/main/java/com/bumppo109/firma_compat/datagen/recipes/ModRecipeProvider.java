@@ -1,15 +1,15 @@
 package com.bumppo109.firma_compat.datagen.recipes;
 
+import com.bumppo109.firma_compat.block.Aqueducts;
+import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -71,7 +71,61 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                     simpleResult("firma_compat:" + woodName + "_support", 8));
         }
 
+        for (CompatRock rock : CompatRock.VALUES) {
+            Block loose = ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE).get();
+            Block looseCobble = ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE_COBBLE).get();
+            Block hardCobble = rock.hardCobbleBlock().get();
+            Item brickItem = rock.brickItem();
+            Block bricksBlock = rock.bricksBlock().get();
 
+            String looseName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(loose)).toString();
+            String looseCobbleName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(looseCobble)).toString();
+            String hardCobbleName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(hardCobble)).toString();
+            String brickItemName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(brickItem)).toString();
+            String bricksBlockName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(bricksBlock)).toString();
+            String brickSlabName = bricksBlockName + "_slab";
+            String brickStairName = bricksBlockName + "_stairs";
+
+            //brick item
+            damageToolShapeless(cache, null, loose, "tfc:chisels", brickItem, 1);
+            //brick block
+            vanillaShaped(cache, bricksBlockName,
+                    new String[]{"AXA", "XAX", "AXA"},
+                    Map.of('X', ingredient(looseName), 'A', ingredient(brickItemName)),
+                    simpleResult(bricksBlockName, 4),
+                    null);
+            if(rock != CompatRock.STONE && rock != CompatRock.DEEPSLATE && rock != CompatRock.BLACKSTONE && rock != CompatRock.END_STONE){
+                //brick slab block
+                vanillaShaped(cache, brickSlabName,
+                        new String[]{"XXX"},
+                        Map.of('X', ingredient(bricksBlockName)),
+                        simpleResult(brickSlabName, 6),
+                        null);
+                //brick stairs block
+                vanillaShaped(cache, brickStairName,
+                        new String[]{"  X", " XX", "XXX"},
+                        Map.of('X', ingredient(bricksBlockName)),
+                        simpleResult(brickStairName, 4),
+                        null);
+            }
+            //loose cobble
+            vanillaShaped(cache, looseCobbleName,
+                    new String[]{"XX ", "XX "},
+                    Map.of('X', ingredient(looseName)),
+                    simpleResult(looseCobbleName, 1),
+                    null);
+            //hardened cobble
+            vanillaShaped(cache, hardCobbleName,
+                    new String[]{"AXA", "XAX", "AXA"},
+                    Map.of('X', ingredient(looseName), 'A', ingredient("tfc:mortar")),
+                    simpleResult(hardCobbleName, 4),
+                    null);
+        }
+
+        //aqueducts
+        for (Aqueducts block : Aqueducts.VALUES){
+
+        }
         return CompletableFuture.completedFuture(null);
     }
 
@@ -121,6 +175,18 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         }
 
         damageInputsShapeless(cache, recipeName, ingredients, result);
+    }
+
+    protected void brickBlockRecipe(CachedOutput cache, Item brick, Block output) {
+        String brickId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(brick)).toString();
+        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(output.asItem())).toString();
+        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(output.asItem())).getPath();
+
+        vanillaShaped(cache, outputName,
+                new String[]{"AXA", "XAX", "AXA"},
+                Map.of('X', ingredient(brickId), 'A', ingredient("tfc:mortar")),
+                simpleResult(outputId, 4),
+                null);
     }
 
     protected String[] doorPattern = new String[]{"XX ", "XX ", "XX "};

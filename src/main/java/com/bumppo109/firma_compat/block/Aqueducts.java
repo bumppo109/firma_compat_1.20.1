@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.Locale;
 import java.util.function.Supplier;
 
-public enum CompatBricks implements StringRepresentable {
+public enum Aqueducts implements StringRepresentable {
     STONE_BRICKS,
     MOSSY_STONE_BRICKS,
     DEEPSLATE_BRICKS,
@@ -23,12 +23,12 @@ public enum CompatBricks implements StringRepresentable {
     NETHER_BRICKS
     ;
 
-    public static final CompatBricks[] VALUES = values();
+    public static final Aqueducts[] VALUES = values();
 
     private final String serializedName;
 
 
-    CompatBricks()
+    Aqueducts()
     {
         this.serializedName = this.name().toLowerCase(Locale.ROOT);
     }
@@ -64,36 +64,6 @@ public enum CompatBricks implements StringRepresentable {
             case NETHER_BRICKS -> () -> Blocks.NETHER_BRICKS;
             case MOSSY_STONE_BRICKS -> () -> Blocks.MOSSY_STONE_BRICKS;
             default -> () -> Blocks.STONE_BRICKS;
-        };
-    }
-
-    public Item brickItem() {
-        return switch (this) {
-            case DEEPSLATE_BRICKS -> ModItems.DEEPSLATE_BRICK.get();
-            case DEEPSLATE_TILES -> ModItems.DEEPSLATE_TILE.get();
-            case STONE_BRICKS -> ModItems.STONE_BRICK.get();
-            case BRICKS -> Items.BRICK;
-            case POLISHED_BLACKSTONE_BRICKS -> ModItems.POLISHED_BLACKSTONE_BRICK.get();
-            case END_STONE_BRICKS -> ModItems.END_STONE_BRICK.get();
-            case PRISMARINE_BRICKS -> ModItems.PRISMARINE_BRICK.get();
-            case QUARTZ_BRICKS -> ModItems.QUARTZ_BRICK.get();
-            case NETHER_BRICKS -> Items.NETHER_BRICK;
-            default -> null;
-        };
-    }
-
-    public String vanillaTexture() {
-        return switch (this) {
-            case DEEPSLATE_BRICKS -> "deepslate_bricks";
-            case DEEPSLATE_TILES -> "deepslate_tiles";
-            case BRICKS -> "bricks";
-            case POLISHED_BLACKSTONE_BRICKS -> "polished_blackstone_bricks";
-            case END_STONE_BRICKS -> "end_stone_bricks";
-            case PRISMARINE_BRICKS -> "prismarine_bricks";
-            case QUARTZ_BRICKS -> "quartz_bricks";
-            case NETHER_BRICKS -> "nether_bricks";
-            case MOSSY_STONE_BRICKS -> "mossy_stone_bricks";
-            default -> "stone_bricks";
         };
     }
 }

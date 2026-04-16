@@ -2,6 +2,7 @@ package com.bumppo109.firma_compat.item;
 
 import com.bumppo109.firma_compat.FirmaCompat;
 import com.bumppo109.firma_compat.block.CompatMetal;
+import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.fluid.ModFluids;
@@ -53,19 +54,16 @@ public class ModItems {
      */
 
     //Rock
-    public static final RegistryObject<Item> STONE_BRICK = register("stone_brick");
-    public static final RegistryObject<Item> DEEPSLATE_BRICK = register("deepslate_brick");
+    public static final Map<CompatRock, RegistryObject<Item>> BRICK = Helpers.mapOfKeys(
+            CompatRock.class,
+            rock -> {
+                String name = rock == CompatRock.BLACKSTONE
+                        ? "polished_blackstone_brick"
+                        : rock.name().toLowerCase(Locale.ROOT) + "_brick";
+                return register(name);
+            }
+    );
     public static final RegistryObject<Item> DEEPSLATE_TILE = register("deepslate_tile");
-    public static final RegistryObject<Item> POLISHED_BLACKSTONE_BRICK = register("polished_blackstone_brick");
-    public static final RegistryObject<Item> END_STONE_BRICK = register("end_stone_brick");
-    public static final RegistryObject<Item> TUFF_BRICK = register("tuff_brick");
-    public static final RegistryObject<Item> ANDESITE_BRICK = register("andesite_brick");
-    public static final RegistryObject<Item> DIORITE_BRICK = register("diorite_brick");
-    public static final RegistryObject<Item> GRANITE_BRICK = register("granite_brick");
-    public static final RegistryObject<Item> CALCITE_BRICK = register("calcite_brick");
-    public static final RegistryObject<Item> DRIPSTONE_BRICK = register("dripstone_brick");
-    public static final RegistryObject<Item> BASALT_BRICK = register("basalt_brick");
-
     public static final RegistryObject<Item> QUARTZ_BRICK = register("quartz_brick");
     public static final RegistryObject<Item> PRISMARINE_BRICK = register("prismarine_brick");
 

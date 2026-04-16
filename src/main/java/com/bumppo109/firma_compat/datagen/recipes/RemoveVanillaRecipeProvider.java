@@ -17,6 +17,48 @@ public class RemoveVanillaRecipeProvider extends RecipeProvider implements ICond
 
     // Recipes to ALWAYS remove (unconditional)
     private static final List<String> UNCONDITIONAL_REMOVALS = List.of(
+            //Stone
+            "minecraft:stone_bricks",
+            "minecraft:cobblestone",
+            "minecraft:smooth_stone",
+            "minecraft:cracked_stone_bricks",
+            "minecraft:chiseled_stone_bricks",
+
+            "minecraft:granite",
+            "minecraft:polished_granite",
+            "minecraft:andesite",
+            "minecraft:polished_andesite",
+            "minecraft:diorite",
+            "minecraft:polished_diorite",
+
+            "minecraft:deepslate_bricks",
+            "minecraft:cobbled_deepslate",
+            "minecraft:chiseled_deepslate",
+            "minecraft:polished_deepslate",
+            "minecraft:cracked_deepslate",
+            "minecraft:cracked_deepslate_tiles",
+
+            "minecraft:smooth_sandstone",
+            "minecraft:cut_sandstone",
+            "minecraft:chiseled_sandstone",
+            "minecraft:smooth_red_sandstone",
+            "minecraft:cut_red_sandstone",
+            "minecraft:chiseled_red_sandstone",
+
+            "minecraft:smooth_basalt",
+            "minecraft:polished_basalt",
+
+            "minecraft:chiseled_polished_blackstone",
+            "minecraft:polished_blackstone",
+            "minecraft:polished_blackstone_bricks",
+            "minecraft:chiseled_polished_blackstone",
+            "minecraft:cracked_polished_blackstone_bricks",
+
+            "minecraft:end_stone_bricks",
+
+            "minecraft:stone_button",
+            "minecraft:polished_blackstone_button",
+
             //Wood
             "minecraft:acacia_log",
             "minecraft:acacia_stripped_log",

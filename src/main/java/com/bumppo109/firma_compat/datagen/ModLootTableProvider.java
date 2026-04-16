@@ -1,7 +1,7 @@
 package com.bumppo109.firma_compat.datagen;
 
 import com.bumppo109.firma_compat.FirmaCompat;
-import com.bumppo109.firma_compat.block.CompatBricks;
+import com.bumppo109.firma_compat.block.Aqueducts;
 import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
@@ -22,17 +22,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.functions.ApplyExplosionDecay;
 import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
 import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -128,7 +125,7 @@ public class ModLootTableProvider extends LootTableProvider {
             dropSelf(ModBlocks.NATIVE_SILVER_GRAVEL_DEPOSIT.get());
             dropSelf(ModBlocks.NATIVE_GOLD_GRAVEL_DEPOSIT.get());
 
-            for (CompatBricks brick : CompatBricks.VALUES) {
+            for (Aqueducts brick : Aqueducts.VALUES) {
                 var aqueduct = ModBlocks.AQUEDUCTS.get(brick);
                 if (aqueduct != null) dropSelf(aqueduct.get());
             }
@@ -321,7 +318,7 @@ public class ModLootTableProvider extends LootTableProvider {
             known.add(ModBlocks.NATIVE_GOLD_GRAVEL_DEPOSIT.get());
 
             // Aqueducts
-            for (CompatBricks brick : CompatBricks.VALUES) {
+            for (Aqueducts brick : Aqueducts.VALUES) {
                 var aqueduct = ModBlocks.AQUEDUCTS.get(brick);
                 if (aqueduct != null) known.add(aqueduct.get());
             }
