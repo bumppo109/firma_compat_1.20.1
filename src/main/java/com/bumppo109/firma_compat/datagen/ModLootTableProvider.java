@@ -112,8 +112,7 @@ public class ModLootTableProvider extends LootTableProvider {
                         addLooseRockLoot(block);
                     } else if (type == CompatRock.BlockType.HARDENED) {
                         addHardenedRockLoot(block, rock);
-                    } else if (type == CompatRock.BlockType.LOOSE_COBBLE ||
-                            type == CompatRock.BlockType.HARDENED_COBBLE) {
+                    } else {
                         dropSelf(block);
                     }
                 }

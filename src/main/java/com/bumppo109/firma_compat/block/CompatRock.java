@@ -1,34 +1,32 @@
 package com.bumppo109.firma_compat.block;
 
 import java.util.Locale;
-import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import com.bumppo109.firma_compat.FirmaCompat;
 import com.bumppo109.firma_compat.item.ModItems;
+import net.dries007.tfc.common.blocks.rock.AqueductBlock;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
-import net.dries007.tfc.common.blocks.rock.MossGrowingSlabBlock;
-import net.dries007.tfc.common.blocks.rock.MossSpreadingSlabBlock;
 import net.dries007.tfc.common.blocks.rock.RockDisplayCategory;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-
-import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.block.Blocks;
 
-import net.dries007.tfc.common.blocks.TFCBlocks;
+import net.dries007.tfc.common.blocks.TFCBlocks; // only kept if you still need it elsewhere; can be removed if unused now
 
 /**
  * Default rocks that are used for block registration calls. Not extensible.
  */
-public enum CompatRock implements ModRegistryRock
-{
+public enum CompatRock implements ModRegistryRock {
+
     GRANITE(RockDisplayCategory.MAFIC_IGNEOUS_INTRUSIVE, MapColor.DIRT),
     DIORITE(RockDisplayCategory.INTERMEDIATE_IGNEOUS_INTRUSIVE, MapColor.QUARTZ),
     DEEPSLATE(RockDisplayCategory.FELSIC_IGNEOUS_INTRUSIVE, MapColor.DEEPSLATE),
@@ -47,180 +45,113 @@ public enum CompatRock implements ModRegistryRock
     private final String serializedName;
     private final RockDisplayCategory category;
     private final MapColor color;
-    //private final SandBlockType sandType;
 
-    CompatRock(RockDisplayCategory category, MapColor color)
-    {
+    CompatRock(RockDisplayCategory category, MapColor color) {
         this.serializedName = name().toLowerCase(Locale.ROOT);
         this.category = category;
         this.color = color;
-        //this.sandType = sandType;
     }
-
-    /*
-    public SandBlockType getSandType()
-    {
-        return sandType;
-    }
-
-     */
 
     @Override
-    public RockDisplayCategory displayCategory()
-    {
+    public RockDisplayCategory displayCategory() {
         return category;
     }
 
     @Override
-    public MapColor color()
-    {
+    public MapColor color() {
         return color;
     }
 
     @Override
-    public Supplier<? extends Block> getBlock(BlockType type)
-    {
-        return TFCBlocks.ROCK_BLOCKS.get(this).get(type);
+    public Supplier<? extends Block> getBlock(BlockType type) {
+        return ModBlocks.ROCK_BLOCKS.get(this).get(type);
     }
 
     @Override
-    public Supplier<? extends SlabBlock> getSlab(BlockType type)
-    {
-        return TFCBlocks.ROCK_DECORATIONS.get(this).get(type).slab();
+    public Supplier<? extends SlabBlock> getSlab(BlockType type) {
+        return ModBlocks.ROCK_DECORATIONS.get(this).get(type).slab();
     }
 
     @Override
-    public Supplier<? extends StairBlock> getStair(BlockType type)
-    {
-        return TFCBlocks.ROCK_DECORATIONS.get(this).get(type).stair();
+    public Supplier<? extends StairBlock> getStair(BlockType type) {
+        return ModBlocks.ROCK_DECORATIONS.get(this).get(type).stair();
     }
 
     @Override
-    public Supplier<? extends WallBlock> getWall(BlockType type)
-    {
-        return TFCBlocks.ROCK_DECORATIONS.get(this).get(type).wall();
+    public Supplier<? extends WallBlock> getWall(BlockType type) {
+        return ModBlocks.ROCK_DECORATIONS.get(this).get(type).wall();
     }
 
     @Override
-    public String getSerializedName()
-    {
+    public String getSerializedName() {
         return serializedName;
     }
 
-    public enum BlockType implements StringRepresentable
-    {
+    public enum BlockType implements StringRepresentable {
         HARDENED((rock, self) -> new Block(properties(rock)), true),
         LOOSE_COBBLE((rock, self) -> new Block(properties(rock)), false),
         HARDENED_COBBLE((rock, self) -> new Block(properties(rock)), true),
         LOOSE((rock, self) -> new LooseRockBlock(properties(rock).noCollission()), false),
         BRICK((rock, self) -> new Block(properties(rock)), true),
-        AQUEDUCT((rock, self) -> new Block(properties(rock)), true);
-
-        /*
-        HARDENED((rock, self) -> new Block(properties(rock).strength(rock.category().hardness(6.5f), 10).requiresCorrectToolForDrops()), false),
-        LOOSE_COBBLE((rock, self) -> new Block(properties(rock).strength(rock.category().hardness(5.5f), 10).requiresCorrectToolForDrops()), false),
-        HARDENED_COBBLE((rock, self) -> new Block(properties(rock).strength(rock.category().hardness(6.5f), 10).requiresCorrectToolForDrops()), true),
-        LOOSE((rock, self) -> new LooseRockBlock(properties(rock).strength(0.05f, 0.0f).noCollission()), false),
-        BRICK((rock, self) -> new Block(properties(rock).strength(rock.category().hardness(6.5f), 10).requiresCorrectToolForDrops()), true);
-
-         */
-
-        /*
-        RAW((rock, self) -> RockConvertableToAnvilBlock.createForIgneousOnly(properties(rock).strength(rock.category().hardness(6.5f), 10).requiresCorrectToolForDrops(), rock, false), true),
-        HARDENED((rock, self) -> RockConvertableToAnvilBlock.createForIgneousOnly(properties(rock).strength(rock.category().hardness(8f), 10).requiresCorrectToolForDrops(), rock, true), false),
-        SMOOTH((rock, self) -> new Block(properties(rock).strength(rock.category().hardness(6.5f), 10).requiresCorrectToolForDrops()), true),
-        COBBLE((rock, self) -> new MossGrowingBlock(properties(rock).strength(rock.category().hardness(5.5f), 10).requiresCorrectToolForDrops(), rock.getBlock(Objects.requireNonNull(self.mossy()))), true),
-        BRICKS((rock, self) -> new MossGrowingBlock(properties(rock).strength(rock.category().hardness(6.5f), 10).requiresCorrectToolForDrops(), rock.getBlock(Objects.requireNonNull(self.mossy()))), true),
-        GRAVEL((rock, self) -> new Block(Block.Properties.of().mapColor(rock.color()).sound(SoundType.GRAVEL).instrument(NoteBlockInstrument.SNARE).strength(rock.category().hardness(2.0f))), false),
-        SPIKE((rock, self) -> new RockSpikeBlock(properties(rock).strength(rock.category().hardness(4f), 10).requiresCorrectToolForDrops().lightLevel(TFCBlocks.lavaLoggedBlockEmission())), false),
-        CRACKED_BRICKS((rock, self) -> new Block(properties(rock).strength(rock.category().hardness(6.5f), 10).requiresCorrectToolForDrops()), true),
-        MOSSY_BRICKS((rock, self) -> new MossSpreadingBlock(properties(rock).strength(rock.category().hardness(6.5f), 10).requiresCorrectToolForDrops()), true),
-        MOSSY_COBBLE((rock, self) -> new MossSpreadingBlock(properties(rock).strength(rock.category().hardness(6.5f), 10).requiresCorrectToolForDrops()), true),
-        CHISELED((rock, self) -> new Block(properties(rock).strength(rock.category().hardness(8f), 10).requiresCorrectToolForDrops()), false),
-        LOOSE((rock, self) -> new LooseRockBlock(properties(rock).strength(0.05f, 0.0f).noCollission()), false),
-        MOSSY_LOOSE((rock, self) -> new LooseRockBlock(properties(rock).strength(0.05f, 0.0f).noCollission()), false),
-        PRESSURE_PLATE((rock, self) -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.MOBS, properties(rock).requiresCorrectToolForDrops().noCollission().strength(0.5f), BlockSetType.POLISHED_BLACKSTONE), false),
-        BUTTON((rock, self) -> new ButtonBlock(properties(rock).noCollission().strength(0.5f), BlockSetType.POLISHED_BLACKSTONE, 20, false), false),
-        AQUEDUCT((rock, self) -> new AqueductBlock(properties(rock).strength(rock.category().hardness(6.5f), 10).requiresCorrectToolForDrops()), false);
-         */
+        BRICK_AQUEDUCT((rock, self) -> new AqueductBlock(properties(rock)), false);  // assuming AqueductBlock exists and takes Properties
 
         public static final BlockType[] VALUES = BlockType.values();
 
-        /*
-        public static BlockType valueOf(int i)
-        {
-            return i >= 0 && i < VALUES.length ? VALUES[i] : RAW;
-        }
-
-         */
-
-        private static BlockBehaviour.Properties properties(ModRegistryRock rock)
-        {
-            // Start with vanilla-like properties, then apply TFC-style tweaks
-            return BlockBehaviour.Properties.copy(rock.vanillaEquivalent().get())
-                    .mapColor(rock.color())
-                    .sound(SoundType.STONE)
-                    .instrument(NoteBlockInstrument.BASEDRUM)
-                    .strength(rock.category().hardness(6.5f), 10.0f)   // keep your TFC hardness if desired
-                    .requiresCorrectToolForDrops();
-        }
-
-        /*
         private static BlockBehaviour.Properties properties(ModRegistryRock rock)
         {
             return BlockBehaviour.Properties.of().mapColor(rock.color()).sound(SoundType.STONE).instrument(NoteBlockInstrument.BASEDRUM);
         }
 
-         */
-
         private final boolean variants;
         private final BiFunction<ModRegistryRock, BlockType, Block> blockFactory;
         private final String serializedName;
 
-        BlockType(BiFunction<ModRegistryRock, BlockType, Block> blockFactory, boolean variants)
-        {
+        BlockType(BiFunction<ModRegistryRock, BlockType, Block> blockFactory, boolean variants) {
             this.blockFactory = blockFactory;
             this.variants = variants;
             this.serializedName = name().toLowerCase(Locale.ROOT);
         }
 
-        /**
-         * @return if this block type should be given slab, stair and wall variants
-         */
-        public boolean hasVariants()
-        {
+        public boolean hasVariants() {
             return variants;
         }
 
-        public Block create(ModRegistryRock rock)
-        {
+        public Block create(ModRegistryRock rock) {
             return blockFactory.apply(rock, this);
         }
 
         @Override
-        public String getSerializedName()
-        {
+        public String getSerializedName() {
             return serializedName;
         }
 
-        public SlabBlock createSlab(ModRegistryRock rock)
-        {
-            final BlockBehaviour.Properties properties = BlockBehaviour.Properties.of().mapColor(MapColor.STONE).sound(SoundType.STONE).strength(1.5f, 10).requiresCorrectToolForDrops();
+        public SlabBlock createSlab(ModRegistryRock rock) {
+            final BlockBehaviour.Properties properties = BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.STONE)
+                    .sound(SoundType.STONE)
+                    .strength(1.5f, 10)
+                    .requiresCorrectToolForDrops();
 
             return new SlabBlock(properties);
         }
 
-        public StairBlock createStairs(ModRegistryRock rock)
-        {
+        public StairBlock createStairs(ModRegistryRock rock) {
             final Supplier<BlockState> state = () -> rock.getBlock(this).get().defaultBlockState();
-            final BlockBehaviour.Properties properties = BlockBehaviour.Properties.of().mapColor(MapColor.STONE).sound(SoundType.STONE).strength(1.5f, 10).requiresCorrectToolForDrops();
+            final BlockBehaviour.Properties properties = BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.STONE)
+                    .sound(SoundType.STONE)
+                    .strength(1.5f, 10)
+                    .requiresCorrectToolForDrops();
 
             return new StairBlock(state, properties);
         }
 
-        public WallBlock createWall(ModRegistryRock rock)
-        {
-            final BlockBehaviour.Properties properties = BlockBehaviour.Properties.of().mapColor(MapColor.STONE).sound(SoundType.STONE).strength(1.5f, 10).requiresCorrectToolForDrops();
+        public WallBlock createWall(ModRegistryRock rock) {
+            final BlockBehaviour.Properties properties = BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.STONE)
+                    .sound(SoundType.STONE)
+                    .strength(1.5f, 10)
+                    .requiresCorrectToolForDrops();
 
             return new WallBlock(properties);
         }
@@ -228,7 +159,6 @@ public enum CompatRock implements ModRegistryRock
 
     /**
      * Returns the vanilla Minecraft block that this rock type is primarily based on.
-     * Use this to copy properties with BlockBehaviour.Properties.copy(vanillaEquivalent().get())
      */
     public Supplier<Block> vanillaEquivalent() {
         return switch (this) {
@@ -246,7 +176,6 @@ public enum CompatRock implements ModRegistryRock
             case END_STONE   -> () -> Blocks.END_STONE;
         };
     }
-
 
     public Supplier<Block> rawBlock() {
         return switch (this) {
@@ -277,7 +206,7 @@ public enum CompatRock implements ModRegistryRock
     }
 
     public Item brickItem() {
-        if(this == NETHERRACK){
+        if (this == NETHERRACK) {
             return Items.NETHER_BRICK;
         } else {
             return ModItems.BRICK.get(this).get();
@@ -288,7 +217,32 @@ public enum CompatRock implements ModRegistryRock
         return switch (this) {
             case STONE -> () -> Blocks.COBBLESTONE;
             case DEEPSLATE -> () -> Blocks.COBBLED_DEEPSLATE;
-            default -> ModBlocks.ROCK_BLOCKS.get(this).get(BlockType.HARDENED_COBBLE);
+            default -> () -> ModBlocks.ROCK_BLOCKS.get(this).get(BlockType.HARDENED_COBBLE).get();
+        };
+    }
+
+    public ResourceLocation rawTexture() {
+        return switch (this) {
+            case BASALT -> ResourceLocation.withDefaultNamespace("block/basalt_side");
+            case DRIPSTONE -> ResourceLocation.withDefaultNamespace("block/dripstone_block");
+            default -> ResourceLocation.withDefaultNamespace("block/" + this.serializedName);
+        };
+    }
+    public ResourceLocation bricksTexture() {
+        return switch (this) {
+            case STONE -> ResourceLocation.withDefaultNamespace("block/stone_bricks");
+            case DEEPSLATE -> ResourceLocation.withDefaultNamespace("block/deepslate_bricks");
+            case END_STONE -> ResourceLocation.withDefaultNamespace("block/end_stone_bricks");
+            case BLACKSTONE -> ResourceLocation.withDefaultNamespace("block/polished_blackstone_bricks");
+            case NETHERRACK -> ResourceLocation.withDefaultNamespace("block/nether_bricks");
+            default -> ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + this.serializedName + "_bricks");
+        };
+    }
+    public ResourceLocation cobbleTexture() {
+        return switch (this) {
+            case STONE -> ResourceLocation.withDefaultNamespace("block/cobblestone");
+            case DEEPSLATE -> ResourceLocation.withDefaultNamespace("block/cobbled_deepslate");
+            default -> ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/loose_" + this.serializedName + "_cobble");
         };
     }
 }

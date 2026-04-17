@@ -1,6 +1,7 @@
 package com.bumppo109.firma_compat.datagen;
 
 import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import net.dries007.tfc.common.TFCTags;
@@ -32,5 +33,12 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
                     .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get());
         }
 
+        for(CompatRock rock : CompatRock.VALUES) {
+            for (CompatRock.BlockType blockType : CompatRock.BlockType.values()) {
+                tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                        .add(ModBlocks.ROCK_BLOCKS.get(rock).get(blockType).get());
+            }
+
+        }
     }
 }

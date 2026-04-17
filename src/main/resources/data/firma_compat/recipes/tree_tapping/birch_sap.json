@@ -1,0 +1,15 @@
+{
+  "type": "afc:tree_tapping",
+  "input_block": [
+    "minecraft:birch_log",
+    "minecraft:birch_wood"
+  ],
+  "result_fluid": {
+    "id": "afc:birch_sap",
+	"amount": 5
+  },
+  "minimum_temperature": 2,
+  "maximum_temperature": 30,
+  "spring_only": true,
+  "requires_natural_log": false
+}

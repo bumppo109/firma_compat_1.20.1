@@ -6,22 +6,15 @@ import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.fluid.ModFluids;
-import net.dries007.tfc.common.TFCTiers;
 import net.dries007.tfc.common.entities.TFCEntities;
-import net.dries007.tfc.common.items.TFCItems;
+import net.dries007.tfc.common.items.JarItem;
 import net.dries007.tfc.common.items.TFCMinecartItem;
-import net.dries007.tfc.mixin.accessor.ItemAccessor;
 import net.dries007.tfc.util.Helpers;
-import net.dries007.tfc.util.Metal;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
-import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Locale;
@@ -30,6 +23,33 @@ import java.util.function.Supplier;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, FirmaCompat.MODID);
+
+    //Food
+    /*
+    public static final RegistryObject<Item> SWEET_BERRIES_JAR = register("sweet_berries_jar",
+            () -> new JarItem(new Item.Properties(),
+                    ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/jar/sweet_berries"),false)
+    );
+    public static final RegistryObject<Item> SWEET_BERRIES_JAR_UNSEALED = register("sweet_berries_jar_unsealed",
+            () -> new JarItem(new Item.Properties(),
+                    ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/jar/sweet_berries_unsealed"),true)
+    );
+    public static final RegistryObject<Item> SWEET_BERRIES_JAM = register("sweet_berries_jam",
+            () -> new Item((new Item.Properties())));
+
+    public static final RegistryObject<Item> GLOW_BERRIES_JAR = register("glow_berries_jar",
+            () -> new JarItem(new Item.Properties(),
+                    ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/jar/glow_berries"),false)
+    );
+    public static final RegistryObject<Item> GLOW_BERRIES_JAR_UNSEALED = register("glow_berries_jar_unsealed",
+            () -> new JarItem(new Item.Properties(),
+                    ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/jar/glow_berries_unsealed"),true)
+    );
+    public static final RegistryObject<Item> GLOW_BERRIES_JAM = register("glow_berries_jam",
+            () -> new Item((new Item.Properties())));
+
+     */
+
 
     // Wood
     public static final Map<CompatWood, RegistryObject<Item>> LUMBER = Helpers.mapOfKeys(CompatWood.class, wood -> register(wood.name() + "_lumber"));

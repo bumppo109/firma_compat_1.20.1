@@ -80,19 +80,11 @@ public class ModEvents
         // Special single blocks (chests)
         modifyBlockEntityType(TFCBlockEntities.CHEST.get(), ModBlocks.COMPAT_CHEST.get());
         modifyBlockEntityType(TFCBlockEntities.CHEST.get(), ModBlocks.COMPAT_TRAPPED_CHEST.get());  // Note: trapped chests usually use the same BE as normal chests in TFC
+        modifyBlockEntityType(TFCBlockEntities.TICK_COUNTER.get(), ModBlocks.DRYING_MUD_BRICK.get());  // Note: trapped chests usually use the same BE as normal chests in TFC
 
         addDynamicBlocksByName();
 
         FirmaCompat.LOGGER.info("Finished BlockEntityType modifications.");
-    }
-
-    private static void modifyWood(BlockEntityType<?> type, CompatWood.BlockType blockType)
-    {
-        ModBlocks.WOODS.values().stream()
-                .map(map -> map.get(blockType))
-                .filter(holder -> holder != null && holder.isPresent())
-                .map(holder -> holder.get())
-                .forEach(block -> modifyBlockEntityType(type, block));
     }
 
     /**

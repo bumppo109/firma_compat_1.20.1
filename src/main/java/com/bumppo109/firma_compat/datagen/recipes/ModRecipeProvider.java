@@ -1,21 +1,27 @@
 package com.bumppo109.firma_compat.datagen.recipes;
 
+import com.bumppo109.firma_compat.FirmaCompat;
 import com.bumppo109.firma_compat.block.Aqueducts;
 import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
+import java.util.AbstractQueue;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -34,7 +40,29 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
             String woodName = wood.getSerializedName();
             Item lumber = ModItems.LUMBER.get(wood).get();
 
-            damageToolShapeless(cache, "from_logs", ("minecraft:" + woodName + "_logs"), "tfc:saws", lumber, 4);
+            if(wood == CompatWood.CRIMSON || wood == CompatWood.WARPED) {
+                damageToolShapeless(cache, "from_logs", ("minecraft:" + woodName + "_stems"), "tfc:saws", lumber, 4);
+                clutchStemRecipe(cache, wood, lumber);
+                damageInputsShaped(cache, woodName + "_support",
+                        new String[]{"XX ", "Y  "},
+                        Map.of(
+                                'X', tagIngredient("minecraft:" + woodName + "_stems"),
+                                'Y', tagIngredient("tfc:saws")
+                        ),
+                        simpleResult("firma_compat:" + woodName + "_support", 8));
+
+            } else {
+                damageToolShapeless(cache, "from_logs", ("minecraft:" + woodName + "_logs"), "tfc:saws", lumber, 4);
+                clutchRecipe(cache, wood, lumber);
+                damageInputsShaped(cache, woodName + "_support",
+                        new String[]{"XX ", "Y  "},
+                        Map.of(
+                                'X', tagIngredient("minecraft:" + woodName + "_logs"),
+                                'Y', tagIngredient("tfc:saws")
+                        ),
+                        simpleResult("firma_compat:" + woodName + "_support", 8));
+            }
+
             damageToolShapeless(cache, "from_planks", wood.planks(), "tfc:saws", lumber, 4);
             damageToolShapeless(cache, "from_stairs", wood.stair(), "tfc:saws", lumber, 3);
             damageToolShapeless(cache, "from_slab", wood.slab(), "tfc:saws", lumber, 2);
@@ -49,6 +77,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
             planksRecipe(cache, wood, lumber);
             pressurePlateRecipe(cache, wood, lumber);
 
+            logFenceRecipe(cache, wood, lumber);
             toolRackRecipe(cache, wood, lumber);
             sluiceRecipe(cache, wood, lumber);
             barrelRecipe(cache, wood, lumber);
@@ -58,79 +87,322 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
             axleRecipe(cache, wood);
             bladedAxleRecipe(cache, wood);
             encasedAxleRecipe(cache, wood, lumber);
-            clutchRecipe(cache, wood, lumber);
             gearBoxRecipe(cache, wood, lumber);
             waterWheelRecipe(cache, wood, lumber);
-
-            damageInputsShaped(cache, woodName + "_support",
-                    new String[]{"XX ", "Y  "},
-                    Map.of(
-                            'X', tagIngredient("minecraft:" + woodName + "_logs"),
-                            'Y', tagIngredient("tfc:saws")
-                    ),
-                    simpleResult("firma_compat:" + woodName + "_support", 8));
         }
+        //extra wood
+        damageToolShapeless(cache, null, Items.BAMBOO_BLOCK, "tfc:saws", ModItems.BAMBOO_LUMBER.get(), 8);
+        planksRecipe(cache, ModItems.BAMBOO_LUMBER.get(), Items.BAMBOO_PLANKS);
+        fenceRecipe(cache, ModItems.BAMBOO_LUMBER.get(), Items.BAMBOO_PLANKS, Items.BAMBOO_FENCE);
+        fenceGateRecipe(cache, ModItems.BAMBOO_LUMBER.get(), Items.BAMBOO_PLANKS, Items.BAMBOO_FENCE_GATE);
+        vanillaShaped(cache, Items.BAMBOO_DOOR,
+                new String[]{"XX ", "XX ", "XX "},
+                Map.of('X', ingredient(ModItems.BAMBOO_LUMBER.get())),
+                simpleResult(Items.BAMBOO_DOOR, 2),
+                null);
+        vanillaShaped(cache, Items.BAMBOO_TRAPDOOR,
+                new String[]{"XXX", "XXX"},
+                Map.of('X', ingredient(ModItems.BAMBOO_LUMBER.get())),
+                simpleResult(Items.BAMBOO_TRAPDOOR, 3),
+                null);
+        vanillaShaped(cache, Items.BAMBOO_PRESSURE_PLATE,
+                new String[]{"XX "},
+                Map.of('X', ingredient(ModItems.BAMBOO_LUMBER.get())),
+                simpleResult(Items.BAMBOO_PRESSURE_PLATE, 1),
+                null);
 
         for (CompatRock rock : CompatRock.VALUES) {
-            Block loose = ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE).get();
-            Block looseCobble = ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE_COBBLE).get();
-            Block hardCobble = rock.hardCobbleBlock().get();
+            Item loose = ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE).get().asItem();
+            Item looseCobble = ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE_COBBLE).get().asItem();
+            Item hardCobble = rock.hardCobbleBlock().get().asItem();
             Item brickItem = rock.brickItem();
-            Block bricksBlock = rock.bricksBlock().get();
-
-            String looseName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(loose)).toString();
-            String looseCobbleName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(looseCobble)).toString();
-            String hardCobbleName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(hardCobble)).toString();
-            String brickItemName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(brickItem)).toString();
-            String bricksBlockName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(bricksBlock)).toString();
-            String brickSlabName = bricksBlockName + "_slab";
-            String brickStairName = bricksBlockName + "_stairs";
+            Item bricksBlock = rock.bricksBlock().get().asItem();
+            Item brickSlabBlock = rock.getSlab(CompatRock.BlockType.BRICK).get().asItem();
+            Item brickStairBlock = rock.getStair(CompatRock.BlockType.BRICK).get().asItem();
+            Item brickWallBlock = rock.getWall(CompatRock.BlockType.BRICK).get().asItem();
+            Item aqueductBlock = ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.BRICK_AQUEDUCT).get().asItem();
 
             //brick item
             damageToolShapeless(cache, null, loose, "tfc:chisels", brickItem, 1);
             //brick block
-            vanillaShaped(cache, bricksBlockName,
+            vanillaShaped(cache, bricksBlock,
                     new String[]{"AXA", "XAX", "AXA"},
-                    Map.of('X', ingredient(looseName), 'A', ingredient(brickItemName)),
-                    simpleResult(bricksBlockName, 4),
+                    Map.of('X', ingredient("tfc:mortar"), 'A', ingredient(brickItem)),
+                    simpleResult(bricksBlock, 4),
                     null);
-            if(rock != CompatRock.STONE && rock != CompatRock.DEEPSLATE && rock != CompatRock.BLACKSTONE && rock != CompatRock.END_STONE){
+            if(rock != CompatRock.STONE && rock != CompatRock.DEEPSLATE && rock != CompatRock.BLACKSTONE && rock != CompatRock.END_STONE && rock != CompatRock.NETHERRACK){
                 //brick slab block
-                vanillaShaped(cache, brickSlabName,
+                vanillaShaped(cache, brickSlabBlock,
                         new String[]{"XXX"},
-                        Map.of('X', ingredient(bricksBlockName)),
-                        simpleResult(brickSlabName, 6),
+                        Map.of('X', ingredient(bricksBlock)),
+                        simpleResult(brickSlabBlock, 6),
                         null);
                 //brick stairs block
-                vanillaShaped(cache, brickStairName,
+                vanillaShaped(cache, brickStairBlock,
                         new String[]{"  X", " XX", "XXX"},
-                        Map.of('X', ingredient(bricksBlockName)),
-                        simpleResult(brickStairName, 4),
+                        Map.of('X', ingredient(bricksBlock)),
+                        simpleResult(brickStairBlock, 4),
+                        null);
+                //brick wall block
+                vanillaShaped(cache, brickWallBlock,
+                        new String[]{"XXX", "XXX"},
+                        Map.of('X', ingredient(bricksBlock)),
+                        simpleResult(brickWallBlock, 6),
                         null);
             }
+            //chisel
+            chisel(cache, bricksBlock, brickSlabBlock, ChiselMode.SLAB);
+            chisel(cache, bricksBlock, brickStairBlock, ChiselMode.STAIR);
             //loose cobble
-            vanillaShaped(cache, looseCobbleName,
+            vanillaShaped(cache, looseCobble,
                     new String[]{"XX ", "XX "},
-                    Map.of('X', ingredient(looseName)),
-                    simpleResult(looseCobbleName, 1),
+                    Map.of('X', ingredient(loose)),
+                    simpleResult(looseCobble, 1),
                     null);
             //hardened cobble
-            vanillaShaped(cache, hardCobbleName,
+            vanillaShaped(cache, hardCobble,
                     new String[]{"AXA", "XAX", "AXA"},
-                    Map.of('X', ingredient(looseName), 'A', ingredient("tfc:mortar")),
-                    simpleResult(hardCobbleName, 4),
+                    Map.of('X', ingredient(loose), 'A', ingredient("tfc:mortar")),
+                    simpleResult(hardCobble, 4),
+                    null);
+            //aqueduct
+            vanillaShaped(cache, aqueductBlock,
+                    new String[]{"X X", "AXA"},
+                    Map.of('X', ingredient(brickItem), 'A', ingredient("tfc:mortar")),
+                    simpleResult(aqueductBlock, 1),
                     null);
         }
+        //extra brick
+        damageToolShapeless(cache, null, ModItems.BRICK.get(CompatRock.STONE).get(), "tfc:chisels", Items.STONE_BUTTON, 1);
+        damageToolShapeless(cache, null, ModItems.BRICK.get(CompatRock.BLACKSTONE).get(), "tfc:chisels", Items.POLISHED_BLACKSTONE_BUTTON, 1);
+        vanillaShaped(cache, Items.STONE_PRESSURE_PLATE,
+                new String[]{"XX "},
+                Map.of('X', ingredient(ModItems.BRICK.get(CompatRock.STONE).get())),
+                simpleResult(Items.STONE_PRESSURE_PLATE, 1),
+                null);
+        vanillaShaped(cache, Items.POLISHED_BLACKSTONE_PRESSURE_PLATE,
+                new String[]{"XX "},
+                Map.of('X', ingredient(ModItems.BRICK.get(CompatRock.BLACKSTONE).get())),
+                simpleResult(Items.POLISHED_BLACKSTONE_PRESSURE_PLATE, 1),
+                null);
 
-        //aqueducts
-        for (Aqueducts block : Aqueducts.VALUES){
 
-        }
+        damageToolShapeless(cache, null, Items.QUARTZ, "tfc:chisels", ModItems.QUARTZ_BRICK.get(), 1);
+        damageToolShapeless(cache, null, Items.PRISMARINE_SHARD, "tfc:chisels", ModItems.PRISMARINE_BRICK.get(), 1);
+        vanillaShaped(cache, Blocks.QUARTZ_BRICKS.asItem(),
+                new String[]{"AXA", "XAX", "AXA"},
+                Map.of('X', ingredient("tfc:mortar"), 'A', ingredient(ModItems.QUARTZ_BRICK.get())),
+                simpleResult(Blocks.QUARTZ_BRICKS.asItem(), 4),
+                null);
+        vanillaShaped(cache, Blocks.PRISMARINE_BRICKS.asItem(),
+                new String[]{"AXA", "XAX", "AXA"},
+                Map.of('X', ingredient("tfc:mortar"), 'A', ingredient(ModItems.PRISMARINE_BRICK.get())),
+                simpleResult(Blocks.PRISMARINE_BRICKS.asItem(), 4),
+                null);
+
+        //extra aqueducts
+        vanillaShapeless(cache,"from_moss", Items.MOSS_BLOCK, ModBlocks.ROCK_BLOCKS.get(CompatRock.STONE).get(CompatRock.BlockType.BRICK_AQUEDUCT).get().asItem() , ModBlocks.AQUEDUCTS.get(Aqueducts.MOSSY_STONE_BRICKS).get().asItem(), 1);
+        vanillaShapeless(cache,"from_vine", Items.VINE, ModBlocks.ROCK_BLOCKS.get(CompatRock.STONE).get(CompatRock.BlockType.BRICK_AQUEDUCT).get().asItem() , ModBlocks.AQUEDUCTS.get(Aqueducts.MOSSY_STONE_BRICKS).get().asItem(), 1);
+        vanillaShaped(cache, ModBlocks.AQUEDUCTS.get(Aqueducts.BRICKS).get().asItem(),
+                new String[]{"X X", "AXA"},
+                Map.of('X', ingredient("minecraft:brick"), 'A', ingredient("tfc:mortar")),
+                simpleResult(ModBlocks.AQUEDUCTS.get(Aqueducts.BRICKS).get().asItem(), 1),
+                null);
+        vanillaShaped(cache, ModBlocks.AQUEDUCTS.get(Aqueducts.NETHER_BRICKS).get().asItem(),
+                new String[]{"X X", "AXA"},
+                Map.of('X', ingredient("minecraft:nether_brick"), 'A', ingredient("tfc:mortar")),
+                simpleResult(ModBlocks.AQUEDUCTS.get(Aqueducts.NETHER_BRICKS).get().asItem(), 1),
+                null);
+        vanillaShaped(cache, ModBlocks.AQUEDUCTS.get(Aqueducts.PRISMARINE_BRICKS).get().asItem(),
+                new String[]{"X X", "AXA"},
+                Map.of('X', ingredient("firma_compat:prismarine_brick"), 'A', ingredient("tfc:mortar")),
+                simpleResult(ModBlocks.AQUEDUCTS.get(Aqueducts.PRISMARINE_BRICKS).get().asItem(), 1),
+                null);
+        vanillaShaped(cache, ModBlocks.AQUEDUCTS.get(Aqueducts.QUARTZ_BRICKS).get().asItem(),
+                new String[]{"X X", "AXA"},
+                Map.of('X', ingredient("firma_compat:quartz_brick"), 'A', ingredient("tfc:mortar")),
+                simpleResult(ModBlocks.AQUEDUCTS.get(Aqueducts.QUARTZ_BRICKS).get().asItem(), 1),
+                null);
+
+
+        //======== Chisel Recipes for Vanilla Blocks
+        chisel(cache, Items.STONE, Items.SMOOTH_STONE, ChiselMode.SMOOTH);
+        chisel(cache, Items.STONE, Items.STONE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.STONE, Items.STONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.STONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.SMOOTH_STONE, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.STONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.STONE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.STONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.STONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.SMOOTH_STONE, Items.SMOOTH_STONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.COBBLESTONE, Items.COBBLESTONE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.COBBLESTONE, Items.COBBLESTONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.MOSSY_COBBLESTONE, Items.MOSSY_COBBLESTONE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.MOSSY_COBBLESTONE, Items.MOSSY_COBBLESTONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.STONE_BRICKS, Items.CHISELED_STONE_BRICKS, ChiselMode.SMOOTH);
+        chisel(cache, Items.STONE_BRICKS, Items.STONE_BRICK_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.STONE_BRICKS, Items.STONE_BRICK_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.MOSSY_STONE_BRICKS, Items.MOSSY_STONE_BRICK_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.MOSSY_STONE_BRICKS, Items.MOSSY_STONE_BRICK_SLAB, ChiselMode.SLAB);
+
+        chisel(cache, Items.GRANITE, Items.POLISHED_GRANITE, ChiselMode.SMOOTH);
+        chisel(cache, Items.GRANITE, Items.GRANITE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.GRANITE, Items.GRANITE_SLAB, ChiselMode.SLAB);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.GRANITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_GRANITE, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.GRANITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.GRANITE_STAIRS, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.GRANITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.GRANITE_SLAB, ChiselMode.SMOOTH);
+        chisel(cache, Items.POLISHED_GRANITE, Items.POLISHED_GRANITE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.POLISHED_GRANITE, Items.POLISHED_GRANITE_STAIRS, ChiselMode.SLAB);
+
+        chisel(cache, Items.ANDESITE, Items.POLISHED_ANDESITE, ChiselMode.SMOOTH);
+        chisel(cache, Items.ANDESITE, Items.ANDESITE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.ANDESITE, Items.ANDESITE_SLAB, ChiselMode.SLAB);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.ANDESITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_ANDESITE, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.ANDESITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.ANDESITE_STAIRS, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.ANDESITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.ANDESITE_SLAB, ChiselMode.SMOOTH);
+        chisel(cache, Items.POLISHED_ANDESITE, Items.POLISHED_ANDESITE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.POLISHED_ANDESITE, Items.POLISHED_ANDESITE_STAIRS, ChiselMode.SLAB);
+
+        chisel(cache, Items.DIORITE, Items.POLISHED_DIORITE, ChiselMode.SMOOTH);
+        chisel(cache, Items.DIORITE, Items.DIORITE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.DIORITE, Items.DIORITE_SLAB, ChiselMode.SLAB);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.DIORITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_DIORITE, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.DIORITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.DIORITE_STAIRS, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.DIORITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.DIORITE_SLAB, ChiselMode.SMOOTH);
+        chisel(cache, Items.POLISHED_DIORITE, Items.POLISHED_DIORITE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.POLISHED_DIORITE, Items.POLISHED_DIORITE_STAIRS, ChiselMode.SLAB);
+
+        chisel(cache, Items.DEEPSLATE, Items.POLISHED_DEEPSLATE, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.DEEPSLATE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_DEEPSLATE, ChiselMode.SMOOTH);
+        chisel(cache, Items.COBBLED_DEEPSLATE, Items.COBBLED_DEEPSLATE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.COBBLED_DEEPSLATE, Items.COBBLED_DEEPSLATE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.POLISHED_DEEPSLATE, Items.POLISHED_DEEPSLATE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.POLISHED_DEEPSLATE, Items.POLISHED_DEEPSLATE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.DEEPSLATE_BRICKS, Items.CHISELED_DEEPSLATE, ChiselMode.SMOOTH);
+        chisel(cache, Items.DEEPSLATE_BRICKS, Items.DEEPSLATE_BRICK_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.DEEPSLATE_BRICKS, Items.DEEPSLATE_BRICK_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.DEEPSLATE_TILES, Items.DEEPSLATE_TILE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.DEEPSLATE_TILES, Items.DEEPSLATE_TILE_SLAB, ChiselMode.SLAB);
+
+        chisel(cache, Items.BRICKS, Items.BRICK_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.BRICKS, Items.BRICK_SLAB, ChiselMode.SLAB);
+
+        chisel(cache, Items.MUD_BRICKS, Items.MUD_BRICK_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.MUD_BRICKS, Items.MUD_BRICK_SLAB, ChiselMode.SLAB);
+
+        chisel(cache, Items.SANDSTONE, Items.SMOOTH_SANDSTONE, ChiselMode.SMOOTH);
+        chisel(cache, Items.SANDSTONE, Items.SANDSTONE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.SANDSTONE, Items.SANDSTONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.SMOOTH_SANDSTONE, Items.CUT_SANDSTONE, ChiselMode.SMOOTH);
+        chisel(cache, Items.SMOOTH_SANDSTONE, Items.SMOOTH_SANDSTONE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.SMOOTH_SANDSTONE, Items.SMOOTH_SANDSTONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.CUT_SANDSTONE, Items.CHISELED_SANDSTONE, ChiselMode.SMOOTH);
+        chisel(cache, Items.CUT_SANDSTONE, Blocks.CUT_SANDSTONE_SLAB.asItem(), ChiselMode.SLAB);
+
+        chisel(cache, Items.RED_SANDSTONE, Items.SMOOTH_RED_SANDSTONE, ChiselMode.SMOOTH);
+        chisel(cache, Items.RED_SANDSTONE, Items.RED_SANDSTONE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.RED_SANDSTONE, Items.RED_SANDSTONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.SMOOTH_RED_SANDSTONE, Items.CUT_RED_SANDSTONE, ChiselMode.SMOOTH);
+        chisel(cache, Items.SMOOTH_RED_SANDSTONE, Items.SMOOTH_RED_SANDSTONE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.SMOOTH_RED_SANDSTONE, Items.SMOOTH_RED_SANDSTONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.CUT_RED_SANDSTONE, Items.CHISELED_RED_SANDSTONE, ChiselMode.SMOOTH);
+        chisel(cache, Items.CUT_RED_SANDSTONE, Blocks.CUT_RED_SANDSTONE_SLAB.asItem(), ChiselMode.SLAB);
+
+        chisel(cache, Items.PRISMARINE, Items.PRISMARINE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.PRISMARINE, Items.PRISMARINE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.PRISMARINE_BRICKS, Items.DARK_PRISMARINE, ChiselMode.SMOOTH);
+        chisel(cache, Items.PRISMARINE_BRICKS, Items.PRISMARINE_BRICK_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.PRISMARINE_BRICKS, Items.PRISMARINE_BRICK_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.DARK_PRISMARINE, Items.DARK_PRISMARINE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.DARK_PRISMARINE, Items.DARK_PRISMARINE_SLAB, ChiselMode.SLAB);
+
+        chisel(cache, Items.NETHER_BRICKS, Items.CHISELED_NETHER_BRICKS, ChiselMode.SMOOTH);
+        chisel(cache, Items.NETHER_BRICKS, Items.NETHER_BRICK_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.NETHER_BRICKS, Items.NETHER_BRICK_SLAB, ChiselMode.SLAB);
+
+        chisel(cache, Items.RED_NETHER_BRICKS, Items.RED_NETHER_BRICK_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.RED_NETHER_BRICKS, Items.RED_NETHER_BRICK_SLAB, ChiselMode.SLAB);
+
+        chisel(cache, Items.BASALT, Items.SMOOTH_BASALT, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.BASALT).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.SMOOTH_BASALT, ChiselMode.SMOOTH);
+        chisel(cache, Items.SMOOTH_BASALT, Items.POLISHED_BASALT, ChiselMode.SMOOTH);
+
+        chisel(cache, Items.BLACKSTONE, Items.POLISHED_BLACKSTONE, ChiselMode.SMOOTH);
+        chisel(cache, Items.BLACKSTONE, Items.BLACKSTONE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.BLACKSTONE, Items.BLACKSTONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.BLACKSTONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_BLACKSTONE, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.BLACKSTONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.BLACKSTONE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.BLACKSTONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.BLACKSTONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.POLISHED_BLACKSTONE, Items.POLISHED_BLACKSTONE_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.POLISHED_BLACKSTONE, Items.POLISHED_BLACKSTONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.POLISHED_BLACKSTONE_BRICKS, Items.CHISELED_POLISHED_BLACKSTONE, ChiselMode.SMOOTH);
+        chisel(cache, Items.POLISHED_BLACKSTONE_BRICKS, Items.POLISHED_BLACKSTONE_BRICK_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.POLISHED_BLACKSTONE_BRICKS, Items.POLISHED_BLACKSTONE_BRICK_SLAB, ChiselMode.SLAB);
+
+        chisel(cache, Items.END_STONE_BRICKS, Items.END_STONE_BRICK_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.END_STONE_BRICKS, Items.END_STONE_BRICK_SLAB, ChiselMode.SLAB);
+
+        chisel(cache, Items.PURPUR_BLOCK, Items.PURPUR_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.PURPUR_BLOCK, Items.PURPUR_SLAB, ChiselMode.SLAB);
+
+        chisel(cache, Items.QUARTZ_BLOCK, Items.SMOOTH_QUARTZ, ChiselMode.SMOOTH);
+        chisel(cache, Items.QUARTZ_BLOCK, Items.QUARTZ_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.QUARTZ_BLOCK, Items.QUARTZ_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.SMOOTH_QUARTZ, Items.SMOOTH_QUARTZ_STAIRS, ChiselMode.STAIR);
+        chisel(cache, Items.SMOOTH_QUARTZ, Items.SMOOTH_QUARTZ_SLAB, ChiselMode.SLAB);
+        chisel(cache, Items.QUARTZ_BRICKS, Items.CHISELED_QUARTZ_BLOCK, ChiselMode.SMOOTH);
+
+
         return CompletableFuture.completedFuture(null);
     }
 
     protected String itemId(ItemLike itemLike) {
         return BuiltInRegistries.ITEM.getKey(itemLike.asItem()).getPath();
+    }
+
+    /**
+     * Creates a simple shapeless crafting recipe with exactly 2 ingredients.
+     *
+     * @param cache      The CachedOutput for recipe generation
+     * @param ingredient1 First ingredient item
+     * @param ingredient2 Second ingredient item
+     * @param result      The resulting item
+     * @param count       The count of the result (usually 1)
+     */
+    protected void vanillaShapeless(CachedOutput cache,
+                                    Item ingredient1,
+                                    Item ingredient2,
+                                    Item result,
+                                    int count) {
+
+        JsonArray ingredients = new JsonArray();
+        ingredients.add(ingredient(ingredient1));
+        ingredients.add(ingredient(ingredient2));
+
+        JsonObject resultObj = new JsonObject();
+        resultObj.addProperty("item", Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(result)).toString());
+        if (count != 1) {
+            resultObj.addProperty("count", count);
+        }
+
+        vanillaShapeless(cache, result, null, ingredients, resultObj, null);
+    }
+
+    protected void vanillaShapeless(CachedOutput cache, String suffix,
+                                    Item ingredient1,
+                                    Item ingredient2,
+                                    Item result,
+                                    int count) {
+
+        JsonArray ingredients = new JsonArray();
+        ingredients.add(ingredient(ingredient1));
+        ingredients.add(ingredient(ingredient2));
+
+        JsonObject resultObj = new JsonObject();
+        resultObj.addProperty("item", Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(result)).toString());
+        if (count != 1) {
+            resultObj.addProperty("count", count);
+        }
+
+        vanillaShapeless(cache, result, suffix, ingredients, resultObj, null);
     }
 
     protected void damageToolShapeless(CachedOutput cache,
@@ -139,11 +411,16 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                                        String toolTag,
                                        ItemLike output,
                                        int outputCount) {
-        String recipeName = itemId(output);
+
+        ResourceLocation inputItem = ForgeRegistries.ITEMS.getKey(input.asItem());
+
+        assert inputItem != null;
+        String recipeName = inputItem.getPath();
+        String inputId = inputItem.toString();
         String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(output.asItem())).toString();
 
         JsonArray ingredients = new JsonArray();
-        ingredients.add(ingredient(itemId(input)));      // Main input item
+        ingredients.add(ingredient(inputId));      // Main input item
         ingredients.add(tagIngredient(toolTag));         // Tool that takes damage
 
         JsonObject result = simpleResult(outputId, outputCount);
@@ -177,16 +454,24 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         damageInputsShapeless(cache, recipeName, ingredients, result);
     }
 
-    protected void brickBlockRecipe(CachedOutput cache, Item brick, Block output) {
-        String brickId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(brick)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(output.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(output.asItem())).getPath();
+    /**
+     * Creates a simple TFC chisel recipe that turns one block into another using a chisel.
+     *
+     * @param cache      The CachedOutput for recipe generation
+     * @param input      The input block/item (usually a block)
+     * @param output     The resulting block (as Item)
+     * @param mode       The chisel mode (e.g. ChiselMode.SMOOTH, ChiselMode.SLAB, etc.)
+     */
+    protected void chisel(CachedOutput cache, Item input, Item output, ChiselMode mode) {
 
-        vanillaShaped(cache, outputName,
-                new String[]{"AXA", "XAX", "AXA"},
-                Map.of('X', ingredient(brickId), 'A', ingredient("tfc:mortar")),
-                simpleResult(outputId, 4),
-                null);
+        String name = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(output)).getPath();
+
+        // Use full resource location string for both ingredient and result
+        String ingredientStr = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(input)).toString();
+        String resultStr     = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(output)).toString();
+
+        // Call the original method, but now passing strings instead of JsonObjects
+        chisel(cache, name, ingredientStr, resultStr, mode, null, null);
     }
 
     protected String[] doorPattern = new String[]{"XX ", "XX ", "XX "};
@@ -214,274 +499,236 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
 
 
     protected void doorRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.door().asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.door().asItem())).getPath();
+        Item outputItem = wood.door().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 doorPattern,
-                Map.of('X', ingredient(lumberId)),
-                simpleResult(outputId, 2),
+                Map.of('X', ingredient(lumber)),
+                simpleResult(outputItem, 2),
                 null);
     }
     protected void trapdoorRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.trapdoor().asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.trapdoor().asItem())).getPath();
+        Item outputItem = wood.trapdoor().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 trapdoorPattern,
-                Map.of('X', ingredient(lumberId)),
-                simpleResult(outputId, 3),
+                Map.of('X', ingredient(lumber)),
+                simpleResult(outputItem, 3),
                 null);
     }
     protected void planksRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.planks().asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.planks().asItem())).getPath();
+        Item outputItem = wood.planks().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 planksPattern,
-                Map.of('X', ingredient(lumberId)),
-                simpleResult(outputId, 1),
+                Map.of('X', ingredient(lumber)),
+                simpleResult(outputItem, 1),
+                null);
+    }
+    protected void planksRecipe(CachedOutput cache, Item lumber, Item planks) {
+        vanillaShaped(cache, planks,
+                planksPattern,
+                Map.of('X', ingredient(lumber)),
+                simpleResult(planks, 1),
                 null);
     }
     protected void fenceRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.fence().asItem())).toString();
-        String planksId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.planks().asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.fence().asItem())).getPath();
+        Item outputItem = wood.fence().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 fencePattern,
-                Map.of('X', ingredient(lumberId), 'Y', ingredient(planksId)),
-                simpleResult(outputId, 8),
+                Map.of('X', ingredient(lumber), 'Y', ingredient(wood.planks().asItem())),
+                simpleResult(outputItem, 8),
+                null);
+    }
+    protected void fenceRecipe(CachedOutput cache, Item lumber, Item fencePostItem, Item fence) {
+        vanillaShaped(cache, fence,
+                fencePattern,
+                Map.of('X', ingredient(lumber), 'Y', ingredient(fencePostItem)),
+                simpleResult(fence, 8),
+                null);
+    }
+    protected void logFenceRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get().asItem();
+
+        vanillaShaped(cache, outputItem,
+                fencePattern,
+                Map.of('X', ingredient(lumber), 'Y', ingredient(wood.log().asItem())),
+                simpleResult(outputItem, 8),
                 null);
     }
     protected void fenceGateRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.fenceGate().asItem())).toString();
-        String planksId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.planks().asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.fenceGate().asItem())).getPath();
+        Item outputItem = wood.fenceGate().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 fenceGatePattern,
-                Map.of('X', ingredient(lumberId), 'Y', ingredient(planksId)),
-                simpleResult(outputId, 2),
+                Map.of('X', ingredient(lumber), 'Y', ingredient(wood.planks().asItem())),
+                simpleResult(outputItem, 2),
+                null);
+    }
+    protected void fenceGateRecipe(CachedOutput cache, Item lumber, Item fencePostItem, Item fence) {
+        vanillaShaped(cache, fence,
+                fenceGatePattern,
+                Map.of('X', ingredient(lumber), 'Y', ingredient(fencePostItem)),
+                simpleResult(fence, 2),
                 null);
     }
     protected void signRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.sign().asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.sign().asItem())).getPath();
+        Item outputItem = wood.sign().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 signPattern,
-                Map.of('X', ingredient(lumberId), 'Y', tagIngredient("forge:rods/wooden")),
-                simpleResult(outputId, 3),
+                Map.of('X', ingredient(lumber), 'Y', tagIngredient("forge:rods/wooden")),
+                simpleResult(outputItem, 3),
                 null);
     }
     protected void hangingSignRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.hangingSign().asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.hangingSign().asItem())).getPath();
+        Item outputItem = wood.hangingSign().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 hangingSignPattern,
-                Map.of('X', ingredient(lumberId), 'Y', tagIngredient("firma_compat:chains")),
-                simpleResult(outputId, 3),
+                Map.of('X', ingredient(lumber), 'Y', tagIngredient("firma_compat:chains")),
+                simpleResult(outputItem, 3),
                 null);
     }
     protected void pressurePlateRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.pressurePlate().asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.pressurePlate().asItem())).getPath();
+        Item outputItem = wood.pressurePlate().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 pressurePlatePattern,
-                Map.of('X', ingredient(lumberId)),
-                simpleResult(outputId, 1),
+                Map.of('X', ingredient(lumber)),
+                simpleResult(outputItem, 1),
                 null);
     }
     protected void toolRackRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.TOOL_RACK).get();
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.TOOL_RACK).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 toolRackPattern,
-                Map.of('X', ingredient(lumberId)),
-                simpleResult(outputId, 1),
+                Map.of('X', ingredient(lumber)),
+                simpleResult(outputItem, 1),
                 null);
     }
     protected void loomRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOOM).get();
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOOM).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 loomPattern,
-                Map.of('X', ingredient(lumberId), 'Y', tagIngredient("forge:rods/wooden")),
-                simpleResult(outputId, 1),
+                Map.of('X', ingredient(lumber), 'Y', tagIngredient("forge:rods/wooden")),
+                simpleResult(outputItem, 1),
                 null);
     }
     protected void sluiceRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.SLUICE).get();
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.SLUICE).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 sluicePattern,
-                Map.of('X', ingredient(lumberId), 'Y', tagIngredient("forge:rods/wooden")),
-                simpleResult(outputId, 1),
+                Map.of('X', ingredient(lumber), 'Y', tagIngredient("forge:rods/wooden")),
+                simpleResult(outputItem, 1),
                 null);
     }
     protected void barrelRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.BARREL).get();
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.BARREL).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 barrelPattern,
-                Map.of('X', ingredient(lumberId)),
-                simpleResult(outputId, 1),
+                Map.of('X', ingredient(lumber)),
+                simpleResult(outputItem, 1),
                 null);
     }
     protected void sewingTableRecipe(CachedOutput cache, CompatWood wood) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.SEWING_TABLE).get();
-        String plankId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.planks().asItem())).toString();
-        String logId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.log().asItem())).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.SEWING_TABLE).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 sewingPattern,
-                Map.of('Y', tagIngredient("forge:shears"), 'Z', ingredient("minecraft:leather"), 'A', ingredient(plankId), 'B', ingredient(logId)),
-                simpleResult(outputId, 1),
+                Map.of('Y', tagIngredient("forge:shears"), 'Z', ingredient("minecraft:leather"), 'A', ingredient(wood.planks().asItem()), 'B', ingredient(wood.log().asItem())),
+                simpleResult(outputItem, 1),
                 null);
     }
     protected void scribingTableRecipe(CachedOutput cache, CompatWood wood) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.SCRIBING_TABLE).get();
-        String plankId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.planks().asItem())).toString();
-        String slabId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.slab().asItem())).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.SCRIBING_TABLE).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 scribingPattern,
-                Map.of('Y', tagIngredient("forge:feathers"), 'Z', tagIngredient("forge:dyes/black"), 'A', ingredient(slabId), 'B', ingredient(plankId)),
-                simpleResult(outputId, 1),
+                Map.of('Y', tagIngredient("forge:feathers"), 'Z', tagIngredient("forge:dyes/black"), 'A', ingredient(wood.slab().asItem()), 'B', ingredient(wood.planks().asItem())),
+                simpleResult(outputItem, 1),
                 null);
     }
     protected void shelfRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.SHELF).get();
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String plankId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.planks().asItem())).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.SHELF).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 shelfPattern,
-                Map.of('A', ingredient(plankId) ,'X', ingredient(lumberId), 'Y', tagIngredient("forge:rods/wooden")),
-                simpleResult(outputId, 2),
+                Map.of('A', ingredient(wood.planks().asItem()) ,'X', ingredient(lumber), 'Y', tagIngredient("forge:rods/wooden")),
+                simpleResult(outputItem, 2),
                 null);
     }
     protected void axleRecipe(CachedOutput cache, CompatWood wood) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get();
-        String strippedId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.strippedLog().asItem())).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 axlePattern,
-                Map.of('A', ingredient(strippedId) ,'B', ingredient("tfc:glue")),
-                simpleResult(outputId, 4),
+                Map.of('A', ingredient(wood.strippedLog().asItem()) ,'B', ingredient("tfc:glue")),
+                simpleResult(outputItem, 4),
                 null);
     }
     protected void bladedAxleRecipe(CachedOutput cache, CompatWood wood) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.BLADED_AXLE).get();
-        Block axleBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get();
-        String axleId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(axleBlock.asItem())).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.BLADED_AXLE).get().asItem();
+        Item axle = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 bladedAxlePattern,
-                Map.of('A', ingredient(axleId) ,'B', ingredient("tfc:metal/ingot/steel")),
-                simpleResult(outputId, 1),
+                Map.of('A', ingredient(axle) ,'B', ingredient("tfc:metal/ingot/steel")),
+                simpleResult(outputItem, 1),
                 null);
     }
     protected void encasedAxleRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.ENCASED_AXLE).get();
-        Block axleBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get();
-        String axleId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(axleBlock.asItem())).toString();
-        String logId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.strippedLog().asItem())).toString();
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.ENCASED_AXLE).get().asItem();
+        Item axle = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 encasedAxlePattern,
-                Map.of('A', ingredient(logId) ,'B', ingredient(axleId), 'X', ingredient(lumberId)),
-                simpleResult(outputId, 4),
+                Map.of('A', ingredient(wood.log().asItem()) ,'B', ingredient(axle), 'X', ingredient(lumber)),
+                simpleResult(outputItem, 4),
                 null);
     }
     protected void clutchRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.CLUTCH).get();
-        Block axleBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get();
-        String axleId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(axleBlock.asItem())).toString();
-        String logId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.strippedLog().asItem())).toString();
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.CLUTCH).get().asItem();
+        Item axle = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 clutchPattern,
-                Map.of('A', tagIngredient(logId),'X', ingredient(lumberId),'B', ingredient("tfc:brass_mechanisms"), 'C', ingredient(axleId), 'D', ingredient("minecraft:redstone")),
-                simpleResult(outputId, 1),
+                Map.of('A', tagIngredient("minecraft:" + wood.getSerializedName() + "_logs"),'X', ingredient(lumber),'B', ingredient("tfc:brass_mechanisms"), 'C', ingredient(axle), 'D', ingredient("minecraft:redstone")),
+                simpleResult(outputItem, 1),
+                null);
+    }
+    protected void clutchStemRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.CLUTCH).get().asItem();
+        Item axle = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get().asItem();
+
+        vanillaShaped(cache, outputItem,
+                clutchPattern,
+                Map.of('A', tagIngredient("minecraft:" + wood.getSerializedName() + "_stems"),'X', ingredient(lumber),'B', ingredient("tfc:brass_mechanisms"), 'C', ingredient(axle), 'D', ingredient("minecraft:redstone")),
+                simpleResult(outputItem, 1),
                 null);
     }
     protected void gearBoxRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.GEAR_BOX).get();
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.GEAR_BOX).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 gearBoxPattern,
-                Map.of('X', ingredient(lumberId),'A', ingredient("tfc:brass_mechanisms")),
-                simpleResult(outputId, 2),
+                Map.of('X', ingredient(lumber),'A', ingredient("tfc:brass_mechanisms")),
+                simpleResult(outputItem, 2),
                 null);
     }
     protected void waterWheelRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Block outputBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.WATER_WHEEL).get();
-        Block axleBlock = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get();
-        String axleId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(axleBlock.asItem())).toString();
-        String plankId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wood.planks().asItem())).toString();
-        String lumberId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(lumber)).toString();
-        String outputId = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).toString();
-        String outputName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(outputBlock.asItem())).getPath();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.WATER_WHEEL).get().asItem();
+        Item axle = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get().asItem();
 
-        vanillaShaped(cache, outputName,
+        vanillaShaped(cache, outputItem,
                 waterWheelPattern,
-                Map.of('X', ingredient(lumberId),'A', ingredient(plankId), 'B', ingredient(axleId)),
-                simpleResult(outputId, 1),
+                Map.of('X', ingredient(lumber),'A', ingredient(wood.planks().asItem()), 'B', ingredient(axle)),
+                simpleResult(outputItem, 1),
                 null);
-    }
-
-
-    protected void toolHeadShaped(CachedOutput cache, String metal, String toolType) {
-        String inputMetal = "tfc:metal/sheet/" + metal;
-        String outputItem = modId + ":" + toolType + "_head/" + metal;
-
-        advancedShaped(cache, toolType + "_head_" + metal,
-                new String[]{" S ", " S ", "S  "},
-                Map.of('S', ingredient(inputMetal)),
-                copyInputResult(outputItem, 1),
-                0, 0);   // input is usually one of the sheets
     }
 }

@@ -1,6 +1,7 @@
 package com.bumppo109.firma_compat.datagen.assets;
 
 import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.item.ModItems;
@@ -8,10 +9,15 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.Objects;
+import java.util.function.Supplier;
 
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
@@ -87,6 +93,40 @@ public class ModItemModelProvider extends ItemModelProvider {
             basicItem(waterWheelBlock.asItem());
             //windmill - N/A
         }
+
+        for (CompatRock rock : CompatRock.VALUES) {
+
+            if(rock == CompatRock.BLACKSTONE) {
+                withExistingParent(Objects.requireNonNull(ModItems.BRICK.get(rock).getId()).getPath(),
+                        ResourceLocation.withDefaultNamespace("item/generated")).texture("layer0",
+                        ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,"item/polished_blackstone_brick"));
+            } else {
+                basicItem(ModItems.BRICK.get(rock).get());
+            }
+            basicItem(ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE).get().asItem());
+
+            if(rock != CompatRock.STONE && rock != CompatRock.DEEPSLATE && rock != CompatRock.BLACKSTONE && rock != CompatRock.END_STONE && rock != CompatRock.NETHERRACK){
+                evenSimplerBlockItem(rock.getSlab(CompatRock.BlockType.BRICK));
+                evenSimplerBlockItem(rock.getStair(CompatRock.BlockType.BRICK));
+                wallItem(rock.getWall(CompatRock.BlockType.BRICK), ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.BRICK));
+            }
+        }
+
+        basicItem(ModItems.PRISMARINE_BRICK.get());
+        basicItem(ModItems.QUARTZ_BRICK.get());
+        basicItem(ModBlocks.DRYING_MUD_BRICK.get().asItem());
+        basicItem(ModItems.MUD_BRICK.get());
+        basicItem(ModItems.UNFIRED_POT.get());
+        basicItem(ModItems.NETHERITE_SCRAP_INGOT.get());
+    }
+
+    public void evenSimplerBlockItem(Supplier<? extends Block> block) {
+        this.withExistingParent(FirmaCompat.MODID + ":" + Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block.get())).getPath(),
+                modLoc("block/" + Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block.get())).getPath()));
+    }
+    public void wallItem(Supplier<? extends WallBlock> block, Supplier<Block> baseBlock) {
+        this.withExistingParent(Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block.get())).getPath(), mcLoc("block/wall_inventory"))
+                .texture("wall", ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + ForgeRegistries.BLOCKS.getKey(baseBlock.get()).getPath()));
     }
 
     private String blockPathName(Block block) {

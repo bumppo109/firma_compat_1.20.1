@@ -14,12 +14,14 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Objects;
 
 public abstract class TFCRecipeBuilder implements DataProvider {
 
@@ -136,11 +138,14 @@ public abstract class TFCRecipeBuilder implements DataProvider {
     /**
      * Base method for vanilla minecraft:crafting_shaped
      */
-    protected void vanillaShaped(CachedOutput cache, String name,
+    protected void vanillaShaped(CachedOutput cache, Item item,
+                                 @Nullable String suffix,
                                  String[] pattern,
                                  Map<Character, JsonElement> key,
                                  JsonObject result,
                                  @Nullable String group) {
+
+        String itemPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
 
         JsonObject json = new JsonObject();
         json.addProperty("type", "minecraft:crafting_shaped");
@@ -161,16 +166,49 @@ public abstract class TFCRecipeBuilder implements DataProvider {
             json.addProperty("group", group);
         }
 
-        saveRecipe(cache, "crafting/" + name, json);
+        saveRecipe(cache, "crafting/" + itemPath + "_" + suffix, json);
+    }
+
+    protected void vanillaShaped(CachedOutput cache, Item item,
+                                 String[] pattern,
+                                 Map<Character, JsonElement> key,
+                                 JsonObject result,
+                                 @Nullable String group) {
+
+        String itemPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
+
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "minecraft:crafting_shaped");
+
+        JsonArray patternArray = new JsonArray();
+        for (String row : pattern) {
+            patternArray.add(row);
+        }
+        json.add("pattern", patternArray);
+
+        JsonObject keyObj = new JsonObject();
+        key.forEach((ch, ing) -> keyObj.add(ch.toString(), ing));
+        json.add("key", keyObj);
+
+        json.add("result", result);
+
+        if (group != null && !group.isEmpty()) {
+            json.addProperty("group", group);
+        }
+
+        saveRecipe(cache, "crafting/" + itemPath, json);
     }
 
     /**
      * Base method for vanilla minecraft:crafting_shapeless
      */
-    protected void vanillaShapeless(CachedOutput cache, String name,
+    protected void vanillaShapeless(CachedOutput cache, Item item,
+                                    @Nullable String suffix,
                                     JsonArray ingredients,
                                     JsonObject result,
                                     @Nullable String group) {
+
+        String itemPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
 
         JsonObject json = new JsonObject();
         json.addProperty("type", "minecraft:crafting_shapeless");
@@ -182,7 +220,7 @@ public abstract class TFCRecipeBuilder implements DataProvider {
             json.addProperty("group", group);
         }
 
-        saveRecipe(cache, "crafting/" + name, json);
+        saveRecipe(cache, "crafting/" + itemPath, json);
     }
 
     // ========================= Chisel =============================
@@ -191,16 +229,17 @@ public abstract class TFCRecipeBuilder implements DataProvider {
      * Base method for tfc:chisel
      */
     protected void chisel(CachedOutput cache, String name,
-                          JsonElement blockIngredient,      // BlockIngredient
-                          String resultBlockState,          // e.g. "tfc:rock/smooth/granite"
+                          String ingredient,           // Changed: now simple string
+                          String result,               // Changed: now simple string
                           ChiselMode mode,
-                          JsonElement itemIngredient,       // optional
-                          JsonObject extraDrop) {           // optional
+                          @Nullable JsonElement itemIngredient,
+                          @Nullable JsonObject extraDrop) {
 
         JsonObject json = new JsonObject();
         json.addProperty("type", "tfc:chisel");
-        json.add("ingredient", blockIngredient);
-        json.addProperty("result", resultBlockState);
+
+        json.addProperty("ingredient", ingredient);   // ← Now a string, not object
+        json.addProperty("result", result);           // ← Now a string
         json.addProperty("mode", mode.getSerializedName());
 
         if (itemIngredient != null) {
@@ -210,7 +249,7 @@ public abstract class TFCRecipeBuilder implements DataProvider {
             json.add("extra_drop", extraDrop);
         }
 
-        saveRecipe(cache, "chisel/" + name, json);
+        saveRecipe(cache, "chisel/" + mode.getSerializedName() + "/" + name, json);
     }
 
     // ========================= Collapse/Landslide =============================
@@ -262,6 +301,13 @@ public abstract class TFCRecipeBuilder implements DataProvider {
         obj.addProperty("item", item);
         return obj;
     }
+    protected JsonObject ingredient(Item item) {
+        String itemName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).toString();
+
+        JsonObject obj = new JsonObject();
+        obj.addProperty("item", itemName);
+        return obj;
+    }
 
     protected JsonObject tagIngredient(String tag) {
         JsonObject obj = new JsonObject();
@@ -272,6 +318,15 @@ public abstract class TFCRecipeBuilder implements DataProvider {
     protected JsonObject simpleResult(String item, int count) {
         JsonObject result = new JsonObject();
         result.addProperty("item", item);
+        if (count > 1) result.addProperty("count", count);
+        return result;
+    }
+
+    protected JsonObject simpleResult(Item item, int count) {
+        String itemName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).toString();
+
+        JsonObject result = new JsonObject();
+        result.addProperty("item", itemName);
         if (count > 1) result.addProperty("count", count);
         return result;
     }

@@ -1,11 +1,11 @@
 package com.bumppo109.firma_compat.datagen.assets;
 
 import com.bumppo109.firma_compat.FirmaCompat;
-import com.bumppo109.firma_compat.block.CompatRock;
-import com.bumppo109.firma_compat.block.CompatWood;
-import com.bumppo109.firma_compat.block.ModBlocks;
+import com.bumppo109.firma_compat.block.*;
+import net.dries007.tfc.common.blocks.devices.DryingBricksBlock;
 import net.dries007.tfc.common.blocks.devices.SluiceBlock;
 import net.dries007.tfc.common.blocks.devices.BarrelBlock;
+import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -30,12 +30,125 @@ public class ModBlockStateProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
         FirmaCompat.LOGGER.info("Starting blockstate and model generation for Firma Compat...");
 
+        simpleBlockWithItem(ModBlocks.PRIMITIVE_ANVIL.get(),
+                models().withExistingParent("primitive_anvil", modLoc("block/template/rock_anvil"))
+                        .texture("texture", mcLoc("block/smooth_stone")));
+
         // Wood blocks
         for (CompatWood wood : CompatWood.VALUES) {
             generateWoodBlock(wood);
         }
+        for (CompatRock rock : CompatRock.VALUES) {
+            generateRockBlock(rock);
+        }
+        ModBlocks.ORES.forEach((rock, oreMap) -> {
+            oreMap.forEach((ore, blockSupplier) -> {
+                Block oreBlock = blockSupplier.get();
+                String oreName = ore.name().toLowerCase();
+
+                overlayCubeAll(oreBlock, modLoc("block/template/ore_overlay/" + oreName), rock.rawTexture());
+            });
+        });
+
+        // ────────────────────────────────────────────────
+        // 2. Graded ores (poor/normal/rich)
+        ModBlocks.GRADED_ORES.forEach((rock, oreMap) -> {
+            oreMap.forEach((ore, gradeMap) -> {
+                gradeMap.forEach((grade, blockSupplier) -> {
+                    Block oreBlock = blockSupplier.get();
+                    String oreName   = ore.name().toLowerCase();
+
+                    ResourceLocation poorOverlay = modLoc("block/template/ore_overlay/poor_" + oreName);
+                    ResourceLocation normalOverlay = modLoc("block/template/ore_overlay/normal_" + oreName);
+                    ResourceLocation richOverlay = modLoc("block/template/ore_overlay/rich_" + oreName);
+
+                    if (grade.equals(CompatOre.Grade.POOR)){
+                        overlayCubeAll(oreBlock, poorOverlay, rock.rawTexture());
+                    } else if (grade.equals(CompatOre.Grade.NORMAL)) {
+                        overlayCubeAll(oreBlock, normalOverlay, rock.rawTexture());
+                    } else if (grade.equals(CompatOre.Grade.RICH)) {
+                        overlayCubeAll(oreBlock, richOverlay, rock.rawTexture());
+                    }
+                });
+            });
+        });
+
+        //Gravel Deposits
+        ResourceLocation copperOverlay = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/template/deposit_overlay/native_copper");
+        ResourceLocation silverOverlay = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/template/deposit_overlay/native_silver");
+        ResourceLocation goldOverlay = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/template/deposit_overlay/native_gold");
+        ResourceLocation cassiteriteOverlay = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/template/deposit_overlay/cassiterite");
+        ResourceLocation gravel = ResourceLocation.withDefaultNamespace("block/gravel");
+
+        overlayCubeAll(ModBlocks.CASSITERITE_GRAVEL_DEPOSIT.get(), cassiteriteOverlay, gravel);
+        overlayCubeAll(ModBlocks.NATIVE_COPPER_GRAVEL_DEPOSIT.get(), copperOverlay, gravel);
+        overlayCubeAll(ModBlocks.NATIVE_GOLD_GRAVEL_DEPOSIT.get(), goldOverlay, gravel);
+        overlayCubeAll(ModBlocks.NATIVE_SILVER_GRAVEL_DEPOSIT.get(), silverOverlay, gravel);
+
+        for (Aqueducts aqueduct : Aqueducts.VALUES) {
+            Block aqueductBlock = ModBlocks.AQUEDUCTS.get(aqueduct).get();
+
+            aqueductBlock(aqueductBlock, aqueduct.bricksTexture());
+        }
+
+
+        //Soils
+        ResourceLocation mudTexture = ResourceLocation.withDefaultNamespace("block/mud");
+        ResourceLocation mudBricksTexture = ResourceLocation.withDefaultNamespace("block/mud_bricks");
+
+        ResourceLocation grassTopTexture = ResourceLocation.withDefaultNamespace("block/grass_block_top");
+        ResourceLocation grassSideTexture = ResourceLocation.withDefaultNamespace("block/grass_block_side");
+        ResourceLocation grassBlockOverlayTexture = ResourceLocation.withDefaultNamespace("block/grass_block_side_overlay");
+        ResourceLocation podzolTopTexture = ResourceLocation.withDefaultNamespace("block/podzol_top");
+        ResourceLocation podzolSideTexture = ResourceLocation.withDefaultNamespace("block/podzol_side");
+        ResourceLocation podzolBlockOverlayTexture = ResourceLocation.fromNamespaceAndPath("firma_compat","block/podzol_overlay");
+        ResourceLocation clayDirtTexture = ResourceLocation.fromNamespaceAndPath("firma_compat","block/clay_dirt");
+        ResourceLocation kaolinDirtTexture = ResourceLocation.fromNamespaceAndPath("firma_compat","block/kaolin_clay");
+
+        dryingMudBrickBlock(ModBlocks.DRYING_MUD_BRICK.get(), mudBricksTexture, mudTexture);
+        topBottomSideOverlayBlock(ModBlocks.CLAY_GRASS_BLOCK.get(), grassTopTexture, clayDirtTexture, clayDirtTexture, grassBlockOverlayTexture);
+        topBottomSideOverlayBlock(ModBlocks.CLAY_PODZOL.get(), podzolTopTexture, clayDirtTexture, clayDirtTexture, podzolBlockOverlayTexture);
+        topBottomSideOverlayBlock(ModBlocks.KAOLIN_CLAY_GRASS_BLOCK.get(), grassTopTexture, kaolinDirtTexture, kaolinDirtTexture, grassBlockOverlayTexture);
+        topBottomSideOverlayBlock(ModBlocks.KAOLIN_CLAY_PODZOL.get(), podzolTopTexture, kaolinDirtTexture, kaolinDirtTexture, podzolBlockOverlayTexture);
+        simpleBlockReuseTexture(ModBlocks.CLAY_DIRT.get(), clayDirtTexture);
+        simpleBlockReuseTexture(ModBlocks.KAOLIN_CLAY_DIRT.get(), kaolinDirtTexture);
+
+        ModelFile farmlandModel = models().withExistingParent("block/farmland", mcLoc("block/farmland"));
+        simpleBlockWithItem(ModBlocks.COMPAT_FARMLAND.get(), farmlandModel);
 
         FirmaCompat.LOGGER.info("Finished blockstate and model generation.");
+    }
+
+    // ========================================================================
+    // ROCK BLOCKS
+    // ========================================================================
+    private void generateRockBlock(CompatRock rock) {
+        String woodName = rock.getSerializedName();
+        var map = ModBlocks.ROCK_BLOCKS.get(rock);
+
+        Block hardened = map.get(CompatRock.BlockType.HARDENED).get();
+        Block loose = map.get(CompatRock.BlockType.LOOSE).get();
+        Block looseCobble = map.get(CompatRock.BlockType.LOOSE_COBBLE).get();
+        Block hardCobble = map.get(CompatRock.BlockType.HARDENED_COBBLE).get();
+        Block bricks = map.get(CompatRock.BlockType.BRICK).get();
+        SlabBlock brickSlab = rock.getSlab(CompatRock.BlockType.BRICK).get();
+        StairBlock brickStairs = rock.getStair(CompatRock.BlockType.BRICK).get();
+        WallBlock brickWall = rock.getWall(CompatRock.BlockType.BRICK).get();
+        Block aqueduct = map.get(CompatRock.BlockType.BRICK_AQUEDUCT).get();
+
+        looseBlock(loose, rock, rock.rawTexture());
+        aqueductBlock(aqueduct, rock, rock.bricksTexture());
+        simpleBlockReuseTexture(hardened, rock.rawTexture());
+        simpleBlockReuseTexture(looseCobble, rock.cobbleTexture());
+        simpleBlockReuseTexture(hardCobble, rock.cobbleTexture());
+        simpleBlockReuseTexture(bricks, rock.bricksTexture());
+
+        if(rock != CompatRock.STONE && rock != CompatRock.DEEPSLATE && rock != CompatRock.BLACKSTONE && rock != CompatRock.END_STONE){
+            slabBlock(brickSlab, rock.bricksTexture(), rock.bricksTexture());
+            stairsBlock(brickStairs, rock.bricksTexture());
+            wallBlock(brickWall, rock.bricksTexture());
+        }
+
     }
 
     // ========================================================================
@@ -96,6 +209,188 @@ public class ModBlockStateProvider extends BlockStateProvider {
         gearBoxBlock(gearBox, planks, axleCasingFront, axleCasingRound, wood);
         waterWheelBlock(waterWheel, planks, wood);
         windmillBlock(windmill, wood);
+    }
+
+    private void topBottomSideBlock(Block block, ResourceLocation top, ResourceLocation bottom, ResourceLocation side) {
+        String blockPath = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
+
+        ModelFile model = models().withExistingParent(blockPath, mcLoc("grass_block"))
+                .texture("bottom", bottom)
+                .texture("top", top)
+                .texture("side", side)
+                .texture("particle", side);
+
+        simpleBlockWithItem(block, model);
+    }
+
+    private void topBottomSideOverlayBlock(Block block, ResourceLocation top, ResourceLocation bottom, ResourceLocation side, ResourceLocation overlay) {
+        String blockPath = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
+
+        ModelFile model = models().withExistingParent(blockPath, mcLoc("grass_block"))
+                .texture("bottom", bottom)
+                .texture("top", top)
+                .texture("side", side)
+                .texture("overlay", overlay)
+                .texture("particle", side);
+
+        simpleBlockWithItem(block, model);
+    }
+
+    private void dryingMudBrickBlock(Block block, ResourceLocation dryMud, ResourceLocation wetMud) {
+        ModelFile brickWet1Model = models().withExistingParent("block/drying_bricks/mud_wet_1", modLoc("block/template/drying_bricks/1"))
+                .texture("mud", wetMud);
+        ModelFile brickDry1Model = models().withExistingParent("block/drying_bricks/mud_dry_1", modLoc("block/template/drying_bricks/1"))
+                .texture("mud", dryMud);
+        ModelFile brickWet2Model = models().withExistingParent("block/drying_bricks/mud_wet_2", modLoc("block/template/drying_bricks/2"))
+                .texture("mud", wetMud);
+        ModelFile brickDry2Model = models().withExistingParent("block/drying_bricks/mud_dry_2", modLoc("block/template/drying_bricks/2"))
+                .texture("mud", dryMud);
+        ModelFile brickWet3Model = models().withExistingParent("block/drying_bricks/mud_wet_3", modLoc("block/template/drying_bricks/3"))
+                .texture("mud", wetMud);
+        ModelFile brickDry3Model = models().withExistingParent("block/drying_bricks/mud_dry_3", modLoc("block/template/drying_bricks/3"))
+                .texture("mud", dryMud);
+        ModelFile brickWet4Model = models().withExistingParent("block/drying_bricks/mud_wet_4", modLoc("block/template/drying_bricks/4"))
+                .texture("mud", wetMud);
+        ModelFile brickDry4Model = models().withExistingParent("block/drying_bricks/mud_dry_4", modLoc("block/template/drying_bricks/4"))
+                .texture("mud", dryMud);
+
+        getVariantBuilder(block)
+                .partialState().with(DryingBricksBlock.COUNT, 1).with(DryingBricksBlock.DRIED, false)
+                .modelForState().modelFile(brickWet1Model).addModel()
+                .partialState().with(DryingBricksBlock.COUNT, 1).with(DryingBricksBlock.DRIED, true)
+                .modelForState().modelFile(brickDry1Model).addModel()
+
+                .partialState().with(DryingBricksBlock.COUNT, 2).with(DryingBricksBlock.DRIED, false)
+                .modelForState().modelFile(brickWet2Model).addModel()
+                .partialState().with(DryingBricksBlock.COUNT, 2).with(DryingBricksBlock.DRIED, true)
+                .modelForState().modelFile(brickDry2Model).addModel()
+
+                .partialState().with(DryingBricksBlock.COUNT, 3).with(DryingBricksBlock.DRIED, false)
+                .modelForState().modelFile(brickWet3Model).addModel()
+                .partialState().with(DryingBricksBlock.COUNT, 3).with(DryingBricksBlock.DRIED, true)
+                .modelForState().modelFile(brickDry3Model).addModel()
+
+                .partialState().with(DryingBricksBlock.COUNT, 4).with(DryingBricksBlock.DRIED, false)
+                .modelForState().modelFile(brickWet4Model).addModel()
+                .partialState().with(DryingBricksBlock.COUNT, 4).with(DryingBricksBlock.DRIED, true)
+                .modelForState().modelFile(brickDry4Model).addModel();
+
+    }
+
+    private void simpleBlockReuseTexture(Block block, ResourceLocation textureAll) {
+        String blockPath = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
+
+        ModelFile model = models()
+                .withExistingParent((blockPath), mcLoc("cube_all"))
+                .texture("all", textureAll);
+
+        simpleBlockWithItem(block, model);
+    }
+
+    private void overlayCubeAll(Block block, ResourceLocation overlay, ResourceLocation base) {
+        String blockId = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
+
+        ModelFile blockModel = models()
+                .withExistingParent(blockId, modLoc("block/template/ore"))
+                .texture("all", base)
+                .texture("overlay", overlay);
+
+        simpleBlockWithItem(block, blockModel);
+    }
+
+    private void aqueductBlock(Block block, CompatRock rock, ResourceLocation bricksTexture) {
+        String brickIdName = rock.getSerializedName();
+
+        ModelFile aqueductBaseModel = models().withExistingParent("block/aqueduct/" + brickIdName + "/base", modLoc("block/template/aqueduct/base"))
+                .texture("texture", bricksTexture)
+                .texture("particle", bricksTexture);
+        ModelFile aqueductNorthModel = models().withExistingParent("block/aqueduct/" + brickIdName + "/north", modLoc("block/template/aqueduct/north"))
+                .texture("texture", bricksTexture)
+                .texture("particle", bricksTexture);
+        ModelFile aqueductSouthModel = models().withExistingParent("block/aqueduct/" + brickIdName + "/south", modLoc("block/template/aqueduct/south"))
+                .texture("texture", bricksTexture)
+                .texture("particle", bricksTexture);
+        ModelFile aqueductEastModel = models().withExistingParent("block/aqueduct/" + brickIdName + "/east", modLoc("block/template/aqueduct/east"))
+                .texture("texture", bricksTexture)
+                .texture("particle", bricksTexture);
+        ModelFile aqueductWestModel = models().withExistingParent("block/aqueduct/" + brickIdName + "/west", modLoc("block/template/aqueduct/west"))
+                .texture("texture", bricksTexture)
+                .texture("particle", bricksTexture);
+
+        getMultipartBuilder(block)
+                .part().modelFile(aqueductBaseModel).addModel().end()
+                .part().modelFile(aqueductNorthModel).addModel().condition(BlockStateProperties.NORTH, false).end()
+                .part().modelFile(aqueductSouthModel).addModel().condition(BlockStateProperties.SOUTH, false).end()
+                .part().modelFile(aqueductEastModel).addModel().condition(BlockStateProperties.EAST, false).end()
+                .part().modelFile(aqueductWestModel).addModel().condition(BlockStateProperties.WEST, false).end();
+
+        simpleBlockItem(block, aqueductBaseModel);
+    }
+
+    private void aqueductBlock(Block block, ResourceLocation bricksTexture) {
+        String brickIdName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
+
+        ModelFile aqueductBaseModel = models().withExistingParent("block/aqueduct/" + brickIdName + "/base", modLoc("block/template/aqueduct/base"))
+                .texture("texture", bricksTexture)
+                .texture("particle", bricksTexture);
+        ModelFile aqueductNorthModel = models().withExistingParent("block/aqueduct/" + brickIdName + "/north", modLoc("block/template/aqueduct/north"))
+                .texture("texture", bricksTexture)
+                .texture("particle", bricksTexture);
+        ModelFile aqueductSouthModel = models().withExistingParent("block/aqueduct/" + brickIdName + "/south", modLoc("block/template/aqueduct/south"))
+                .texture("texture", bricksTexture)
+                .texture("particle", bricksTexture);
+        ModelFile aqueductEastModel = models().withExistingParent("block/aqueduct/" + brickIdName + "/east", modLoc("block/template/aqueduct/east"))
+                .texture("texture", bricksTexture)
+                .texture("particle", bricksTexture);
+        ModelFile aqueductWestModel = models().withExistingParent("block/aqueduct/" + brickIdName + "/west", modLoc("block/template/aqueduct/west"))
+                .texture("texture", bricksTexture)
+                .texture("particle", bricksTexture);
+
+        getMultipartBuilder(block)
+                .part().modelFile(aqueductBaseModel).addModel().end()
+                .part().modelFile(aqueductNorthModel).addModel().condition(BlockStateProperties.NORTH, false).end()
+                .part().modelFile(aqueductSouthModel).addModel().condition(BlockStateProperties.SOUTH, false).end()
+                .part().modelFile(aqueductEastModel).addModel().condition(BlockStateProperties.EAST, false).end()
+                .part().modelFile(aqueductWestModel).addModel().condition(BlockStateProperties.WEST, false).end();
+
+        simpleBlockItem(block, aqueductBaseModel);
+    }
+
+    private void looseBlock(Block loose, CompatRock rock, ResourceLocation rockTexture) {
+        String rockName = rock.getSerializedName();
+
+        ModelFile looseOneModel = models()
+                .withExistingParent(("block/loose/" + rockName + "_1"), modLoc("block/template/loose/loose_metamorphic_1"))
+                .texture("texture", rockTexture);
+
+        ModelFile looseTwoModel = models()
+                .withExistingParent(("block/loose/" + rockName + "_2"), modLoc("block/template/loose/loose_metamorphic_2"))
+                .texture("texture", rockTexture);
+
+        ModelFile looseThreeModel = models()
+                .withExistingParent(("block/loose/" + rockName + "_3"), modLoc("block/template/loose/loose_metamorphic_3"))
+                .texture("texture", rockTexture);
+
+        getVariantBuilder(loose)
+                .forAllStatesExcept(
+                        state -> {
+                            int count = state.getValue(LooseRockBlock.COUNT);
+                            ModelFile model = switch (count) {
+                                case 1 -> looseOneModel;
+                                case 2 -> looseTwoModel;
+                                case 3 -> looseThreeModel;
+                                default -> looseOneModel; // fallback
+                            };
+
+                            return new ConfiguredModel[] {
+                                    new ConfiguredModel(model, 0, 0,   false),
+                                    new ConfiguredModel(model, 0, 90,  false),
+                                    new ConfiguredModel(model, 0, 180, false),
+                                    new ConfiguredModel(model, 0, 270, false)
+                            };
+                        },
+                        LooseRockBlock.FLUID // ← ignore this property (replace with your actual fluid Property)
+                );
     }
 
     // ========================================================================
@@ -343,16 +638,25 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .withExistingParent("block/axle/" + name, modLoc("block/template/axle"))
                 .texture("wood", strippedLog);
 
-        simpleBlock(block, axleModel);
+        getVariantBuilder(block)
+                .partialState()
+                .setModels(new ConfiguredModel(models().getExistingFile(ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/template/empty"))));
+
+        simpleBlockItem(block, axleModel);
     }
 
     private void bladedAxleBlock(Block block, ResourceLocation strippedLog, CompatWood wood) {
         String name = wood.getSerializedName();
 
-        ModelFile axleModel = models()
+        ModelFile bladedAxleModel = models()
                 .withExistingParent("block/bladed_axle/" + name, modLoc("block/template/bladed_axle"))
                 .texture("wood", strippedLog);
-        simpleBlock(block, axleModel);
+
+        getVariantBuilder(block)
+                .partialState()
+                .setModels(new ConfiguredModel(models().getExistingFile(ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/template/empty"))));
+
+        simpleBlockItem(block, bladedAxleModel);
     }
 
     private void encasedAxleBlock(Block block, ResourceLocation stripped, ResourceLocation planks, ResourceLocation casing, ResourceLocation casingFront, CompatWood wood) {

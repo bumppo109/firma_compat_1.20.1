@@ -35,6 +35,9 @@ public class ModItemTagGenerator extends ItemTagsProvider {
             tag(ItemTags.FENCES)
                     .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get().asItem());
         }
+        tag(TFCTags.Items.CARRIED_BY_HORSE)
+                .add(ModBlocks.COMPAT_CHEST.get().asItem())
+                .add(ModBlocks.COMPAT_TRAPPED_CHEST.get().asItem());
 
         this.tag(ModTags.Items.CHAINS)
                 .add(Items.CHAIN)

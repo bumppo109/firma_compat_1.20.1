@@ -36,6 +36,7 @@ import java.util.function.Supplier;
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(Registries.BLOCK, FirmaCompat.MODID);
+
     //Wood
     public static final Map<CompatWood, Map<CompatWood.BlockType, RegistryObject<Block>>> WOODS = Helpers.mapOfKeys(CompatWood.class, wood ->
             Helpers.mapOfKeys(CompatWood.BlockType.class, type ->
@@ -107,34 +108,10 @@ public class ModBlocks {
 
     // Metals
 
-    public static final Map<CompatMetal, Map<CompatMetal.BlockType, RegistryObject<Block>>> METALS = Helpers.mapOfKeys(CompatMetal.class, metal ->
-            Helpers.mapOfKeys(CompatMetal.BlockType.class, type -> type.has(metal), type ->
-                    register(("metal/" + type.name() + "/" + metal.name()), type.create(metal), type.createBlockItem(new Item.Properties()))
-            )
-    );
-
-    /*
-    public static final Map<CompatMetal, Map<Metal.BlockType, RegistryObject<Block>>> METALS = Helpers.mapOfKeys(CompatMetal.class, metal ->
-            Helpers.mapOfKeys(Metal.BlockType.class, type -> type.has(Metal.Default.BISMUTH), type ->
-                    register(type.createName(metal), type.create(metal), type.createBlockItem(new Item.Properties()))
-            )
-    );
-
-     */
-
     public static final Map<CompatMetal, RegistryObject<LiquidBlock>> METAL_FLUIDS = Helpers.mapOfKeys(CompatMetal.class, metal ->
             registerNoItem("fluid/metal/" + metal.name(), () -> new LiquidBlock(ModFluids.METALS.get(metal).source(), BlockBehaviour.Properties.copy(Blocks.LAVA).noLootTable()))
     );
 
-    // Rock Stuff
-
-    /*
-    public static final Map<CompatRock, Map<CompatRock.BlockType, RegistryObject<Block>>> ROCK_BLOCKS = Helpers.mapOfKeys(CompatRock.class, rock ->
-            Helpers.mapOfKeys(CompatRock.BlockType.class, type ->
-                    register(rock.name() + "_" + (type.name()), () -> type.create(rock))
-            )
-    );
-     */
     // ====================== MAIN ROCK BLOCKS ======================
     public static final Map<CompatRock, Map<CompatRock.BlockType, RegistryObject<Block>>> ROCK_BLOCKS =
             Helpers.mapOfKeys(CompatRock.class, rock ->
@@ -157,16 +134,18 @@ public class ModBlocks {
                     })
             );
 
-    /*
-    public static final Map<Rock, RegistryObject<Block>> ROCK_ANVILS = Helpers.mapOfKeys(Rock.class, rock -> rock.category() == RockCategory.IGNEOUS_EXTRUSIVE || rock.category() == RockCategory.IGNEOUS_INTRUSIVE, rock ->
-            register("rock/anvil/" + rock.name(), () -> new RockAnvilBlock(ExtendedProperties.of().mapColor(MapColor.STONE).sound(SoundType.STONE).strength(2, 10).requiresCorrectToolForDrops().blockEntity(TFCBlockEntities.ANVIL), TFCBlocks.ROCK_BLOCKS.get(rock).get(Rock.BlockType.RAW)))
-    );
-     */
-
     //anvil
     public static final RegistryObject<Block> PRIMITIVE_ANVIL = register("primitive_anvil",
-            () -> new RockAnvilBlock(ExtendedProperties.of().mapColor(MapColor.STONE).sound(SoundType.STONE).strength(2.0F, 10.0F).requiresCorrectToolForDrops().blockEntity(TFCBlockEntities.ANVIL), (Supplier<? extends Block>) Blocks.STONE));
-
+            () -> new RockAnvilBlock(
+                    ExtendedProperties.of()
+                            .mapColor(MapColor.STONE)
+                            .sound(SoundType.STONE)
+                            .strength(2.0F, 10.0F)
+                            .requiresCorrectToolForDrops()
+                            .blockEntity(TFCBlockEntities.ANVIL),
+                    () -> Blocks.STONE
+            )
+    );
 
     //gravel deposit
     public static final RegistryObject<Block> CASSITERITE_GRAVEL_DEPOSIT = register("cassiterite_gravel_deposit",
@@ -219,22 +198,18 @@ public class ModBlocks {
     private static String getRockBlockRegistryName(CompatRock rock, CompatRock.BlockType type) {
         if (rock == CompatRock.BLACKSTONE && type == CompatRock.BlockType.BRICK) {
             return "polished_blackstone_bricks";   // special case you requested
+        } else if (type == CompatRock.BlockType.BRICK) {
+            return rock.name() + "_bricks";
         }
 
-        String base = rock.name().toLowerCase(Locale.ROOT) + "_" + type.name().toLowerCase(Locale.ROOT);
-
-        // Most TFC-style bricks are plural ("_bricks")
-        if (type == CompatRock.BlockType.BRICK) {
-            return base + "s";
-        }
-        return base;
+        return rock.name().toLowerCase(Locale.ROOT) + "_" + type.name().toLowerCase(Locale.ROOT);
     }
 
     private static String getRockDecorationName(CompatRock rock, CompatRock.BlockType type, String suffix) {
         if (rock == CompatRock.BLACKSTONE && type == CompatRock.BlockType.BRICK) {
-            return "polished_blackstone_bricks_" + suffix;
+            return "polished_blackstone_brick_" + suffix;
         }
-        return rock.name().toLowerCase(Locale.ROOT) + type.name().toLowerCase(Locale.ROOT) + "_" + suffix;
+        return rock.name().toLowerCase(Locale.ROOT) + "_" + type.name().toLowerCase(Locale.ROOT) + "_" + suffix;
     }
 
     private static <T extends Block> RegistryObject<T> registerNoItem(String name, Supplier<T> blockSupplier)

@@ -1,15 +1,20 @@
 {
   "values": [
     "firma_compat:stone_brick_aqueduct",
-    "firma_compat:mossy_stone_brick_aqueduct",
     "firma_compat:deepslate_brick_aqueduct",
-    "firma_compat:deepslate_tile_aqueduct",
-    "firma_compat:brick_aqueduct",
     "firma_compat:tuff_brick_aqueduct",
     "firma_compat:polished_blackstone_brick_aqueduct",
     "firma_compat:end_stone_brick_aqueduct",
+    "firma_compat:nether_brick_aqueduct",
+    "firma_compat:andesite_aqueduct",
+    "firma_compat:granite_aqueduct",
+    "firma_compat:diorite_aqueduct",
+    "firma_compat:calcite_aqueduct",
+    "firma_compat:dripstone_aqueduct",
+    "firma_compat:basalt_aqueduct",
+    "firma_compat:mossy_stone_brick_aqueduct",
+    "firma_compat:brick_aqueduct",
     "firma_compat:prismarine_brick_aqueduct",
-    "firma_compat:quartz_brick_aqueduct",
-    "firma_compat:nether_brick_aqueduct"
+    "firma_compat:quartz_brick_aqueduct"
   ]
 }

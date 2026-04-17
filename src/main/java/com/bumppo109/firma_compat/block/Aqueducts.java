@@ -1,6 +1,8 @@
 package com.bumppo109.firma_compat.block;
 
+import com.bumppo109.firma_compat.FirmaCompat;
 import com.bumppo109.firma_compat.item.ModItems;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -11,13 +13,8 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 public enum Aqueducts implements StringRepresentable {
-    STONE_BRICKS,
     MOSSY_STONE_BRICKS,
-    DEEPSLATE_BRICKS,
-    DEEPSLATE_TILES,
     BRICKS,
-    POLISHED_BLACKSTONE_BRICKS,
-    END_STONE_BRICKS,
     PRISMARINE_BRICKS,
     QUARTZ_BRICKS,
     NETHER_BRICKS
@@ -54,16 +51,21 @@ public enum Aqueducts implements StringRepresentable {
      */
     public Supplier<Block> vanillaEquivalent() {
         return switch (this) {
-            case DEEPSLATE_BRICKS -> () -> Blocks.DEEPSLATE_BRICKS;
-            case DEEPSLATE_TILES -> () -> Blocks.DEEPSLATE_TILES;
             case BRICKS -> () -> Blocks.BRICKS;
-            case POLISHED_BLACKSTONE_BRICKS -> () -> Blocks.POLISHED_BLACKSTONE_BRICKS;
-            case END_STONE_BRICKS -> () -> Blocks.END_STONE_BRICKS;
             case PRISMARINE_BRICKS -> () -> Blocks.PRISMARINE_BRICKS;
             case QUARTZ_BRICKS -> () -> Blocks.QUARTZ_BRICKS;
             case NETHER_BRICKS -> () -> Blocks.NETHER_BRICKS;
             case MOSSY_STONE_BRICKS -> () -> Blocks.MOSSY_STONE_BRICKS;
-            default -> () -> Blocks.STONE_BRICKS;
+        };
+    }
+
+    public ResourceLocation bricksTexture() {
+        return switch (this) {
+            case BRICKS -> ResourceLocation.withDefaultNamespace("block/bricks");
+            case PRISMARINE_BRICKS -> ResourceLocation.withDefaultNamespace("block/prismarine_bricks");
+            case QUARTZ_BRICKS -> ResourceLocation.withDefaultNamespace("block/quartz_bricks");
+            case NETHER_BRICKS -> ResourceLocation.withDefaultNamespace("block/nether_bricks");
+            case MOSSY_STONE_BRICKS -> ResourceLocation.withDefaultNamespace("block/mossy_stone_bricks");
         };
     }
 }
