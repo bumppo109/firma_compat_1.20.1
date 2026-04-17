@@ -100,7 +100,7 @@ public class ModItemModelProvider extends ItemModelProvider {
                 withExistingParent(Objects.requireNonNull(ModItems.BRICK.get(rock).getId()).getPath(),
                         ResourceLocation.withDefaultNamespace("item/generated")).texture("layer0",
                         ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,"item/polished_blackstone_brick"));
-            } else {
+            } else if (rock != CompatRock.NETHERRACK) {
                 basicItem(ModItems.BRICK.get(rock).get());
             }
             basicItem(ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE).get().asItem());
