@@ -1,10 +1,7 @@
 package com.bumppo109.firma_compat.datagen.recipes;
 
 import com.bumppo109.firma_compat.FirmaCompat;
-import com.bumppo109.firma_compat.block.Aqueducts;
-import com.bumppo109.firma_compat.block.CompatRock;
-import com.bumppo109.firma_compat.block.CompatWood;
-import com.bumppo109.firma_compat.block.ModBlocks;
+import com.bumppo109.firma_compat.block.*;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -25,6 +22,7 @@ import java.util.AbstractQueue;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 public class ModRecipeProvider extends TFCRecipeBuilder {
 
@@ -171,6 +169,12 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                     Map.of('X', ingredient(brickItem), 'A', ingredient("tfc:mortar")),
                     simpleResult(aqueductBlock, 1),
                     null);
+
+            //collapse
+            collapse(cache, ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE_COBBLE).get(), null, rock);
+
+            //landslide
+            selfLandslide(cache, ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE_COBBLE).get());
         }
         //extra brick
         damageToolShapeless(cache, null, ModItems.BRICK.get(CompatRock.STONE).get(), "tfc:chisels", Items.STONE_BUTTON, 1);
@@ -229,9 +233,9 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         chisel(cache, Items.STONE, Items.SMOOTH_STONE, ChiselMode.SMOOTH);
         chisel(cache, Items.STONE, Items.STONE_STAIRS, ChiselMode.STAIR);
         chisel(cache, Items.STONE, Items.STONE_SLAB, ChiselMode.SLAB);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.STONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.SMOOTH_STONE, ChiselMode.SMOOTH);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.STONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.STONE_STAIRS, ChiselMode.STAIR);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.STONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.STONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.STONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.SMOOTH_STONE, ChiselMode.SMOOTH, "from_hardened");
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.STONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.STONE_STAIRS, ChiselMode.STAIR, "from_hardened");
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.STONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.STONE_SLAB, ChiselMode.SLAB, "from_hardened");
         chisel(cache, Items.SMOOTH_STONE, Items.SMOOTH_STONE_SLAB, ChiselMode.SLAB);
         chisel(cache, Items.COBBLESTONE, Items.COBBLESTONE_STAIRS, ChiselMode.STAIR);
         chisel(cache, Items.COBBLESTONE, Items.COBBLESTONE_SLAB, ChiselMode.SLAB);
@@ -246,32 +250,32 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         chisel(cache, Items.GRANITE, Items.POLISHED_GRANITE, ChiselMode.SMOOTH);
         chisel(cache, Items.GRANITE, Items.GRANITE_STAIRS, ChiselMode.STAIR);
         chisel(cache, Items.GRANITE, Items.GRANITE_SLAB, ChiselMode.SLAB);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.GRANITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_GRANITE, ChiselMode.SMOOTH);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.GRANITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.GRANITE_STAIRS, ChiselMode.SMOOTH);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.GRANITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.GRANITE_SLAB, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.GRANITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_GRANITE, ChiselMode.SMOOTH, "from_hardened");
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.GRANITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.GRANITE_STAIRS, ChiselMode.SMOOTH, "from_hardened");
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.GRANITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.GRANITE_SLAB, ChiselMode.SMOOTH, "from_hardened");
         chisel(cache, Items.POLISHED_GRANITE, Items.POLISHED_GRANITE_STAIRS, ChiselMode.STAIR);
         chisel(cache, Items.POLISHED_GRANITE, Items.POLISHED_GRANITE_STAIRS, ChiselMode.SLAB);
 
         chisel(cache, Items.ANDESITE, Items.POLISHED_ANDESITE, ChiselMode.SMOOTH);
         chisel(cache, Items.ANDESITE, Items.ANDESITE_STAIRS, ChiselMode.STAIR);
         chisel(cache, Items.ANDESITE, Items.ANDESITE_SLAB, ChiselMode.SLAB);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.ANDESITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_ANDESITE, ChiselMode.SMOOTH);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.ANDESITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.ANDESITE_STAIRS, ChiselMode.SMOOTH);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.ANDESITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.ANDESITE_SLAB, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.ANDESITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_ANDESITE, ChiselMode.SMOOTH, "from_hardened");
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.ANDESITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.ANDESITE_STAIRS, ChiselMode.SMOOTH, "from_hardened");
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.ANDESITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.ANDESITE_SLAB, ChiselMode.SMOOTH, "from_hardened");
         chisel(cache, Items.POLISHED_ANDESITE, Items.POLISHED_ANDESITE_STAIRS, ChiselMode.STAIR);
         chisel(cache, Items.POLISHED_ANDESITE, Items.POLISHED_ANDESITE_STAIRS, ChiselMode.SLAB);
 
         chisel(cache, Items.DIORITE, Items.POLISHED_DIORITE, ChiselMode.SMOOTH);
         chisel(cache, Items.DIORITE, Items.DIORITE_STAIRS, ChiselMode.STAIR);
         chisel(cache, Items.DIORITE, Items.DIORITE_SLAB, ChiselMode.SLAB);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.DIORITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_DIORITE, ChiselMode.SMOOTH);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.DIORITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.DIORITE_STAIRS, ChiselMode.SMOOTH);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.DIORITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.DIORITE_SLAB, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.DIORITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_DIORITE, ChiselMode.SMOOTH, "from_hardened");
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.DIORITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.DIORITE_STAIRS, ChiselMode.SMOOTH, "from_hardened");
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.DIORITE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.DIORITE_SLAB, ChiselMode.SMOOTH, "from_hardened");
         chisel(cache, Items.POLISHED_DIORITE, Items.POLISHED_DIORITE_STAIRS, ChiselMode.STAIR);
         chisel(cache, Items.POLISHED_DIORITE, Items.POLISHED_DIORITE_STAIRS, ChiselMode.SLAB);
 
         chisel(cache, Items.DEEPSLATE, Items.POLISHED_DEEPSLATE, ChiselMode.SMOOTH);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.DEEPSLATE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_DEEPSLATE, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.DEEPSLATE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_DEEPSLATE, ChiselMode.SMOOTH, "from_hardened");
         chisel(cache, Items.COBBLED_DEEPSLATE, Items.COBBLED_DEEPSLATE_STAIRS, ChiselMode.STAIR);
         chisel(cache, Items.COBBLED_DEEPSLATE, Items.COBBLED_DEEPSLATE_SLAB, ChiselMode.SLAB);
         chisel(cache, Items.POLISHED_DEEPSLATE, Items.POLISHED_DEEPSLATE_STAIRS, ChiselMode.STAIR);
@@ -322,15 +326,15 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         chisel(cache, Items.RED_NETHER_BRICKS, Items.RED_NETHER_BRICK_SLAB, ChiselMode.SLAB);
 
         chisel(cache, Items.BASALT, Items.SMOOTH_BASALT, ChiselMode.SMOOTH);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.BASALT).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.SMOOTH_BASALT, ChiselMode.SMOOTH);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.BASALT).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.SMOOTH_BASALT, ChiselMode.SMOOTH, "from_hardened");
         chisel(cache, Items.SMOOTH_BASALT, Items.POLISHED_BASALT, ChiselMode.SMOOTH);
 
         chisel(cache, Items.BLACKSTONE, Items.POLISHED_BLACKSTONE, ChiselMode.SMOOTH);
         chisel(cache, Items.BLACKSTONE, Items.BLACKSTONE_STAIRS, ChiselMode.STAIR);
         chisel(cache, Items.BLACKSTONE, Items.BLACKSTONE_SLAB, ChiselMode.SLAB);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.BLACKSTONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_BLACKSTONE, ChiselMode.SMOOTH);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.BLACKSTONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.BLACKSTONE_STAIRS, ChiselMode.STAIR);
-        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.BLACKSTONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.BLACKSTONE_SLAB, ChiselMode.SLAB);
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.BLACKSTONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.POLISHED_BLACKSTONE, ChiselMode.SMOOTH, "from_hardened");
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.BLACKSTONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.BLACKSTONE_STAIRS, ChiselMode.STAIR, "from_hardened");
+        chisel(cache, ModBlocks.ROCK_BLOCKS.get(CompatRock.BLACKSTONE).get(CompatRock.BlockType.HARDENED).get().asItem(), Items.BLACKSTONE_SLAB, ChiselMode.SLAB, "from_hardened");
         chisel(cache, Items.POLISHED_BLACKSTONE, Items.POLISHED_BLACKSTONE_STAIRS, ChiselMode.STAIR);
         chisel(cache, Items.POLISHED_BLACKSTONE, Items.POLISHED_BLACKSTONE_SLAB, ChiselMode.SLAB);
         chisel(cache, Items.POLISHED_BLACKSTONE_BRICKS, Items.CHISELED_POLISHED_BLACKSTONE, ChiselMode.SMOOTH);
@@ -350,12 +354,138 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         chisel(cache, Items.SMOOTH_QUARTZ, Items.SMOOTH_QUARTZ_SLAB, ChiselMode.SLAB);
         chisel(cache, Items.QUARTZ_BRICKS, Items.CHISELED_QUARTZ_BLOCK, ChiselMode.SMOOTH);
 
+        damageToolShapeless(cache, null, Items.CRACKED_STONE_BRICKS, "tfc:hammers", Items.STONE_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.CRACKED_DEEPSLATE_BRICKS, "tfc:hammers", Items.DEEPSLATE_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.CRACKED_DEEPSLATE_TILES, "tfc:hammers", Items.DEEPSLATE_TILES, 1);
+        damageToolShapeless(cache, null, Items.CRACKED_NETHER_BRICKS, "tfc:hammers", Items.NETHER_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.CRACKED_POLISHED_BLACKSTONE_BRICKS, "tfc:hammers", Items.POLISHED_BLACKSTONE_BRICKS, 1);
+
+        damageToolShapeless(cache, null, Items.CHISELED_STONE_BRICKS, "tfc:chisels", Items.STONE_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.SMOOTH_STONE, "tfc:chisels", Items.STONE, 1);
+        damageToolShapeless(cache, null, Items.POLISHED_GRANITE, "tfc:chisels", Items.GRANITE, 1);
+        damageToolShapeless(cache, null, Items.POLISHED_ANDESITE, "tfc:chisels", Items.ANDESITE, 1);
+        damageToolShapeless(cache, null, Items.POLISHED_DIORITE, "tfc:chisels", Items.DIORITE, 1);
+        damageToolShapeless(cache, null, Items.CHISELED_DEEPSLATE, "tfc:chisels", Items.DEEPSLATE_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.POLISHED_DEEPSLATE, "tfc:chisels", Items.DEEPSLATE, 1);
+        damageToolShapeless(cache, null, Items.CHISELED_SANDSTONE, "tfc:chisels", Items.CUT_SANDSTONE, 1);
+        damageToolShapeless(cache, null, Items.CUT_SANDSTONE, "tfc:chisels", Items.SMOOTH_SANDSTONE, 1);
+        damageToolShapeless(cache, null, Items.SMOOTH_SANDSTONE, "tfc:chisels", Items.SANDSTONE, 1);
+        damageToolShapeless(cache, null, Items.CHISELED_RED_SANDSTONE, "tfc:chisels", Items.CUT_RED_SANDSTONE, 1);
+        damageToolShapeless(cache, null, Items.CUT_RED_SANDSTONE, "tfc:chisels", Items.SMOOTH_RED_SANDSTONE, 1);
+        damageToolShapeless(cache, null, Items.SMOOTH_RED_SANDSTONE, "tfc:chisels", Items.RED_SANDSTONE, 1);
+        damageToolShapeless(cache, null, Items.DARK_PRISMARINE, "tfc:chisels", Items.PRISMARINE_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.CHISELED_NETHER_BRICKS, "tfc:chisels", Items.NETHER_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.SMOOTH_BASALT, "tfc:chisels", Items.BASALT, 1);
+        damageToolShapeless(cache, null, Items.POLISHED_BASALT, "tfc:chisels", Items.SMOOTH_BASALT, 1);
+        damageToolShapeless(cache, null, Items.CHISELED_QUARTZ_BLOCK, "tfc:chisels", Items.QUARTZ_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.SMOOTH_QUARTZ, "tfc:chisels", Items.QUARTZ_BLOCK, 1);
+
+        // ================ NATURAL
+
+        //mud
+        selfLandslide(cache, Blocks.PACKED_MUD);
+        planksRecipe(cache, Items.MUD, Items.PACKED_MUD);
+
+        //clay grasses
+        landslide(cache, ModBlocks.CLAY_GRASS_BLOCK.get(), ModBlocks.CLAY_DIRT.get(), null);
+        landslide(cache, ModBlocks.CLAY_PODZOL.get(), ModBlocks.CLAY_DIRT.get(), null);
+        selfLandslide(cache, ModBlocks.CLAY_DIRT.get());
+        landslide(cache, ModBlocks.KAOLIN_CLAY_GRASS_BLOCK.get(), ModBlocks.KAOLIN_CLAY_DIRT.get(), null);
+        landslide(cache, ModBlocks.KAOLIN_CLAY_PODZOL.get(), ModBlocks.KAOLIN_CLAY_DIRT.get(), null);
+        selfLandslide(cache, ModBlocks.KAOLIN_CLAY_DIRT.get());
+        landslide(cache, ModBlocks.COMPAT_FARMLAND.get(), Blocks.DIRT, null);
+
+        //deposit
+        selfLandslide(cache, ModBlocks.NATIVE_SILVER_GRAVEL_DEPOSIT.get());
+        selfLandslide(cache, ModBlocks.NATIVE_GOLD_GRAVEL_DEPOSIT.get());
+        selfLandslide(cache, ModBlocks.NATIVE_COPPER_GRAVEL_DEPOSIT.get());
+        selfLandslide(cache, ModBlocks.CASSITERITE_GRAVEL_DEPOSIT.get());
 
         return CompletableFuture.completedFuture(null);
     }
 
     protected String itemId(ItemLike itemLike) {
         return BuiltInRegistries.ITEM.getKey(itemLike.asItem()).getPath();
+    }
+
+    /**
+     * Generates a TFC collapse recipe for a CompatRock.
+     * Includes: raw rock, hardened rock, all normal ores, and only POOR graded ores.
+     *
+     * @param cache        CachedOutput
+     * @param resultBlock  The resulting cobble block after collapse
+     * @param recipeSuffix Optional suffix for the recipe filename (null = no suffix)
+     * @param compatRock   The rock type to generate the recipe for
+     */
+    protected void collapse(CachedOutput cache, Block resultBlock, @Nullable String recipeSuffix, CompatRock compatRock) {
+        ResourceLocation resultKey = ForgeRegistries.BLOCKS.getKey(resultBlock);
+        Objects.requireNonNull(resultKey, "Result block has no registry name");
+
+        String baseName = resultKey.getPath();
+        String resultId = resultKey.toString();
+
+        JsonArray ingredients = new JsonArray();
+
+        // Raw rock
+        Supplier<Block> rawBlock = compatRock.rawBlock();
+        if (rawBlock != null) {
+            ResourceLocation key = ForgeRegistries.BLOCKS.getKey(rawBlock.get());
+            if (key != null) ingredients.add(key.toString());
+        }
+
+        // Hardened rock
+        var rockBlocks = ModBlocks.ROCK_BLOCKS.get(compatRock);
+        if (rockBlocks != null) {
+            Supplier<Block> hardened = rockBlocks.get(CompatRock.BlockType.HARDENED);
+            if (hardened != null) {
+                ResourceLocation key = ForgeRegistries.BLOCKS.getKey(hardened.get());
+                if (key != null) ingredients.add(key.toString());
+            }
+        }
+
+        // Normal (non-graded) ores for this rock
+        var normalOres = ModBlocks.ORES.get(compatRock);
+        if (normalOres != null) {
+            normalOres.forEach((ore, supplier) -> {
+                if (supplier != null) {
+                    ResourceLocation key = ForgeRegistries.BLOCKS.getKey(supplier.get());
+                    if (key != null) ingredients.add(key.toString());
+                }
+            });
+        }
+
+        // Only POOR graded ores for this rock
+        var gradedOres = ModBlocks.GRADED_ORES.get(compatRock);
+        if (gradedOres != null) {
+            gradedOres.forEach((ore, gradeMap) -> {
+                Supplier<Block> poorOre = gradeMap.get(CompatOre.Grade.POOR);
+                if (poorOre != null) {
+                    ResourceLocation key = ForgeRegistries.BLOCKS.getKey(poorOre.get());
+                    if (key != null) ingredients.add(key.toString());
+                }
+            });
+        }
+
+        // Generate the recipe
+        collapseOrLandslide(cache, "collapse", baseName, recipeSuffix, ingredients, resultId);
+    }
+
+    protected void landslide(CachedOutput cache, Block inputBlock, Block resultBlock, @Nullable String recipeSuffix) {
+        ResourceLocation inputRes = ForgeRegistries.BLOCKS.getKey(inputBlock);
+        String inputPath = Objects.requireNonNull(inputRes).getPath();
+        String inputId = Objects.requireNonNull(inputRes).toString();
+
+        String outputId = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(resultBlock)).toString();
+
+        landslide(cache, inputPath, inputId, outputId, recipeSuffix);
+    }
+
+    protected void selfLandslide(CachedOutput cache, Block block) {
+        ResourceLocation inputRes = ForgeRegistries.BLOCKS.getKey(block);
+        String inputPath = Objects.requireNonNull(inputRes).getPath();
+        String inputId = Objects.requireNonNull(inputRes).toString();
+
+        landslide(cache, inputPath, inputId, inputId, null);
     }
 
     /**
@@ -471,7 +601,19 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         String resultStr     = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(output)).toString();
 
         // Call the original method, but now passing strings instead of JsonObjects
-        chisel(cache, name, ingredientStr, resultStr, mode, null, null);
+        chisel(cache, name, ingredientStr, resultStr, mode, null, null, null);
+    }
+
+    protected void chisel(CachedOutput cache, Item input, Item output, ChiselMode mode, String recipeSuffix) {
+
+        String name = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(output)).getPath();
+
+        // Use full resource location string for both ingredient and result
+        String ingredientStr = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(input)).toString();
+        String resultStr     = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(output)).toString();
+
+        // Call the original method, but now passing strings instead of JsonObjects
+        chisel(cache, name, ingredientStr, resultStr, mode, null, null, recipeSuffix);
     }
 
     protected String[] doorPattern = new String[]{"XX ", "XX ", "XX "};

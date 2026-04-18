@@ -1,5 +1,6 @@
 package com.bumppo109.firma_compat.block;
 
+import com.bumppo109.firma_compat.item.ModItems;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
@@ -12,6 +13,7 @@ import net.dries007.tfc.util.Metal;
 import net.dries007.tfc.util.registry.RegistryMetal;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -154,53 +156,24 @@ public enum CompatMetal implements RegistryMetal {
         SHEET(Type.PART, false),
         DOUBLE_SHEET(Type.PART, false),
         ROD(Type.PART, false),
-        TUYERE(Type.TOOL, (metal) -> new TieredItem(metal.toolTier(), properties())),
-        FISH_HOOK(Type.TOOL, false),
-        FISHING_ROD(Type.TOOL, (metal) -> new TFCFishingRodItem(properties().defaultDurability(metal.toolTier().getUses()), metal.toolTier())),
-        PICKAXE(Type.TOOL, (metal) -> new PickaxeItem(metal.toolTier(), (int) ToolItem.calculateVanillaAttackDamage(0.75F, metal.toolTier()), -2.8F, properties())),
-        PICKAXE_HEAD(Type.TOOL, true),
-        PROPICK(Type.TOOL, (metal) -> new PropickItem(metal.toolTier(), ToolItem.calculateVanillaAttackDamage(0.5F, metal.toolTier()), -2.8F, properties())),
-        PROPICK_HEAD(Type.TOOL, true),
-        AXE(Type.TOOL, (metal) -> new AxeItem(metal.toolTier(), ToolItem.calculateVanillaAttackDamage(1.5F, metal.toolTier()), -3.1F, properties())),
-        AXE_HEAD(Type.TOOL, true),
-        SHOVEL(Type.TOOL, (metal) -> new ShovelItem(metal.toolTier(), ToolItem.calculateVanillaAttackDamage(0.875F, metal.toolTier()), -3.0F, properties())),
-        SHOVEL_HEAD(Type.TOOL, true),
-        HOE(Type.TOOL, (metal) -> new TFCHoeItem(metal.toolTier(), -1, -2.0F, properties())),
-        HOE_HEAD(Type.TOOL, true),
-        CHISEL(Type.TOOL, (metal) -> new ChiselItem(metal.toolTier(), ToolItem.calculateVanillaAttackDamage(0.27F, metal.toolTier()), -1.5F, properties())),
-        CHISEL_HEAD(Type.TOOL, true),
-        HAMMER(Type.TOOL, (metal) -> new ToolItem(metal.toolTier(), ToolItem.calculateVanillaAttackDamage(1.0F, metal.toolTier()), -3.0F, TFCTags.Blocks.MINEABLE_WITH_HAMMER, properties())),
-        HAMMER_HEAD(Type.TOOL, true),
-        SAW(Type.TOOL, (metal) -> new AxeItem(metal.toolTier(), ToolItem.calculateVanillaAttackDamage(0.5F, metal.toolTier()), -3.0F, properties())),
-        SAW_BLADE(Type.TOOL, true),
-        JAVELIN(Type.TOOL, (metal) -> new JavelinItem(metal.toolTier(), ToolItem.calculateVanillaAttackDamage(1.0F, metal.toolTier()), -2.2F, 2f, properties(), metal.getSerializedName())), //todo attackspeed is new
-        JAVELIN_HEAD(Type.TOOL, true),
-        SWORD(Type.TOOL, (metal) -> new SwordItem(metal.toolTier(), (int)ToolItem.calculateVanillaAttackDamage(1.0F, metal.toolTier()), -2.4F, properties())),
-        SWORD_BLADE(Type.TOOL, true),
-        MACE(Type.TOOL, (metal) -> new MaceItem(metal.toolTier(), (int)ToolItem.calculateVanillaAttackDamage(1.3F, metal.toolTier()), -3.0F, properties())),
-        MACE_HEAD(Type.TOOL, true),
-        KNIFE(Type.TOOL, (metal) -> new ToolItem(metal.toolTier(), ToolItem.calculateVanillaAttackDamage(0.6F, metal.toolTier()), -2.0F, TFCTags.Blocks.MINEABLE_WITH_KNIFE, properties())),
-        KNIFE_BLADE(Type.TOOL, true),
-        SCYTHE(Type.TOOL, (metal) -> new ScytheItem(metal.toolTier(), ToolItem.calculateVanillaAttackDamage(0.7F, metal.toolTier()), -3.2F, TFCTags.Blocks.MINEABLE_WITH_SCYTHE, properties())),
-        SCYTHE_BLADE(Type.TOOL, true),
-        SHEARS(Type.TOOL, (metal) -> new ShearsItem(properties().defaultDurability(metal.toolTier().getUses()))),
+
         UNFINISHED_HELMET(Type.ARMOR, false),
-        //HELMET(Type.ARMOR, (metal) -> new ArmorItem(metal.armorTier(), ArmorItem.Type.HELMET, properties())),
         UNFINISHED_CHESTPLATE(Type.ARMOR, false),
-        //CHESTPLATE(Type.ARMOR, (metal) -> new ArmorItem(metal.armorTier(), ArmorItem.Type.CHESTPLATE, properties())),
         UNFINISHED_LEGGINGS(Type.ARMOR, false),
-        //GREAVES(Type.ARMOR, (metal) -> new ArmorItem(metal.armorTier(), ArmorItem.Type.LEGGINGS, properties())),
         UNFINISHED_BOOTS(Type.ARMOR, false),
-        UNFINISHED_LAMP(Type.UTILITY, false),
-        //BOOTS(Type.ARMOR, (metal) -> new ArmorItem(metal.armorTier(), ArmorItem.Type.BOOTS, properties())),
-        SHIELD(Type.TOOL, (metal) -> new TFCShieldItem(metal.toolTier(), properties()));
+
+        SWORD_BLADE(Type.TOOL, true),
+        AXE_HEAD(Type.TOOL, true),
+        SHOVEL_HEAD(Type.TOOL, true),
+        HOE_HEAD(Type.TOOL, true),
+        PICKAXE_HEAD(Type.TOOL, true);
 
         private final Function<RegistryMetal, Item> itemFactory;
         private final Type type;
         private final boolean mold;
 
         public static Item.Properties properties() {
-            return (new Item.Properties());//todo .tab(MetallumItemGroup.METAL);
+            return (new Item.Properties());
         }
 
         ItemType(Type type, boolean mold) {
@@ -240,17 +213,23 @@ public enum CompatMetal implements RegistryMetal {
 
             return isCommon;
         }
+
+        public double heatCapacity() {
+            double heatCapacity = 0;
+
+            switch (this) {
+                case ROD -> heatCapacity = 3.571;
+                case SHEET, SWORD_BLADE, DOUBLE_INGOT, UNFINISHED_BOOTS -> heatCapacity = 5.714;
+                case DOUBLE_SHEET, UNFINISHED_CHESTPLATE, UNFINISHED_LEGGINGS, UNFINISHED_HELMET -> heatCapacity = 11.429;
+                default -> heatCapacity = 2.857;
+            }
+
+            return heatCapacity;
+        }
     }
 
     public enum BlockType {
-        ANVIL(Type.UTILITY, (metal) -> new AnvilBlock(ExtendedProperties.of().mapColor(MapColor.METAL).noOcclusion().sound(SoundType.METAL).strength(10.0F, 10.0F).requiresCorrectToolForDrops().blockEntity(TFCBlockEntities.ANVIL), metal.metalTier())),
-        CHAIN(Type.UTILITY, (metal) -> new TFCChainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN))),
-        LAMP(Type.UTILITY, (metal) -> new LampBlock(ExtendedProperties.of(MapColor.METAL).noOcclusion().sound(SoundType.LANTERN).strength(4.0F, 10.0F).randomTicks().lightLevel((state) -> (Boolean)state.getValue(LampBlock.LIT) ? 15 : 0).blockEntity(TFCBlockEntities.LAMP)), LampBlockItem::new),
-        TRAPDOOR(Type.UTILITY, (metal) -> new TrapDoorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(5.0F).sound(SoundType.METAL).noOcclusion().isValidSpawn(TFCBlocks::never), BlockSetType.IRON));
-
-        // MetallumMetal.BlockType.BLOCK, MetallumMetal.BlockType.BLOCK_SLAB,
-        // MetallumMetal.BlockType.BLOCK_STAIRS, MetallumMetal.BlockType.BARS,
-
+        ;
         private final Function<RegistryMetal, Block> blockFactory;
         private final BiFunction<Block, Item.Properties, ? extends BlockItem> blockItemFactory;
         private final Type type;
@@ -276,5 +255,42 @@ public enum CompatMetal implements RegistryMetal {
         public boolean has(CompatMetal metal) {
             return this.type.hasType(metal);
         }
+    }
+
+    public Supplier<Item> ingot() {
+        return switch (this) {
+            case NETHERITE -> () -> Items.NETHERITE_INGOT;
+            default -> () -> ModItems.METAL_ITEMS.get(this).get(ItemType.INGOT).get();
+        };
+    }
+
+    public double tierForgeTemp() {
+        return switch (metalTier()) {
+            case TIER_0 -> 0;
+            case TIER_I -> 648;
+            case TIER_II -> 570;
+            case TIER_III -> 921;
+            case TIER_IV, TIER_VI -> 924;
+            case TIER_V -> 891;
+        };
+    }
+
+    public double tierWeldTemp() {
+        return switch (metalTier()) {
+            case TIER_0 -> 0;
+            case TIER_I -> 864;
+            case TIER_II -> 760;
+            case TIER_III -> 1228;
+            case TIER_IV, TIER_VI -> 1232;
+            case TIER_V -> 1180;
+        };
+    }
+
+    public double meltTemp() {
+        return switch (this) {
+            case NETHERITE -> 1535;
+            case POOR_NETHERITE -> 1450;
+            default -> 950;
+        };
     }
 }

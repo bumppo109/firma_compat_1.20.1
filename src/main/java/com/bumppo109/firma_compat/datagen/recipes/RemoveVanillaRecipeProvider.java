@@ -105,6 +105,7 @@ public class RemoveVanillaRecipeProvider extends RecipeProvider implements ICond
             //Stone
             "minecraft:prismarine_bricks",
             "minecraft:quartz_pillar",
+            "minecraft:packed_mud",
             "minecraft:mud_bricks",
             "minecraft:quartz_bricks",
             "minecraft:nether_bricks",

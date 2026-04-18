@@ -1,6 +1,7 @@
 package com.bumppo109.firma_compat.datagen;
 
 import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.util.ModTags;
@@ -34,6 +35,10 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                     .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get().asItem());
             tag(ItemTags.FENCES)
                     .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get().asItem());
+        }
+        for (CompatRock rock : CompatRock.VALUES) {
+            tag(TFCTags.Items.ROCK_KNAPPING)
+                    .add(ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE).get().asItem());
         }
         tag(TFCTags.Items.CARRIED_BY_HORSE)
                 .add(ModBlocks.COMPAT_CHEST.get().asItem())

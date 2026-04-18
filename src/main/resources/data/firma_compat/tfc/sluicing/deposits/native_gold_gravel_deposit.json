@@ -1,0 +1,6 @@
+{
+  "ingredient": {
+    "item": "firma_compat:native_gold_gravel_deposit"
+  },
+  "loot_table": "firma_compat:deposit/native_gold_gravel_deposit"
+}

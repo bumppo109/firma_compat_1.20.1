@@ -34,6 +34,113 @@ public abstract class TFCDataBuilder implements DataProvider {
         this.modId = modId;
     }
 
+    /**
+     * Creates a TFC Metal definition JSON.
+     * Files are saved to: data/<modid>/tfc/metals/<name>.json
+     *
+     * @param cache                CachedOutput
+     * @param name                 Name of the metal file (e.g. "netherite", "poor_netherite")
+     * @param tier                 Metal tier (0-6, corresponds to Metal.Tier.TIER_0 ... TIER_VI)
+     * @param fluid                Fluid ID (usually "tfc:metal/<metalname>" or your mod's fluid)
+     * @param meltTemperature      Melting temperature in °C
+     * @param specificHeatCapacity Specific heat capacity (note: small decimal values like 0.00857)
+     */
+    protected void metal(CachedOutput cache, String name, int tier, String fluid,
+                         double meltTemperature, double specificHeatCapacity) {
+
+        JsonObject json = new JsonObject();
+
+        json.addProperty("tier", tier);
+        json.addProperty("fluid", fluid);
+        json.addProperty("melt_temperature", meltTemperature);
+        json.addProperty("specific_heat_capacity", specificHeatCapacity);
+
+        saveData(cache, "metals/" + name, json);
+    }
+
+    /**
+     * Creates a TFC Item Heat definition.
+     * Supports both a single ingredient object or an array of ingredients.
+     * Files are saved to: data/<modid>/tfc/item_heats/<subPath>.json
+     *
+     * @param cache       The CachedOutput
+     * @param subPath     Path inside item_heats folder (e.g. "metal/bismuth_block" or "ore/cassiterite")
+     * @param ingredient  Either a single JsonObject (from ingredient()) or a JsonArray
+     * @param heatCapacity      Heat capacity value
+     * @param forgingTemperature Forging temperature
+     * @param weldingTemperature Welding temperature (can be omitted by passing null if not needed)
+     */
+    /*
+    JsonArray oreArray = new JsonArray();
+    oreArray.add(ingredient("tfc:ore/small_cassiterite"));
+    oreArray.add(ingredient("tfc:ore/normal_cassiterite"));
+    oreArray.add(ingredient("tfc:ore/poor_cassiterite"));
+    oreArray.add(ingredient("tfc:ore/rich_cassiterite"));
+
+    itemHeat(cache, "ore/cassiterite", oreArray, 2.857, 138, 184);
+     */
+    protected void itemHeat(CachedOutput cache, String subPath,
+                            JsonElement ingredient,
+                            double heatCapacity,
+                            double forgingTemperature,
+                            double weldingTemperature) {
+
+        JsonObject json = new JsonObject();
+
+        // Automatically handle single object vs array
+        if (ingredient.isJsonArray()) {
+            json.add("ingredient", ingredient);
+        } else {
+            json.add("ingredient", ingredient);  // single object or primitive
+        }
+
+        json.addProperty("heat_capacity", heatCapacity);
+        json.addProperty("forging_temperature", forgingTemperature);
+        json.addProperty("welding_temperature", weldingTemperature);
+
+        saveData(cache, "item_heats/" + subPath, json);
+    }
+
+    protected void itemHeat(CachedOutput cache, String subPath,
+                            JsonElement ingredient,
+                            double heatCapacity,
+                            double forgingTemperature) {
+
+        JsonObject json = new JsonObject();
+
+        // Automatically handle single object vs array
+        if (ingredient.isJsonArray()) {
+            json.add("ingredient", ingredient);
+        } else {
+            json.add("ingredient", ingredient);  // single object or primitive
+        }
+
+        json.addProperty("heat_capacity", heatCapacity);
+        json.addProperty("forging_temperature", forgingTemperature);
+
+        saveData(cache, "item_heats/" + subPath, json);
+    }
+
+    /**
+     * Generates the combined wood_horizontal_supports.json for TFC compatibility.
+     * Includes all vanilla + common TFC woods.
+     * Saved to: data/<modid>/tfc/supports/wood_horizontal_supports.json
+     */
+    protected void woodHorizontalSupports(CachedOutput cache) {
+        support(cache, "wood_horizontal_supports", new JsonElement[]{
+                ingredient("minecraft:acacia_horizontal_support"),
+                ingredient("minecraft:birch_horizontal_support"),
+                ingredient("minecraft:cherry_horizontal_support"),
+                ingredient("minecraft:dark_oak_horizontal_support"),
+                ingredient("minecraft:jungle_horizontal_support"),
+                ingredient("minecraft:mangrove_horizontal_support"),
+                ingredient("minecraft:oak_horizontal_support"),
+                ingredient("minecraft:spruce_horizontal_support"),
+                ingredient("minecraft:crimson_horizontal_support"),
+                ingredient("minecraft:warped_horizontal_support"),
+        }, 2, 2, 4);
+    }
+
     // ====================== Fuel Builder ======================
 
     /**

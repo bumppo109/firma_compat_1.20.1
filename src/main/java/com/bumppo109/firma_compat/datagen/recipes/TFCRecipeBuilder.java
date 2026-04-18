@@ -38,6 +38,37 @@ public abstract class TFCRecipeBuilder implements DataProvider {
         this.modId = modId;
     }
 
+    /**
+     * Creates a TFC Collapse or Landslide recipe.
+     *
+     * For collapse: ingredient is usually a JsonArray of many block IDs.
+     * For landslide: ingredient is usually a single string (block ID).
+     *
+     * Files are saved to: data/<modid>/tfc/recipes/collapse/<name>.json
+     *                    or data/<modid>/tfc/recipes/landslide/<name>.json
+     *
+     * @param cache       CachedOutput
+     * @param recipeType      "collapse" or "landslide"
+     * @param recipeSuffix  nullable suffix for recipe name
+     * @param recipeName        Recipe name (e.g. "andesite" → andesite.json)
+     * @param ingredient  JsonElement: either a JsonArray (for collapse) or a JsonPrimitive/String (for landslide)
+     * @param result      Result block ID as string (e.g. "tfc:rock/cobble/andesite")
+     */
+    protected void collapseOrLandslide(CachedOutput cache, String recipeType, String recipeName, @Nullable String recipeSuffix,
+                                       JsonElement ingredient, String result) {
+
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "tfc:" + recipeType);
+        json.add("ingredient", ingredient);
+        json.addProperty("result", result);
+
+        saveRecipe(cache,recipeType + "/" + recipeName, json);
+    }
+
+    protected void landslide(CachedOutput cache, String name, String ingredient, String result, @Nullable String recipeSuffix) {
+        collapseOrLandslide(cache, "landslide", name, recipeSuffix, new com.google.gson.JsonPrimitive(ingredient), result);
+    }
+
     // ====================== Crafting ======================
 
     /**
@@ -233,7 +264,8 @@ public abstract class TFCRecipeBuilder implements DataProvider {
                           String result,               // Changed: now simple string
                           ChiselMode mode,
                           @Nullable JsonElement itemIngredient,
-                          @Nullable JsonObject extraDrop) {
+                          @Nullable JsonObject extraDrop,
+                          @Nullable String recipeSuffix) {
 
         JsonObject json = new JsonObject();
         json.addProperty("type", "tfc:chisel");
@@ -247,6 +279,12 @@ public abstract class TFCRecipeBuilder implements DataProvider {
         }
         if (extraDrop != null) {
             json.add("extra_drop", extraDrop);
+        }
+
+        if(recipeSuffix == null){
+            name = name;
+        } else {
+            name = name + "_" + recipeSuffix;
         }
 
         saveRecipe(cache, "chisel/" + mode.getSerializedName() + "/" + name, json);

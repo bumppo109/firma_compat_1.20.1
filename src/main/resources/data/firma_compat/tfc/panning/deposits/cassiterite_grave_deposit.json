@@ -1,0 +1,9 @@
+{
+  "ingredient": "tfc:deposit/cassiterite/andesite",
+  "model_stages": [
+    "tfc:item/pan/cassiterite/andesite_full",
+    "tfc:item/pan/cassiterite/andesite_half",
+    "tfc:item/pan/cassiterite/result"
+  ],
+  "loot_table": "firma_compat:deposit/cassiterite_gravel_deposit"
+}
