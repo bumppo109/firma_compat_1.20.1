@@ -20,6 +20,7 @@ public class ModTags {
 
     public static class Items {
         public static final TagKey<Item> CHAINS = tag("chains");
+        public static final TagKey<Item> COMPAT_LOOSE = tag("compat_loose");
 
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, name));

@@ -12,11 +12,12 @@ public class EveryCompatHandler {
             CompatWoodGoodModule woodModule = new CompatWoodGoodModule();
             EveryCompatAPI.registerModule(woodModule);
         }
-        /*
         if(ModList.get().isLoaded("stonezone")){
             CompatStoneZoneModule stoneModule = new CompatStoneZoneModule();
             EveryCompatAPI.registerModule(stoneModule);
         }
+
+        /*
         if(ModList.get().isLoaded("firmalife")){
             if(ModList.get().isLoaded("stonezone")){
                 FLStoneZoneModule flStoneModule = new FLStoneZoneModule();

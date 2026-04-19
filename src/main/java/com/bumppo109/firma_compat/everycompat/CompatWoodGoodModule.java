@@ -400,11 +400,14 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         this.addEntry(WATER_WHEEL);
     }
 
+    /*
     @Override
     //public boolean isEntryAlreadyRegistered(String entrySetId, String blockId, BlockType blockType, Registry<?> registry) {
     public boolean isEntryAlreadyRegistered(String entrySetId, ResourceLocation blockId, BlockType blockType, Registry<?> registry) {
         return false;
     }
+
+     */
 
     @Override
     // RECIPES, TAGS

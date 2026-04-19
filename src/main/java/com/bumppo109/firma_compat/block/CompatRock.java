@@ -242,7 +242,7 @@ public enum CompatRock implements ModRegistryRock {
         return switch (this) {
             case STONE -> ResourceLocation.withDefaultNamespace("block/cobblestone");
             case DEEPSLATE -> ResourceLocation.withDefaultNamespace("block/cobbled_deepslate");
-            default -> ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/loose_" + this.serializedName + "_cobble");
+            default -> ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + this.serializedName + "_loose_cobblestone");
         };
     }
 }

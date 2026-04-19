@@ -73,9 +73,6 @@ public class CompatStoneZoneModule extends StoneZoneModule {
     public final ItemOnlyEntrySet<StoneType, Item> BRICK;
     public final SimpleEntrySet<StoneType, Block> AQUEDUCT;
 
-    //public final ItemOnlyEntrySet<MudType, Item> MUD_BRICK;
-    //public final SimpleEntrySet<MudType, Block> DRYING_MUD_BRICK;
-
     public final Map<String, SimpleEntrySet<StoneType, Block>> ORE_ENTRY_SETS = new HashMap<>();
 
     public CompatStoneZoneModule(){
@@ -88,7 +85,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                         stoneType -> new LooseRockBlock(BlockBehaviour.Properties.of().strength(0.05f, 0.0f).noCollission())
                 )
                 .requiresChildren(VanillaStoneChildKeys.STONE)
-                .addTag(ResourceLocation.fromNamespaceAndPath("tfc", "compat_loose"), Registries.ITEM)
+                .addTag(modRes( "compat_loose"), Registries.ITEM)
                 .addTag(TFCTags.Items.METAMORPHIC_ITEMS, Registries.ITEM)
                 .addTag(TFCTags.Blocks.CAN_BE_SNOW_PILED, Registries.BLOCK)
                 .addTexture(modRes("item/stone_loose"))
@@ -98,27 +95,25 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 .build();
         this.addEntry(LOOSE);
 
-        LOOSE_COBBLE = StoneZoneEntrySet.of(StoneType.class,"cobble", "loose",
-                        getModBlock("loose_stone_cobble"), () -> VanillaStoneTypes.STONE,
+        LOOSE_COBBLE = StoneZoneEntrySet.of(StoneType.class,"loose_cobble",
+                        getModBlock("andesite_loose_cobble"), () -> VanillaStoneTypes.ANDESITE,
                         stoneType -> new Block(Utils.copyPropertySafe(Blocks.COBBLESTONE))
                 )
                 .requiresFromMap(LOOSE.blocks)
                 .addTag(TFCTags.Blocks.CAN_LANDSLIDE, Registries.BLOCK)
-                .addTexture(modRes("block/loose_stone_cobble"), PaletteStrategies.MAIN_CHILD)
-                .addRecipe(modRes("crafting/loose_stone_cobble"))
+                .addTexture(modRes("block/andesite_loose_cobblestone"), PaletteStrategies.MAIN_CHILD)
                 .dropSelf()
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*")
                 .build();
         this.addEntry(LOOSE_COBBLE);
 
-        HARDENED_COBBLE = StoneZoneEntrySet.of(StoneType.class, "cobble","hardened",
-                        getModBlock("hardened_andesite_cobble"), () -> VanillaStoneTypes.ANDESITE,
+        HARDENED_COBBLE = StoneZoneEntrySet.of(StoneType.class, "hardened_cobble",
+                        getModBlock("andesite_hardened_cobble"), () -> VanillaStoneTypes.ANDESITE,
                         stoneType -> new Block(Utils.copyPropertySafe(Blocks.COBBLESTONE))
                 )
                 .requiresFromMap(LOOSE.blocks)
-                .addTexture(modRes("block/loose_stone_cobble"), PaletteStrategies.MAIN_CHILD)
-                .defaultRecipe()
+                .addTexture(modRes("block/andesite_hardened_cobblestone"), PaletteStrategies.MAIN_CHILD)
                 .dropSelf()
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*")
@@ -217,34 +212,6 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 ORE_ENTRY_SETS.put(gradeName + "_" + oreName, gradedSet);
             }
         }
-
-        /* TODO - pending mod with mud brick set
-        MUD_BRICK = ItemOnlyEntrySet.builder(MudType.class, "brick",
-                        getModItem("mud_brick"), () -> VanillaMudTypes.MUD,
-                        w -> new Item(new Item.Properties())
-                )
-                .addTexture(modRes("item/mud_brick"), PaletteStrategies.MAIN_CHILD)
-                .excludeBlockTypes("tfc:.*")
-                .setTabKey(tab)
-                .build();
-        this.addEntry(MUD_BRICK);
-
-        DRYING_MUD_BRICK = StoneZoneEntrySet.of(MudType.class,"bricks", "drying",
-                        getModBlock("drying_mud_brick"), () -> VanillaMudTypes.MUD,
-                        mudType -> new DryingBricksBlock(ExtendedProperties.of(MapColor.DIRT).noCollission().noOcclusion().instabreak().sound(SoundType.STEM).randomTicks()
-                                .blockEntity(TFCBlockEntities.TICK_COUNTER), () -> MUD_BRICK.items.get(mudType))
-                )
-                .requiresFromMap(MUD_BRICK.items)
-                .addTag(BlockTags.MINEABLE_WITH_SHOVEL, Registries.BLOCK)
-                .addRecipe(modRes("crafting/drying_mud_bricks"))
-                .copyParentDrop()
-                .dropSelf()
-                .excludeBlockTypes("tfc:.*")
-                .setTabKey(tab)
-                .build();
-        this.addEntry(DRYING_MUD_BRICK);
-
-         */
     }
 
     /*
@@ -304,28 +271,62 @@ public class CompatStoneZoneModule extends StoneZoneModule {
         super.addDynamicServerResources(executor);
 
         executor.accept((manager, sink) -> {
-            for(StoneType stoneType : StoneTypeRegistry.INSTANCE){
-                ResourceLocation rockTag = ResourceLocation.fromNamespaceAndPath(stoneType.getNamespace(), "stone_type/" + stoneType.getTypeName());
+            // ────────────────────────────────────────────────────────────────
+            // 1. Process all registered StoneTypes (this should now work reliably)
+            // ────────────────────────────────────────────────────────────────
+            for (StoneType stoneType : StoneTypeRegistry.INSTANCE) {
+                if (stoneType == null) continue;
+
+                ResourceLocation rockTag = ResourceLocation.fromNamespaceAndPath(
+                        stoneType.getNamespace(),
+                        "stone_type/" + stoneType.getTypeName()
+                );
+
                 UtilityTag.createAndAddCustomTags(rockTag, sink, stoneType.stone);
 
-                if(LOOSE.items.get(stoneType) != null){
-                    if(HARDENED_COBBLE.items.get(stoneType) != null){
-                        generateBrickBlockRecipe(sink, LOOSE.items.get(stoneType).toString(), HARDENED_COBBLE.items.get(stoneType).toString(), 4, null);
+                Block looseBlock = LOOSE.blocks.get(stoneType);
+
+                if (looseBlock != null) {
+                    FirmaCompat.LOGGER.info("Generating loose cobblestone recipe for {}", stoneType.getTypeName());
+
+                    Block looseCobbleBlock = LOOSE_COBBLE.blocks.get(stoneType);
+                    if (looseCobbleBlock != null) {
+                        generateLooseCobbleRecipe(sink,
+                                BuiltInRegistries.BLOCK.getKey(looseBlock).toString(),
+                                BuiltInRegistries.BLOCK.getKey(looseCobbleBlock).toString(),
+                                1, null);
                     }
-                    if(BRICK.items.get(stoneType) != null){
-                        if(stoneType.getChild(VanillaRockChildKeys.BRICKS) != null && stoneType.getChild(VanillaRockChildKeys.BUTTON) != null && stoneType.getChild(VanillaRockChildKeys.PRESSURE_PLATE) != null){
-                            generateBrickRecipe(sink, LOOSE.items.get(stoneType), BRICK.items.get(stoneType), "c:tools/chisel", 1,null);
+
+                    if (HARDENED_COBBLE.blocks.get(stoneType) != null) {
+                        FirmaCompat.LOGGER.info("Generating hardened cobblestone recipe for {}", stoneType.getTypeName());
+                        generateBrickBlockRecipe(sink,
+                                BuiltInRegistries.BLOCK.getKey(looseBlock).toString(),
+                                BuiltInRegistries.BLOCK.getKey(HARDENED_COBBLE.blocks.get(stoneType)).toString(),
+                                4, null);
+                    }
+                    if (BRICK.blocks.get(stoneType) != null) {
+                        Item brickItem = BRICK.items.get(stoneType);
+                        if (brickItem != null) {
+                            FirmaCompat.LOGGER.info("Generating brick recipe for {}", stoneType.getTypeName());
+                            generateBrickRecipe(sink, LOOSE.items.get(stoneType), brickItem, "tfc:chisels", 1, null);
                         }
-                        if(stoneType.getChild(VanillaRockChildKeys.BUTTON) != null){
-                            generateBrickRecipe(sink, BRICK.items.get(stoneType), stoneType.getItemOfThis("button"), "c:tools/chisel", 1,null);
+
+                        // Button / Pressure Plate / Bricks logic...
+                        if (stoneType.getChild(VanillaRockChildKeys.BUTTON) != null) {
+                            generateBrickRecipe(sink, brickItem, stoneType.getItemOfThis("button"), "tfc:chisels", 1, null);
                             UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, stoneType.getItemOfThis("button"));
                         }
-                        if(stoneType.getChild(VanillaRockChildKeys.PRESSURE_PLATE) != null){
-                            generatePressurePlateFromBrickRecipe(sink, stoneType, BRICK.items.get(stoneType).asItem(), 1, null);
+
+                        if (stoneType.getChild(VanillaRockChildKeys.PRESSURE_PLATE) != null) {
+                            generatePressurePlateFromBrickRecipe(sink, stoneType, brickItem, 1, null);
                             UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, stoneType.getItemOfThis("pressure_plate"));
                         }
-                        if(stoneType.getChild(VanillaRockChildKeys.BRICKS) != null){
-                            generateBrickBlockRecipe(sink, BRICK.items.get(stoneType).toString(), Utils.getID(Objects.requireNonNull(stoneType.getChild(VanillaRockChildKeys.BRICKS))).toString(), 4, null);
+
+                        if (stoneType.getChild(VanillaRockChildKeys.BRICKS) != null) {
+                            generateBrickBlockRecipe(sink,
+                                    BuiltInRegistries.ITEM.getKey(brickItem).toString(),
+                                    BuiltInRegistries.BLOCK.getKey((Block) stoneType.getChild(VanillaRockChildKeys.BRICKS)).toString(),
+                                    4, null);
                             UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, stoneType.getItemOfThis("bricks"));
                         }
                     }
@@ -343,43 +344,6 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 //hardened
                 generateLootTableForStone("hardened", stoneType.stone, LOOSE.blocks.get(stoneType), sink, manager);
             });
-
-        //Building Hardend Data Map
-            JsonObject hardenedDataMap = new JsonObject();
-            JsonObject hardenedArray = new JsonObject();
-
-            for(CompatRock rock : CompatRock.VALUES){
-                Block rawBlock = rock.rawBlock().get();
-                Block hardenedRock = ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.HARDENED).get();
-
-                if (rawBlock == null || hardenedRock == null) continue;
-
-                String rawId = BuiltInRegistries.BLOCK.getKey(rawBlock).toString();
-                String hardenedId = BuiltInRegistries.BLOCK.getKey(hardenedRock).toString();
-
-                hardenedArray.addProperty(rawId, hardenedId);
-            }
-            for(StoneType stone : StoneTypeRegistry.INSTANCE){
-                Block rawBlock = stone.block;
-                Block hardenedRock = HARDENED.blocks.get(stone);
-
-                if (rawBlock == null || hardenedRock == null) continue;
-
-                String rawId = BuiltInRegistries.BLOCK.getKey(rawBlock).toString();
-                String hardenedId = BuiltInRegistries.BLOCK.getKey(hardenedRock).toString();
-
-                hardenedArray.addProperty(rawId, hardenedId);
-            }
-            // Finalize the map
-            hardenedDataMap.add("values", hardenedArray);
-
-            // Write the file
-            ResourceLocation hardenedDataMapPath = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
-                    "data_maps/block/worldgen/hardened_rock_replacement.json"
-            );
-
-            sink.addJson(hardenedDataMapPath, hardenedDataMap, ResType.GENERIC);
-            FirmaCompat.LOGGER.info("Generated hardened replacement map with {} entries: {}", hardenedArray.size(), hardenedDataMapPath);
 
         //Loose Block Worldgen
             for(StoneType stone : StoneTypeRegistry.INSTANCE){
@@ -1277,6 +1241,58 @@ public class CompatStoneZoneModule extends StoneZoneModule {
             recipePath += suffix;
         }
 
+        ResourceLocation recipeId = ResourceLocation.fromNamespaceAndPath(
+                FirmaCompat.MODID, recipePath
+        );
+
+        sink.addJson(recipeId, recipe, ResType.RECIPES);
+    }
+
+    public void generateLooseCobbleRecipe(
+            ResourceSink sink,
+            String inputItem,
+            String outputItem,
+            int count,
+            @Nullable String suffix
+    ) {
+        if (count < 1) {
+            count = 1;
+        }
+
+        JsonObject recipe = new JsonObject();
+        recipe.addProperty("type", "minecraft:crafting_shaped");
+        recipe.addProperty("category", "misc");
+
+        // Key definitions
+        JsonObject key = new JsonObject();
+
+        JsonObject looseKey = new JsonObject();
+        looseKey.addProperty("item", inputItem);
+        key.add("X", looseKey);
+
+        recipe.add("key", key);
+
+        // Fixed 3x3 pattern from your example
+        JsonArray pattern = new JsonArray();
+        pattern.add("XX ");
+        pattern.add("XX ");
+        recipe.add("pattern", pattern);
+
+        // Result
+        JsonObject result = new JsonObject();
+        result.addProperty("count", count);
+        result.addProperty("id", outputItem);
+        recipe.add("result", result);
+
+        // Build recipe ResourceLocation based on output item's namespace + path
+        ResourceLocation outLoc = ResourceLocation.parse(outputItem);
+        String recipePath = "crafting/" + outLoc.getPath();  // e.g. "bricks/andesite"
+
+        if (suffix != null && !suffix.isEmpty()) {
+            recipePath += suffix;
+        }
+
+        // Final location: <output_namespace>:recipes/<recipePath>
         ResourceLocation recipeId = ResourceLocation.fromNamespaceAndPath(
                 FirmaCompat.MODID, recipePath
         );
