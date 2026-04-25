@@ -121,26 +121,6 @@ public abstract class TFCDataBuilder implements DataProvider {
         saveData(cache, "item_heats/" + subPath, json);
     }
 
-    /**
-     * Generates the combined wood_horizontal_supports.json for TFC compatibility.
-     * Includes all vanilla + common TFC woods.
-     * Saved to: data/<modid>/tfc/supports/wood_horizontal_supports.json
-     */
-    protected void woodHorizontalSupports(CachedOutput cache) {
-        support(cache, "wood_horizontal_supports", new JsonElement[]{
-                ingredient("minecraft:acacia_horizontal_support"),
-                ingredient("minecraft:birch_horizontal_support"),
-                ingredient("minecraft:cherry_horizontal_support"),
-                ingredient("minecraft:dark_oak_horizontal_support"),
-                ingredient("minecraft:jungle_horizontal_support"),
-                ingredient("minecraft:mangrove_horizontal_support"),
-                ingredient("minecraft:oak_horizontal_support"),
-                ingredient("minecraft:spruce_horizontal_support"),
-                ingredient("minecraft:crimson_horizontal_support"),
-                ingredient("minecraft:warped_horizontal_support"),
-        }, 2, 2, 4);
-    }
-
     // ====================== Fuel Builder ======================
 
     /**

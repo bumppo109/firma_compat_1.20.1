@@ -1,8 +1,10 @@
 {
   "replace": false,
   "values": [
-    "firma_compat:woodgood_twig_patches",
-
+    {
+      "id": "#firma_compat:woodgood_twig_patches",
+      "required": false
+    },
     "firma_compat:twig/acacia_patch",
     "firma_compat:twig/birch_patch",
     "firma_compat:twig/cherry_patch",

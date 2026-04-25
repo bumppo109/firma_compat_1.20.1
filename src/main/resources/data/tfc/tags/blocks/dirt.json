@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "firma_compat:clay_dirt",
     "firma_compat:clay_podzol",

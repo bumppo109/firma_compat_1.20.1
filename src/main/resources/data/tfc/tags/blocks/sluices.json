@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "firma_compat:acacia_sluice",
     "firma_compat:birch_sluice",

@@ -19,7 +19,7 @@ public class EveryCompatHandler {
         }
         if(ModList.get().isLoaded("gemsrealm")){
             CompatMetalModule metalModule = new CompatMetalModule(FirmaCompat.MODID);
-            EveryCompatAPI.registerModule(metalModule);
+            //EveryCompatAPI.registerModule(metalModule);
         }
 
         /*

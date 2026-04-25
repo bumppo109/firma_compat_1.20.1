@@ -1,6 +1,0 @@
-{
-  "values": [
-    "firma_compat:sweet_berries_jar",
-    "firma_compat:glow_berries_jar"
-  ]
-}

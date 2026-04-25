@@ -21,9 +21,10 @@ import net.dries007.tfc.util.Helpers;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static com.bumppo109.firma_compat.block.CompatWood.BlockType.SHELF;
+import static com.bumppo109.firma_compat.block.CompatWood.BlockType.*;
 import static com.bumppo109.firma_compat.block.ModBlocks.GRADED_ORES;
 import static com.bumppo109.firma_compat.block.ModBlocks.ORES;
-import static net.dries007.tfc.common.blocks.wood.Wood.BlockType.*;
 
 @Mod.EventBusSubscriber(modid = FirmaCompat.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class FirmaCompatClient
@@ -34,18 +35,12 @@ public class FirmaCompatClient
         // Render Types
         final RenderType cutout = RenderType.cutout();
 
-        // Set cutout rendering for your wood blocks
         ModBlocks.WOODS.values().forEach(map -> {
-            Stream.of(TWIG, BARREL, SCRIBING_TABLE, JAR_SHELF, ENCASED_AXLE, CLUTCH, GEAR_BOX, SEWING_TABLE)
-                    .forEach(type -> {
-                        var blockHolder = map.get(type);
-                        if (blockHolder != null && blockHolder.isPresent()) {
-                            ItemBlockRenderTypes.setRenderLayer(blockHolder.get(), cutout);
-                        }
-                    });
+            Stream.of(TWIG, BARREL, SCRIBING_TABLE, SHELF, ENCASED_AXLE, CLUTCH, GEAR_BOX, SEWING_TABLE)
+                    .forEach(type -> ItemBlockRenderTypes.setRenderLayer(map.get(type).get(), cutout));
         });
 
-        // Things that must run on the main thread
+            // Things that must run on the main thread
         event.enqueueWork(() -> {
             // Barrel sealed property
             ModBlocks.WOODS.values().forEach(map -> {

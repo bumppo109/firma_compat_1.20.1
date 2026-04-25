@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "firma_compat:acacia_scribing_table",
     "firma_compat:birch_scribing_table",

@@ -30,7 +30,6 @@ public class ModTFCDataProvider extends TFCDataBuilder {
         for (CompatWood wood : CompatWood.VALUES) {
             logFuel(cache, wood);
         }
-        woodHorizontalSupports(cache);
 
         for (CompatMetal metal : CompatMetal.values()) {
             var metalItems = ModItems.METAL_ITEMS.get(metal);

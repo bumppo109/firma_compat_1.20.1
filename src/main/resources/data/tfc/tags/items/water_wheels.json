@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "firma_compat:acacia_water_wheel",
     "firma_compat:birch_water_wheel",

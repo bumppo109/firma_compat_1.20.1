@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "firma_compat:compat_chest",
     "firma_compat:compat_trapped_chest"

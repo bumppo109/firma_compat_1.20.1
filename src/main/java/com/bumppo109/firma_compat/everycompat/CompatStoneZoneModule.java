@@ -85,10 +85,9 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                         stoneType -> new LooseRockBlock(BlockBehaviour.Properties.of().strength(0.05f, 0.0f).noCollission())
                 )
                 .requiresChildren(VanillaStoneChildKeys.STONE)
+                .addTag(modRes("compat_loose"), Registries.BLOCK)
                 .addTag(modRes("compat_loose"), Registries.ITEM)
-                .addTag(ResourceLocation.fromNamespaceAndPath("tfc","metamorphic_rock"), Registries.ITEM)
-                .addTag(ResourceLocation.fromNamespaceAndPath("tfc","rock_knapping"), Registries.ITEM)
-                .addTag(TFCTags.Blocks.CAN_BE_SNOW_PILED, Registries.BLOCK)
+                .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
                 .addTexture(modRes("item/stone_loose"))
                 .copyParentDrop()
                 .setTabKey(tab)
@@ -101,9 +100,9 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                         stoneType -> new Block(Utils.copyPropertySafe(Blocks.COBBLESTONE))
                 )
                 .requiresFromMap(LOOSE.blocks)
-                .addTag(TFCTags.Blocks.CAN_LANDSLIDE, Registries.BLOCK)
+                .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
+                .addTag(modRes("loose_cobble"), Registries.BLOCK)
                 .addTexture(modRes("block/andesite_loose_cobblestone"), PaletteStrategies.MAIN_CHILD)
-                .addRecipe(modRes("crafting/andesite_loose_cobble"))
                 .dropSelf()
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*")
@@ -115,8 +114,9 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                         stoneType -> new Block(Utils.copyPropertySafe(Blocks.COBBLESTONE))
                 )
                 .requiresFromMap(LOOSE.blocks)
+                .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
+                .addTag(modRes("hardened_cobble"), Registries.BLOCK)
                 .addTexture(modRes("block/andesite_hardened_cobblestone"), PaletteStrategies.MAIN_CHILD)
-                .addRecipe(modRes("crafting/andesite_hardened_cobble"))
                 .dropSelf()
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*")
@@ -129,10 +129,8 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 )
                 .requiresFromMap(LOOSE.blocks)
                 .requiresChildren(VanillaStoneChildKeys.STONE)
+                .addTag(modRes("hardened"), Registries.BLOCK)
                 .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
-                .addTag(TFCTags.Blocks.BREAKS_WHEN_ISOLATED, Registries.BLOCK)
-                .addTag(TFCTags.Blocks.CAN_TRIGGER_COLLAPSE, Registries.BLOCK)
-                .addTag(TFCTags.Blocks.CAN_COLLAPSE, Registries.BLOCK)
                 .noDrops()
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*")
@@ -146,7 +144,6 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 .requiresFromMap(LOOSE.blocks)
                 .addTexture(modRes("item/stone_brick"), PaletteStrategies.MAIN_CHILD)
                 .addTag(modRes("compat_brick"), Registries.ITEM)
-                .addRecipe(modRes("crafting/stone_brick"))
                 .excludeBlockTypes("tfc:.*")
                 .setTabKey(tab)
                 .build();
@@ -159,7 +156,6 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 .requiresChildren(VanillaRockChildKeys.BRICKS)
                 .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
                 .addTag(ResourceLocation.fromNamespaceAndPath("tfc", "aqueducts"), Registries.BLOCK)
-                .addRecipe(modRes("crafting/stone_brick_aqueduct"))
                 .dropSelf()
                 .excludeBlockTypes("tfc:.*")
                 .setTabKey(tab)
@@ -177,10 +173,6 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                             stoneType -> new Block(Utils.copyPropertySafe(stoneType.block))
                     )
                     .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
-                    .addTag(TFCTags.Blocks.CAN_COLLAPSE, Registries.BLOCK)
-                    .addTag(TFCTags.Blocks.CAN_START_COLLAPSE, Registries.BLOCK)
-                    .addTag(TFCTags.Blocks.CAN_TRIGGER_COLLAPSE, Registries.BLOCK)
-                    .copyParentDrop()
                     .setRenderType(RenderLayer.CUTOUT)
                     .setTabKey(tab)
                     .excludeBlockTypes("tfc:.*")
@@ -204,10 +196,6 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                                 stoneType -> new Block(Utils.copyPropertySafe(stoneType.block))
                         )
                         .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
-                        .addTag(TFCTags.Blocks.CAN_COLLAPSE, Registries.BLOCK)
-                        .addTag(TFCTags.Blocks.CAN_START_COLLAPSE, Registries.BLOCK)
-                        .addTag(TFCTags.Blocks.CAN_TRIGGER_COLLAPSE, Registries.BLOCK)
-                        .copyParentDrop()
                         .setRenderType(RenderLayer.CUTOUT)
                         .setTabKey(tab)
                         .excludeBlockTypes("tfc:.*")
@@ -249,27 +237,56 @@ public class CompatStoneZoneModule extends StoneZoneModule {
         super.addDynamicServerResources(executor);
 
         executor.accept((manager, sink) -> {
-            // Hardened blocks loot tables + tags
-            HARDENED.blocks.forEach((stoneType, block) -> {
-                if (stoneType == null) return;
+            for (StoneType stone : StoneTypeRegistry.INSTANCE) {
+                if (stone == null) return;
+
+                Block hardenedBlock = HARDENED.blocks.get(stone);
+                Block looseRockBlock = LOOSE.blocks.get(stone);
+                Block looseCobbleBlock = LOOSE_COBBLE.blocks.get(stone);
+                Block hardCobbleBlock = HARDENED_COBBLE.blocks.get(stone);
+                Block aqueductBlock = AQUEDUCT.blocks.get(stone);
+                Item brickItem = BRICK.items.get(stone);
+
+                //============== Loot Tables
                 // raw
-                generateLootTableForStone(null, stoneType.stone, LOOSE.blocks.get(stoneType), sink, manager);
-                UtilityTag.createAndAddCustomTags(ResourceLocation.fromNamespaceAndPath("tfc", "breaks_when_isolated"), sink, stoneType.stone);
-                UtilityTag.createAndAddCustomTags(ResourceLocation.fromNamespaceAndPath("tfc", "can_collapse"), sink, stoneType.stone);
-                UtilityTag.createAndAddCustomTags(ResourceLocation.fromNamespaceAndPath("tfc", "can_start_collapse"), sink, stoneType.stone);
-                UtilityTag.createAndAddCustomTags(ResourceLocation.fromNamespaceAndPath("tfc", "can_trigger_collapse"), sink, stoneType.stone);
+                generateLootTableForStone(null, stone.stone, looseRockBlock, sink, manager);
                 // hardened
-                generateLootTableForStone("hardened", stoneType.stone, LOOSE.blocks.get(stoneType), sink, manager);
-            });
+                generateLootTableForStone("hardened", hardenedBlock, looseRockBlock, sink, manager);
+
+                //================ Recipe
+                if(LOOSE.items.get(stone) != null){
+                    if(LOOSE_COBBLE.items.get(stone) != null){
+                        generatelandslideSelfRecipe(sink, stone);
+                    }
+                    if(HARDENED_COBBLE.items.get(stone) != null){
+                        generateBrickBlockRecipe(sink, LOOSE.items.get(stone).toString(), HARDENED_COBBLE.items.get(stone).toString(), 4, null);
+                    }
+                    if(BRICK.items.get(stone) != null){
+                        if(stone.getChild(VanillaRockChildKeys.BRICKS) != null || stone.getChild(VanillaRockChildKeys.BUTTON)  != null || stone.getChild(VanillaRockChildKeys.PRESSURE_PLATE) != null){
+                            generateBrickRecipe(sink, LOOSE.items.get(stone), BRICK.items.get(stone), "tfc:chisels", 1,null);
+                        }
+                        if(stone.getChild(VanillaRockChildKeys.BUTTON) != null){
+                            generateBrickRecipe(sink, BRICK.items.get(stone), stone.getItemOfThis("button"), "tfc:chisels", 1,null);
+                            UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, stone.getItemOfThis("button"));
+                        }
+                        if(stone.getChild(VanillaRockChildKeys.PRESSURE_PLATE) != null){
+                            generatePressurePlateFromBrickRecipe(sink, stone, BRICK.items.get(stone).asItem(), 1, null);
+                            UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, stone.getItemOfThis("pressure_plate"));
+                        }
+                        if(stone.getChild(VanillaRockChildKeys.BRICKS) != null){
+                            generateBrickBlockRecipe(sink, BRICK.items.get(stone).toString(), Utils.getID(Objects.requireNonNull(stone.getChild(VanillaRockChildKeys.BRICKS))).toString(), 4, null);
+                            UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, stone.getItemOfThis("bricks"));
+                        }
+                    }
+
+                    generateCollapseRecipes(sink, stone);
+                }
+            }
 
             // ==================== WORLDGEN (REVERTED TO ORIGINAL) ====================
-            // Loose Block Worldgen
             for (StoneType stone : StoneTypeRegistry.INSTANCE) {
                 Block looseBlock = LOOSE.blocks.get(stone);
                 if (looseBlock == null) continue;
-
-                String loosePath = Utils.getID(looseBlock).getPath();
-                String looseNamespace = Utils.getID(looseBlock).getNamespace();
 
                 ResourceLocation rockTag = ResourceLocation.fromNamespaceAndPath(
                         stone.getNamespace(), "stone_type/" + stone.getTypeName());
@@ -421,11 +438,6 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 FirmaCompat.LOGGER.info("Generated placed feature: {}", placedPath);
             }
 
-            // Copper Vein Placer (original structure - note: still has the loop issue you had originally)
-            // Iron Vein Placer
-            // Tags, Biome Modifier, Landslide, Collapse, Loot Tables...
-            // (All other worldgen parts are left as they were in your original code)
-
         // Create a single tag JSON with all placed feature references + conditional loading
             JsonObject tagJson = new JsonObject();
 
@@ -454,7 +466,6 @@ public class CompatStoneZoneModule extends StoneZoneModule {
 
             tagJson.add("values", valuesArray);
 
-            // Optional: explicitly set replace to false (recommended)
             tagJson.addProperty("replace", true);
 
             // Write the tag file
@@ -465,119 +476,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
 
             sink.addJson(tagPath, tagJson, ResType.GENERIC);
             FirmaCompat.LOGGER.info("Generated conditional placed feature tag: {}", tagPath);
-
-        // Landslide Recipes (original)
-            for (StoneType stone : StoneTypeRegistry.INSTANCE) {
-                Block looseCobble = LOOSE_COBBLE.blocks.get(stone);
-                if (looseCobble == null) continue;
-                String looseCobbleId = BuiltInRegistries.BLOCK.getKey(looseCobble).toString();
-                String looseCobblePath = Utils.getID(looseCobble).getPath();
-
-                JsonObject landslideRecipeJson = new JsonObject();
-                JsonArray landslideArray = new JsonArray();
-                landslideArray.add(looseCobbleId);
-
-                landslideRecipeJson.addProperty("type", "tfc:landslide");
-                landslideRecipeJson.add("ingredient", landslideArray);
-                landslideRecipeJson.addProperty("result", looseCobbleId);
-
-                ResourceLocation landslideRecipeLoc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
-                        "recipes/landslide/" + looseCobblePath + ".json");
-
-                sink.addJson(landslideRecipeLoc, landslideRecipeJson, ResType.GENERIC);
-            }
-            generateLateRecipes(sink);
         });
-    }
-
-    //
-    public void generateLateRecipes(ResourceSink sink) {
-        FirmaCompat.LOGGER.info("=== Starting LATE recipe generation (after StoneZone maps populated) ===");
-
-        int processed = 0;
-        int recipesGenerated = 0;
-
-        for (StoneType stoneType : StoneTypeRegistry.INSTANCE) {
-            if (stoneType == null) continue;
-
-            ResourceLocation rockTag = ResourceLocation.fromNamespaceAndPath(
-                    stoneType.getNamespace(), "stone_type/" + stoneType.getTypeName());
-
-            UtilityTag.createAndAddCustomTags(rockTag, sink, stoneType.stone);
-
-            Block looseBlock = LOOSE.blocks.get(stoneType);
-            if (looseBlock == null) continue;
-
-            processed++;
-
-            // Loose cobble recipe
-            Block looseCobbleBlock = LOOSE_COBBLE.blocks.get(stoneType);
-            if (looseCobbleBlock != null) {
-                FirmaCompat.LOGGER.info("Generating loose cobblestone recipe for {}", stoneType.getTypeName());
-                generateLooseCobbleRecipe(sink,
-                        BuiltInRegistries.BLOCK.getKey(looseBlock).toString(),
-                        BuiltInRegistries.BLOCK.getKey(looseCobbleBlock).toString(),
-                        1, null);
-                recipesGenerated++;
-            }
-
-            // Hardened cobble recipe
-            Block hardenedCobble = HARDENED_COBBLE.blocks.get(stoneType);
-            if (hardenedCobble != null) {
-                FirmaCompat.LOGGER.info("Generating hardened cobblestone recipe for {}", stoneType.getTypeName());
-                generateBrickBlockRecipe(sink,
-                        BuiltInRegistries.BLOCK.getKey(looseBlock).toString(),
-                        BuiltInRegistries.BLOCK.getKey(hardenedCobble).toString(),
-                        4, null);
-                recipesGenerated++;
-            }
-
-            // Brick recipes
-            Item brickItem = BRICK.items.get(stoneType);
-            if (brickItem != null) {
-                Item looseItem = LOOSE.items.get(stoneType);
-                if (looseItem != null) {
-                    FirmaCompat.LOGGER.info("Generating brick recipe for {}", stoneType.getTypeName());
-                    generateBrickRecipe(sink, looseItem, brickItem, "tfc:chisels", 1, null);
-                    recipesGenerated++;
-                }
-
-                // Button
-                if (stoneType.getChild(VanillaRockChildKeys.BUTTON) != null) {
-                    Item button = stoneType.getItemOfThis("button");
-                    if (button != null) {
-                        generateBrickRecipe(sink, brickItem, button, "tfc:chisels", 1, null);
-                        UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, button);
-                        recipesGenerated++;
-                    }
-                }
-
-                // Pressure plate
-                if (stoneType.getChild(VanillaRockChildKeys.PRESSURE_PLATE) != null) {
-                    Item plate = stoneType.getItemOfThis("pressure_plate");
-                    if (plate != null) {
-                        generatePressurePlateFromBrickRecipe(sink, stoneType, brickItem, 1, null);
-                        UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, plate);
-                        recipesGenerated++;
-                    }
-                }
-
-                // Bricks block
-                if (stoneType.getChild(VanillaRockChildKeys.BRICKS) != null) {
-                    Object child = stoneType.getChild(VanillaRockChildKeys.BRICKS);
-                    if (child instanceof Block bricksBlock) {
-                        generateBrickBlockRecipe(sink,
-                                BuiltInRegistries.ITEM.getKey(brickItem).toString(),
-                                BuiltInRegistries.BLOCK.getKey(bricksBlock).toString(),
-                                4, null);
-                        UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, stoneType.getItemOfThis("bricks"));
-                        recipesGenerated++;
-                    }
-                }
-            }
-        }
-
-        FirmaCompat.LOGGER.info("=== LATE recipe generation finished. Processed {} stone types, {} recipes generated ===", processed, recipesGenerated);
     }
 
     // ==================== ALL YOUR HELPER METHODS ====================
@@ -656,6 +555,167 @@ public class CompatStoneZoneModule extends StoneZoneModule {
             hash = 31 * hash + c;
         }
         return hash & 0x7FFFFFFFFFFFFFFFL;
+    }
+
+    public void generatelandslideSelfRecipe(ResourceSink sink, StoneType stone) {
+
+        Block looseCobble = LOOSE_COBBLE.blocks.get(stone);
+        if (looseCobble == null) return;
+
+        String looseCobbleId = BuiltInRegistries.BLOCK.getKey(looseCobble).toString();
+        String looseCobblePath = Utils.getID(looseCobble).getPath();
+
+        JsonObject landslideRecipeJson = new JsonObject();
+        JsonArray landslideArray = new JsonArray();
+        landslideArray.add(looseCobbleId);
+
+        landslideRecipeJson.addProperty("type", "tfc:landslide");
+        landslideRecipeJson.add("ingredient", landslideArray);
+        landslideRecipeJson.addProperty("result", looseCobbleId);
+
+        ResourceLocation landslideRecipeLoc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
+                "recipes/landslide/" + looseCobblePath + ".json");
+
+        sink.addJson(landslideRecipeLoc, landslideRecipeJson, ResType.GENERIC);
+    }
+
+    /**
+     * Generates all TFC collapse recipes for a given StoneType.
+     *
+     * @param sink     The ResourceSink to write the recipes to
+     * @param stone    The StoneType to generate collapse recipes for
+     */
+    public void generateCollapseRecipes(ResourceSink sink, StoneType stone) {
+
+        // Skip if required blocks are missing
+        Block looseCobble = LOOSE_COBBLE.blocks.get(stone);
+        if (looseCobble == null) return;
+
+        Block hardened = HARDENED.blocks.get(stone);
+        if (hardened == null) return;
+
+        String rawId         = BuiltInRegistries.BLOCK.getKey(stone.stone).toString();
+        String hardenedId    = BuiltInRegistries.BLOCK.getKey(hardened).toString();
+        String looseCobbleId = BuiltInRegistries.BLOCK.getKey(looseCobble).toString();
+
+        String looseNs       = Utils.getID(looseCobble).getNamespace();
+        String stoneName     = stone.getTypeName();
+
+        // ────────────────────────────────────────────────────────────────
+        // 1. Main collapse recipe: raw + hardened + ALL poor ores + ALL non-graded ores → loose cobble
+        // ────────────────────────────────────────────────────────────────
+        JsonArray poorCollapseArray = new JsonArray();
+        poorCollapseArray.add(rawId);
+        poorCollapseArray.add(hardenedId);
+
+        for (Map.Entry<String, SimpleEntrySet<StoneType, Block>> entry : ORE_ENTRY_SETS.entrySet()) {
+            String key = entry.getKey();
+            SimpleEntrySet<StoneType, Block> oreSet = entry.getValue();
+
+            boolean isPoor = key.startsWith("poor_");
+            boolean isUngraded = !key.startsWith("poor_") &&
+                    !key.startsWith("normal_") &&
+                    !key.startsWith("rich_");
+
+            if (!isPoor && !isUngraded) continue;
+
+            Block oreBlock = oreSet.blocks.get(stone);
+            if (oreBlock != null && oreBlock != Blocks.AIR) {
+                String oreId = BuiltInRegistries.BLOCK.getKey(oreBlock).toString();
+                poorCollapseArray.add(oreId);
+
+                FirmaCompat.LOGGER.debug("Poor/ungraded collapse: {} for {} → {}", key, stoneName, oreId);
+            }
+        }
+
+        JsonObject poorCollapseJson = new JsonObject();
+        poorCollapseJson.addProperty("type", "tfc:collapse");
+        poorCollapseJson.add("ingredient", poorCollapseArray);
+        poorCollapseJson.addProperty("result", looseCobbleId);
+
+        ResourceLocation poorLoc = ResourceLocation.fromNamespaceAndPath(
+                FirmaCompat.MODID,
+                "recipe/collapse/" + looseNs + "/" + stoneName + ".json"
+        );
+        sink.addJson(poorLoc, poorCollapseJson, ResType.GENERIC);
+
+        // ────────────────────────────────────────────────────────────────
+        // 2. Rich ores collapse → corresponding normal ore
+        // ────────────────────────────────────────────────────────────────
+        for (Map.Entry<String, SimpleEntrySet<StoneType, Block>> entry : ORE_ENTRY_SETS.entrySet()) {
+            String key = entry.getKey();
+            if (!key.startsWith("rich_")) continue;
+
+            String normalKey = "normal_" + key.substring("rich_".length());
+            SimpleEntrySet<StoneType, Block> normalSet = ORE_ENTRY_SETS.get(normalKey);
+            if (normalSet == null) continue;
+
+            Block richBlock = entry.getValue().blocks.get(stone);
+            Block normalBlock = normalSet.blocks.get(stone);
+
+            if (richBlock != null && richBlock != Blocks.AIR &&
+                    normalBlock != null && normalBlock != Blocks.AIR) {
+
+                String richId   = BuiltInRegistries.BLOCK.getKey(richBlock).toString();
+                String normalId = BuiltInRegistries.BLOCK.getKey(normalBlock).toString();
+
+                JsonObject recipe = new JsonObject();
+                recipe.addProperty("type", "tfc:collapse");
+                JsonArray ing = new JsonArray();
+                ing.add(richId);
+                recipe.add("ingredient", ing);
+                recipe.addProperty("result", normalId);
+
+                String oreType = key.substring("rich_".length());
+                ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(
+                        FirmaCompat.MODID,
+                        "recipe/collapse/" + looseNs + "/rich_to_normal/" + stoneName + "_" + oreType + ".json"
+                );
+                sink.addJson(loc, recipe, ResType.GENERIC);
+
+                FirmaCompat.LOGGER.debug("Rich→Normal: {} → {} for {}", richId, normalId, stoneName);
+            }
+        }
+
+        // ────────────────────────────────────────────────────────────────
+        // 3. Normal ores collapse → corresponding poor ore
+        // ────────────────────────────────────────────────────────────────
+        for (Map.Entry<String, SimpleEntrySet<StoneType, Block>> entry : ORE_ENTRY_SETS.entrySet()) {
+            String key = entry.getKey();
+            if (!key.startsWith("normal_")) continue;
+
+            String poorKey = "poor_" + key.substring("normal_".length());
+            SimpleEntrySet<StoneType, Block> poorSet = ORE_ENTRY_SETS.get(poorKey);
+            if (poorSet == null) continue;
+
+            Block normalBlock = entry.getValue().blocks.get(stone);
+            Block poorBlock   = poorSet.blocks.get(stone);
+
+            if (normalBlock != null && normalBlock != Blocks.AIR &&
+                    poorBlock != null && poorBlock != Blocks.AIR) {
+
+                String normalId = BuiltInRegistries.BLOCK.getKey(normalBlock).toString();
+                String poorId   = BuiltInRegistries.BLOCK.getKey(poorBlock).toString();
+
+                JsonObject recipe = new JsonObject();
+                recipe.addProperty("type", "tfc:collapse");
+                JsonArray ing = new JsonArray();
+                ing.add(normalId);
+                recipe.add("ingredient", ing);
+                recipe.addProperty("result", poorId);
+
+                String oreType = key.substring("normal_".length());
+                ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(
+                        FirmaCompat.MODID,
+                        "recipe/collapse/" + looseNs + "/normal_to_poor/" + stoneName + "_" + oreType + ".json"
+                );
+                sink.addJson(loc, recipe, ResType.GENERIC);
+
+                FirmaCompat.LOGGER.debug("Normal→Poor: {} → {} for {}", normalId, poorId, stoneName);
+            }
+        }
+
+        FirmaCompat.LOGGER.info("Generated all collapse recipes for stone: {}", stoneName);
     }
 
     /**
@@ -922,7 +982,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
             ResourceSink sink,
             ResourceManager manager
     ) {
-        ResourceLocation templateLoc = modRes("loot_table/blocks/stone_hardened.json");
+        ResourceLocation templateLoc = modRes("loot_tables/blocks/stone_hardened.json");
         String outputNamespace = "";
 
         ResourceLocation hardenedId = BuiltInRegistries.BLOCK.getKey(hardenedBlock);
@@ -933,7 +993,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
 
         String hardenedPath = "";
         String loosePath = looseId.getPath();
-        String outputPath = "loot_table/blocks/";
+        String outputPath = "loot_tables/blocks/";
 
         if(type != null){
             hardenedPath = hardenedId.getPath() + "_" + type;

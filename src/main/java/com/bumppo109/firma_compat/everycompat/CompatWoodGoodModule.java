@@ -2,7 +2,9 @@ package com.bumppo109.firma_compat.everycompat;
 
 import com.bumppo109.firma_compat.FirmaCompat;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blockentities.BarrelBlockEntity;
 import net.dries007.tfc.common.blockentities.LoomBlockEntity;
@@ -35,6 +37,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -51,6 +54,8 @@ import javax.annotation.Nullable;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -94,8 +99,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 .requiresChildren("planks")
                 .addTexture(modRes("item/oak_lumber"), PaletteStrategies.MAIN_CHILD)
                 .addTag(modRes("compat_lumber"), Registries.ITEM)
-                .addTag(ResourceLocation.fromNamespaceAndPath("tfc","lumber"), Registries.ITEM)
-                //.addRecipe(modRes("crafting/oak_planks"))
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*")
                 .excludeBlockTypes("afc:.*")
@@ -108,7 +111,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresChildren("log")
                 .addTexture(modRes("item/oak_twig"), PaletteStrategies.MAIN_CHILD)
-                .addTag(ResourceLocation.fromNamespaceAndPath("tfc", "twigs"), Registries.ITEM)
                 .addTag(modRes("twigs"), Registries.BLOCK)
                 .addTag(Tags.Items.RODS_WOODEN, Registries.ITEM)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
@@ -126,7 +128,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 .addTag(ItemTags.WOODEN_FENCES, Registries.ITEM)
                 .addTag(BlockTags.WOODEN_FENCES, Registries.BLOCK)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_log_fence"))
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
                 .build();
@@ -138,9 +139,9 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                                 VerticalSupportBlock(ExtendedProperties.of().strength(1.0F).noOcclusion().flammableLikeLogs())
                 )
                 .requiresChildren("log")
-                .addTag(TFCTags.Blocks.SUPPORT_BEAM, Registries.BLOCK)
+                .addTag(modRes("compat_support_beams"), Registries.BLOCK)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                .addTexture(ResourceLocation.withDefaultNamespace("textures/item/barrier"))
+
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
                 .build();
@@ -152,9 +153,8 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                                 HorizontalSupportBlock(ExtendedProperties.of().strength(1.0F).noOcclusion().flammableLikeLogs())
                 )
                 .requiresChildren("log")
-                .addTag(TFCTags.Blocks.SUPPORT_BEAM, Registries.BLOCK)
+                .addTag(modRes("compat_support_beams"), Registries.BLOCK)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                .addTexture(ResourceLocation.withDefaultNamespace("textures/item/barrier"))
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
                 .build();
@@ -166,6 +166,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresFromMap(VERTICAL_SUPPORT.blocks)
                 .requiresFromMap(HORIZONTAL_SUPPORT.blocks)
+                .addTag(modRes("compat_support_items"), Registries.ITEM)
                 .requiresChildren("log")
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
@@ -179,7 +180,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresChildren("planks")
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_tool_rack"))
                 .setRenderType(RenderLayer.CUTOUT)
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
@@ -195,7 +195,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresChildren("planks")
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_loom"))
                 .setRenderType(RenderLayer.CUTOUT)
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
@@ -209,7 +208,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresChildren("planks")
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_sluice"))
                 .setRenderType(RenderLayer.CUTOUT)
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
@@ -223,7 +221,8 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresChildren("planks")
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_barrel"))
+                .addTag(modRes("compat_barrels"), Registries.ITEM)
+                .addTag(modRes("compat_barrels"), Registries.BLOCK)
                 .setRenderType(RenderLayer.CUTOUT)
                 .addCustomItem((wood, block, itemProperties) ->
                         new BarrelBlockItem(block, itemProperties))
@@ -416,6 +415,8 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         super.addDynamicServerResources(executor);
 
         executor.accept((manager, sink) -> {
+            supportData(sink);
+
             for(var woodType : WoodTypeRegistry.INSTANCE){
                 Item lumberItem = LUMBER.items.get(woodType);
                 ResourceLocation logTag = getATagOrCreateANew("logs", "caps", woodType, sink, manager);
@@ -456,7 +457,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                         generateSupportRecipe(sink, logTag, "tfc:saws", Utils.getID(SUPPORT.items.get(woodType)).getPath(), 8, null);
                         generateToolTagRecipe(sink, logTag, "tfc:saws", lumberItem, 8, null);
                         generateFenceRecipe(sink, woodType, "log_fence", null);
-                        supportData(sink, woodType);
                     }
                     if(woodType.getChild("door") != null){
                         generateDoorRecipe(sink, woodType, null);
@@ -498,7 +498,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 }
                 //TFC data
                 if(woodType.canBurn()){
-                    if(!Objects.equals(woodType.getNamespace(), "assets/minecraft")
+                    if(!Objects.equals(woodType.getNamespace(), "minecraft")
                             && !Objects.equals(woodType.getNamespace(), "tfc")
                             && !Objects.equals(woodType.getNamespace(), "afc")){
                         fuelData(woodType, sink, manager);
@@ -1174,7 +1174,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         key.add("L", logKey);
 
         JsonObject sawKey = new JsonObject();
-        sawKey.addProperty("item", TFCItems.GLUE.get().toString());
+        sawKey.addProperty("item", "tfc:glue");
         key.add("S", sawKey);
 
         recipe.add("key", key);
@@ -1228,7 +1228,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         key.add("L", logKey);
 
         JsonObject sawKey = new JsonObject();
-        sawKey.addProperty("item", TFCItems.METAL_ITEMS.get(Metal.Default.STEEL).get(Metal.ItemType.INGOT).get().toString());
+        sawKey.addProperty("item", "tfc:metal/ingot/steel");
         key.add("S", sawKey);
 
         recipe.add("key", key);
@@ -1369,7 +1369,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         key.add("R", redstoneKey);
 
         JsonObject brassMechKey = new JsonObject();
-        brassMechKey.addProperty("item", TFCItems.BRASS_MECHANISMS.get().toString());
+        brassMechKey.addProperty("item", "tfc:brass_mechanisms");
         key.add("B", brassMechKey);
 
         recipe.add("key", key);
@@ -1425,7 +1425,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         key.add("L", logKey);
 
         JsonObject brassMechKey = new JsonObject();
-        brassMechKey.addProperty("item", TFCItems.BRASS_MECHANISMS.get().toString());
+        brassMechKey.addProperty("item", "tfc:brass_mechanisms");
         key.add("B", brassMechKey);
 
         recipe.add("key", key);
@@ -1833,75 +1833,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         sink.addJson(recipeId, recipe, ResType.RECIPES);
     }
 
-    /*
-    public void generateSupportRecipe(
-            ResourceSink sink,
-            ResourceLocation tag,
-            String toolTag,
-            String outputItem,
-            int count,
-            @Nullable String suffix
-    ) {
-        if (count < 1) {
-            count = 1;
-            EveryCompat.LOGGER.warn("Invalid count {} for support recipe → {}, clamped to 1", count, outputItem);
-        }
-
-        JsonObject recipe = new JsonObject();
-        recipe.addProperty("type", "tfc:advanced_shaped_crafting");
-
-        // Column width hint (matches your example)
-        recipe.addProperty("input_column", 1);
-
-        // Key definitions
-        JsonObject key = new JsonObject();
-
-        JsonObject logKey = new JsonObject();
-        logKey.addProperty("tag", String.valueOf(tag));
-        key.add("L", logKey);
-
-        JsonObject sawKey = new JsonObject();
-        sawKey.addProperty("tag", toolTag);
-        key.add("S", sawKey);
-
-        recipe.add("key", key);
-
-        // Pattern (fixed 2x2 layout from your example)
-        JsonArray pattern = new JsonArray();
-        pattern.add("LS");
-        pattern.add("L ");
-        recipe.add("pattern", pattern);
-
-        // Remainder: damage the tool (saw)
-        JsonObject remainder = new JsonObject();
-        JsonArray modifiers = new JsonArray();
-        JsonObject damage = new JsonObject();
-        damage.addProperty("type", "tfc:damage_crafting_remainder");
-        modifiers.add(damage);
-        remainder.add("modifiers", modifiers);
-        recipe.add("remainder", remainder);
-
-        // Result
-        JsonObject result = new JsonObject();
-        result.addProperty("count", count);
-        result.addProperty("item", FirmaCompat.MODID + ":" + outputItem);
-        recipe.add("result", result);
-
-        // Build recipe ResourceLocation based on output item namespace + path
-        ResourceLocation outLoc = ResourceLocation.parse(outputItem);
-        String basePath = "crafting/" + outLoc.getPath();  // e.g. supports/acacia_support
-
-        if (suffix != null && !suffix.isEmpty()) {
-            basePath += suffix;
-        }
-
-        ResourceLocation recipeId = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, basePath);
-
-        sink.addJson(recipeId, recipe, ResType.RECIPES);
-    }
-
-     */
-
     public void generateToolItemRecipe(
             ResourceSink sink,
             Item inputItem,
@@ -2044,74 +1975,89 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
     }
 
     //TFC Data files
-
     private ResourceLocation getPlanksTextureId(WoodType wood) {
-        String namespace = wood.getNamespace();
-        String typeName = wood.getTypeName();
+        ResourceLocation plankResLoc = BuiltInRegistries.BLOCK.getKey(wood.planks);
 
-        if ("assets/minecraft".equals(namespace)) {
-            return ResourceLocation.fromNamespaceAndPath("assets/minecraft", "block/" + typeName + "_planks");
-        } else if ("tfc".equals(namespace)) {
-            return ResourceLocation.fromNamespaceAndPath("tfc", "block/wood/planks/" + typeName);
-        } else {
-            // Fallback for other mods — adjust if you support more
-            FirmaCompat.LOGGER.warn("Unknown wood namespace for plank texture: {}", namespace);
-            return ResourceLocation.fromNamespaceAndPath(namespace, "block/" + typeName + "_planks");
-        }
+        return ResourceLocation.fromNamespaceAndPath(plankResLoc.getNamespace(), "block/" + plankResLoc.getPath());
     }
 
+    /**
+     * Copies the oak_logs.json fuel template and replaces "oak" with the current wood type.
+     */
     public void fuelData(WoodType woodType, ResourceSink sink, ResourceManager manager) {
 
-        ResourceLocation dataLoc = modRes("tfc/fuel/oak_logs.json");
+        ResourceLocation templateLoc = modRes("tfc/fuels/oak_logs.json");
+        String woodName = woodType.getTypeName().toLowerCase(Locale.ROOT); // e.g. "acacia", "birch", etc.
 
-        try (InputStream dataStream = manager.getResource(dataLoc)
-                .orElseThrow(() -> new FileNotFoundException("File not found @ " + dataLoc)).open()) {
+        try (InputStream dataStream = manager.getResource(templateLoc)
+                .orElseThrow(() -> new FileNotFoundException("Template not found: " + templateLoc))
+                .open()) {
 
-            JsonObject fuelData = RPUtils.deserializeJson(dataStream);
+            // Read the template as a raw string so we can do simple text replacement
+            String jsonString = new String(dataStream.readAllBytes(), StandardCharsets.UTF_8);
 
-            // Editing the recipe
-            fuelData.getAsJsonObject("ingredient")
-                    .addProperty("tag", getATagOrCreateANew("logs", "caps", woodType, sink, manager).toString());
+            // Replace all instances of "oak" with the current wood type
+            // This handles "oak_logs", "oak" in tags, filenames, etc.
+            jsonString = jsonString.replace("oak", woodName);
+            jsonString = jsonString.replace("minecraft", woodType.getNamespace().toLowerCase(Locale.ROOT));
 
-            // Adding to resources
-            sink.addJson(
-                    modRes("tfc/fuel/" + woodType.getTypeName() + "_logs.json"),
-                    fuelData,
-                    ResType.GENERIC
-            );
-        }
-        catch (IOException e) {
-            EveryCompat.LOGGER.error("Failed to generate the tfc data - fuel for {} : {}", woodType.getId(), e);
+            // Parse back into JsonObject
+            JsonObject fuelData = JsonParser.parseString(jsonString).getAsJsonObject();
+
+            // Save the modified fuel file
+            ResourceLocation outputLoc = modRes("tfc/fuels/" + woodName + "_logs.json");
+
+            sink.addJson(outputLoc, fuelData, ResType.GENERIC);
+
+            EveryCompat.LOGGER.debug("Generated fuel data for {}", woodName);
+
+        } catch (IOException e) {
+            EveryCompat.LOGGER.error("Failed to generate fuel data for {} : {}", woodType.getId(), e);
         }
     }
 
-    public void supportData(ResourceSink sink, WoodType wood) {
-        JsonObject config = new JsonObject();
+    /**
+     * Generates the horizontal support config for TFC compatibility.
+     * Collects all horizontal supports from registered woods and puts them into one JSON file.
+     */
+    public void supportData(ResourceSink sink) {
         JsonArray ingredients = new JsonArray();
 
-        String woodPath = Utils.getID(HORIZONTAL_SUPPORT.blocks.get(wood)).getPath();
-        String woodNamespace = Utils.getID(HORIZONTAL_SUPPORT.blocks.get(wood)).getNamespace();
+        // Populate the list with all horizontal support block IDs
+        for (WoodType wood : WoodTypeRegistry.INSTANCE) {
+            // Get the registered horizontal support block for this wood type
+            Block horizontalSupportBlock = HORIZONTAL_SUPPORT.blocks.get(wood);
 
-        String ingredientPath = woodNamespace + ":" + woodPath;
+            if (horizontalSupportBlock != null) {
+                ResourceLocation id = Utils.getID(horizontalSupportBlock);
+                String horizontalId = id.getNamespace() + ":" + id.getPath();
 
-        ingredients.add(ingredientPath);
+                ingredients.add(horizontalId);
+            } else {
+                EveryCompat.LOGGER.warn("No horizontal support block found for wood: {}", wood.getTypeName());
+            }
+        }
 
-        // Only add if we actually have ingredients (avoid empty array)
+        // Build the final JSON
+        JsonObject config = new JsonObject();
+
         if (!ingredients.isEmpty()) {
             config.add("ingredient", ingredients);
         } else {
-            EveryCompat.LOGGER.warn("No wood types found for horizontal support config");
+            EveryCompat.LOGGER.warn("No horizontal supports found - ingredient array is empty");
         }
 
-        // Fixed structural values (from your example)
+        // Fixed support values (matching your example and TFC expectation)
         config.addProperty("support_down", 2);
         config.addProperty("support_horizontal", 4);
         config.addProperty("support_up", 2);
 
-        // Destination path – adjust namespace/folder as needed
-        ResourceLocation configLocation = modRes("tfc/support/compat_horizontal_support_beam.json");
+        // Output location - adjust folder/name as needed
+        ResourceLocation configLocation = modRes("tfc/supports/compat_horizontal_support_beam.json");
 
         sink.addJson(configLocation, config, ResType.GENERIC);
+
+        EveryCompat.LOGGER.info("Generated horizontal support config with {} entries", ingredients.size());
     }
 
     //Placed Feature - Patch

@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "firma_compat:stone_brick_aqueduct",
     "firma_compat:deepslate_brick_aqueduct",

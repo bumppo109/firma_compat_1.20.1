@@ -38,41 +38,8 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
             for (CompatRock.BlockType blockType : CompatRock.BlockType.values()) {
                 tag(BlockTags.MINEABLE_WITH_PICKAXE)
                         .add(ModBlocks.ROCK_BLOCKS.get(rock).get(blockType).get());
-
-                if(blockType.equals(CompatRock.BlockType.HARDENED)) {
-                    tag(TFCTags.Blocks.CAN_TRIGGER_COLLAPSE)
-                            .add(ModBlocks.ROCK_BLOCKS.get(rock).get(blockType).get());
-                } else if (blockType.equals(CompatRock.BlockType.LOOSE_COBBLE)) {
-                    tag(TFCTags.Blocks.CAN_LANDSLIDE)
-                            .add(ModBlocks.ROCK_BLOCKS.get(rock).get(blockType).get());
-                }
             }
         }
-
-        tag(TFCTags.Blocks.CAN_START_COLLAPSE)
-                .add(Blocks.DEEPSLATE)
-                .add(Blocks.TUFF)
-                .add(Blocks.DRIPSTONE_BLOCK)
-                .add(Blocks.BASALT)
-                .add(Blocks.BLACKSTONE)
-                .add(Blocks.NETHERRACK)
-                .add(Blocks.CALCITE);
-        tag(TFCTags.Blocks.CAN_TRIGGER_COLLAPSE)
-                .add(Blocks.DEEPSLATE)
-                .add(Blocks.TUFF)
-                .add(Blocks.DRIPSTONE_BLOCK)
-                .add(Blocks.BASALT)
-                .add(Blocks.BLACKSTONE)
-                .add(Blocks.NETHERRACK)
-                .add(Blocks.CALCITE);
-        tag(TFCTags.Blocks.CAN_COLLAPSE)
-                .add(Blocks.DEEPSLATE)
-                .add(Blocks.TUFF)
-                .add(Blocks.DRIPSTONE_BLOCK)
-                .add(Blocks.BASALT)
-                .add(Blocks.BLACKSTONE)
-                .add(Blocks.NETHERRACK)
-                .add(Blocks.CALCITE);
 
         //Ore
         ModBlocks.ORES.forEach((rock, oreMap) -> {
@@ -97,29 +64,5 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
                 });
             });
         });
-
-        tag(TFCTags.Blocks.CAN_LANDSLIDE)
-                .add(Blocks.MUD)
-                .add(Blocks.PACKED_MUD)
-                .add(Blocks.COARSE_DIRT)
-                .add(Blocks.MYCELIUM)
-                .add(Blocks.PODZOL)
-                .add(Blocks.DIRT_PATH)
-                .add(Blocks.DIRT)
-                .add(Blocks.GRASS_BLOCK)
-                .add(Blocks.SAND)
-                .add(Blocks.RED_SAND)
-                .add(ModBlocks.COMPAT_FARMLAND.get())
-                .add(ModBlocks.CLAY_GRASS_BLOCK.get())
-                .add(ModBlocks.CLAY_PODZOL.get())
-                .add(ModBlocks.CLAY_DIRT.get())
-                .add(ModBlocks.KAOLIN_CLAY_GRASS_BLOCK.get())
-                .add(ModBlocks.KAOLIN_CLAY_PODZOL.get())
-                .add(ModBlocks.KAOLIN_CLAY_DIRT.get())
-                .add(ModBlocks.CASSITERITE_GRAVEL_DEPOSIT.get())
-                .add(ModBlocks.NATIVE_COPPER_GRAVEL_DEPOSIT.get())
-                .add(ModBlocks.NATIVE_GOLD_GRAVEL_DEPOSIT.get())
-                .add(ModBlocks.NATIVE_SILVER_GRAVEL_DEPOSIT.get())
-        ;
     }
 }

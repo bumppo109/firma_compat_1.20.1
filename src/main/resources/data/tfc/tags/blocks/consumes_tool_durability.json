@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "minecraft:tall_grass",
     "minecraft:short_grass",

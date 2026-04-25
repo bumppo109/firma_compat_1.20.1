@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "#firma_compat:raw",
+    "minecraft:deepslate",
+    "minecraft:calcite",
+    "minecraft:dripstone_block",
+    "minecraft:basalt",
+    "minecraft:blackstone",
+    "minecraft:netherrack",
+    "minecraft:tuff"
+  ]
+}

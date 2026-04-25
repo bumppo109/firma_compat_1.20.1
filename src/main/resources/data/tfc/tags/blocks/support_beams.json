@@ -1,5 +1,7 @@
 {
+  "replace": false,
   "values": [
+    "#firma_compat:compat_support_beams",
     "firma_compat:acacia_horizontal_support",
     "firma_compat:birch_horizontal_support",
     "firma_compat:cherry_horizontal_support",

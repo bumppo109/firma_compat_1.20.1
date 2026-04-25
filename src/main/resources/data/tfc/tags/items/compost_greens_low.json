@@ -1,9 +1,11 @@
 {
+  "replace": false,
   "values": [
     "#minecraft:flowers",
     "#minecraft:saplings",
-    "#c:mushrooms",
-    "minecraft:short_grass",
+    "minecraft:red_mushroom",
+    "minecraft:brown_mushroom",
+    "minecraft:grass",
     "minecraft:tall_grass",
     "minecraft:fern",
     "minecraft:large_fern",

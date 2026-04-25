@@ -205,7 +205,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         axleBlock(axle, strippedLog, wood);
         bladedAxleBlock(bladedAxle, strippedLog, wood);
         encasedAxleBlock(encasedAxle, strippedLog, planks, axleCasing, axleCasingFront, wood);
-        clutchBlock(clutch, strippedLog, planks, axleUnpowered, axlePowered, wood);
+        clutchBlock(clutch, strippedLog, planks, axleUnpowered, axlePowered, axleCasingFront, wood);
         gearBoxBlock(gearBox, planks, axleCasingFront, axleCasingRound, wood);
         waterWheelBlock(waterWheel, planks, wood);
         windmillBlock(windmill, wood);
@@ -582,8 +582,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         getVariantBuilder(block)
                 .partialState().with(HorizontalDirectionalBlock.FACING, Direction.EAST).modelForState().modelFile(model).rotationY(270).addModel()
-                .partialState().with(HorizontalDirectionalBlock.FACING, Direction.NORTH).modelForState().modelFile(model).addModel()
-                .partialState().with(HorizontalDirectionalBlock.FACING, Direction.SOUTH).modelForState().modelFile(model).rotationY(180).addModel()
+                .partialState().with(HorizontalDirectionalBlock.FACING, Direction.NORTH).modelForState().modelFile(model).rotationY(180).addModel()
+                .partialState().with(HorizontalDirectionalBlock.FACING, Direction.SOUTH).modelForState().modelFile(model).addModel()
                 .partialState().with(HorizontalDirectionalBlock.FACING, Direction.WEST).modelForState().modelFile(model).rotationY(90).addModel();
     }
 
@@ -675,13 +675,13 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.Z).modelForState().modelFile(model).rotationX(90).addModel();
     }
 
-    private void clutchBlock(Block block, ResourceLocation stripped, ResourceLocation planks, ResourceLocation unpowered, ResourceLocation powered, CompatWood wood) {
+    private void clutchBlock(Block block, ResourceLocation stripped, ResourceLocation planks, ResourceLocation unpowered, ResourceLocation powered, ResourceLocation axleCasingFront, CompatWood wood) {
         String name = wood.getSerializedName();
 
         ModelFile off = models().withExistingParent("block/clutch/" + name, modLoc("block/template/ore_column"))
-                .texture("side", stripped).texture("end", planks).texture("overlay", unpowered).texture("overlay_end", unpowered).texture("particle", stripped);
+                .texture("side", stripped).texture("end", planks).texture("overlay", unpowered).texture("overlay_end", axleCasingFront).texture("particle", stripped);
         ModelFile on = models().withExistingParent("block/clutch/" + name + "_powered", modLoc("block/template/ore_column"))
-                .texture("side", stripped).texture("end", planks).texture("overlay", powered).texture("overlay_end", powered).texture("particle", stripped);
+                .texture("side", stripped).texture("end", planks).texture("overlay", powered).texture("overlay_end", axleCasingFront).texture("particle", stripped);
 
         getVariantBuilder(block)
                 .partialState().with(BlockStateProperties.AXIS, Direction.Axis.X).with(BlockStateProperties.POWERED, false).modelForState().modelFile(off).rotationX(90).rotationY(90).addModel()

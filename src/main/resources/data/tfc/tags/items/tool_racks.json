@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "firma_compat:acacia_tool_rack",
     "firma_compat:birch_tool_rack",

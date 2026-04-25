@@ -29,16 +29,10 @@ public class ModItemTagGenerator extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         for (CompatWood wood : CompatWood.VALUES) {
-            tag(TFCTags.Items.CARRIED_BY_HORSE)
-                    .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.BARREL).get().asItem());
             tag(ItemTags.WOODEN_FENCES)
                     .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get().asItem());
             tag(ItemTags.FENCES)
                     .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get().asItem());
-        }
-        for (CompatRock rock : CompatRock.VALUES) {
-            tag(TFCTags.Items.ROCK_KNAPPING)
-                    .add(ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE).get().asItem());
         }
         tag(TFCTags.Items.CARRIED_BY_HORSE)
                 .add(ModBlocks.COMPAT_CHEST.get().asItem())

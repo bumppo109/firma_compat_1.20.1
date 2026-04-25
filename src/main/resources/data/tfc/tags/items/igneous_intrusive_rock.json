@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "firma_compat:granite_loose",
     "firma_compat:diorite_loose",
