@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#firma_compat:compat_loose",
+    "#firma_compat:loose_rocks",
     "firma_compat:granite_loose",
     "firma_compat:diorite_loose",
     "firma_compat:deepslate_loose",

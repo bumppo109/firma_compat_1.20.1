@@ -4,6 +4,7 @@ import com.bumppo109.firma_compat.FirmaCompat;
 import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
+import com.bumppo109.firma_compat.item.ModItems;
 import com.bumppo109.firma_compat.util.ModTags;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.TFCBlocks;
@@ -33,7 +34,23 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                     .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get().asItem());
             tag(ItemTags.FENCES)
                     .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get().asItem());
+            tag(ModTags.Items.TWIGS)
+                    .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.TWIG).get().asItem());
+            tag(ModTags.Items.BARRELS)
+                    .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.BARREL).get().asItem());
+            tag(ModTags.Items.LUMBER)
+                    .add(ModItems.LUMBER.get(wood).get());
+            tag(ModTags.Items.SUPPORT_BEAMS)
+                    .add(ModItems.SUPPORTS.get(wood).get());
         }
+
+        for (CompatRock rock : CompatRock.VALUES) {
+            tag(ModTags.Items.BRICKS)
+                    .add(rock.brickItem());
+            tag(ModTags.Items.LOOSE_ROCKS)
+                    .add(ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE).get().asItem());
+        }
+
         tag(TFCTags.Items.CARRIED_BY_HORSE)
                 .add(ModBlocks.COMPAT_CHEST.get().asItem())
                 .add(ModBlocks.COMPAT_TRAPPED_CHEST.get().asItem());

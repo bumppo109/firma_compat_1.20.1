@@ -2,5 +2,5 @@
   "ingredient": {
     "item": "firma_compat:cassiterite_gravel_deposit"
   },
-  "loot_table": "firma_compat:deposit/cassiterite_gravel_deposit"
+  "loot_table": "firma_compat:sluicing/deposits/cassiterite_gravel_deposit"
 }

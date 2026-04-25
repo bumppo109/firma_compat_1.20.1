@@ -25,8 +25,6 @@ import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.stone_zone.StoneZone;
 import net.mehvahdjukaar.stone_zone.api.StoneZoneEntrySet;
@@ -85,8 +83,8 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                         stoneType -> new LooseRockBlock(BlockBehaviour.Properties.of().strength(0.05f, 0.0f).noCollission())
                 )
                 .requiresChildren(VanillaStoneChildKeys.STONE)
-                .addTag(modRes("compat_loose"), Registries.BLOCK)
-                .addTag(modRes("compat_loose"), Registries.ITEM)
+                .addTag(modRes("loose_rocks"), Registries.BLOCK)
+                .addTag(modRes("loose_rocks"), Registries.ITEM)
                 .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
                 .addTexture(modRes("item/stone_loose"))
                 .copyParentDrop()
@@ -99,9 +97,8 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                         getModBlock("andesite_loose_cobble"), () -> VanillaStoneTypes.ANDESITE,
                         stoneType -> new Block(Utils.copyPropertySafe(Blocks.COBBLESTONE))
                 )
-                .requiresFromMap(LOOSE.blocks)
+                .requiresChildren(VanillaStoneChildKeys.STONE)
                 .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
-                .addTag(modRes("loose_cobble"), Registries.BLOCK)
                 .addTexture(modRes("block/andesite_loose_cobblestone"), PaletteStrategies.MAIN_CHILD)
                 .dropSelf()
                 .setTabKey(tab)
@@ -113,9 +110,8 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                         getModBlock("andesite_hardened_cobble"), () -> VanillaStoneTypes.ANDESITE,
                         stoneType -> new Block(Utils.copyPropertySafe(Blocks.COBBLESTONE))
                 )
-                .requiresFromMap(LOOSE.blocks)
+                .requiresChildren(VanillaStoneChildKeys.STONE)
                 .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
-                .addTag(modRes("hardened_cobble"), Registries.BLOCK)
                 .addTexture(modRes("block/andesite_hardened_cobblestone"), PaletteStrategies.MAIN_CHILD)
                 .dropSelf()
                 .setTabKey(tab)
@@ -127,9 +123,8 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                         getModBlock("stone_hardened"), () -> VanillaStoneTypes.STONE,
                         stoneType -> new Block(Utils.copyPropertySafe(stoneType.stone))
                 )
-                .requiresFromMap(LOOSE.blocks)
                 .requiresChildren(VanillaStoneChildKeys.STONE)
-                .addTag(modRes("hardened"), Registries.BLOCK)
+                .addTag(modRes("rock_hardened"), Registries.BLOCK)
                 .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
                 .noDrops()
                 .setTabKey(tab)
@@ -141,9 +136,9 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                         getModItem("stone_brick"), () -> VanillaStoneTypes.STONE,
                         w -> new Item(new Item.Properties())
                 )
-                .requiresFromMap(LOOSE.blocks)
+                .requiresChildren(VanillaStoneChildKeys.BRICKS)
                 .addTexture(modRes("item/stone_brick"), PaletteStrategies.MAIN_CHILD)
-                .addTag(modRes("compat_brick"), Registries.ITEM)
+                .addTag(modRes("bricks"), Registries.ITEM)
                 .excludeBlockTypes("tfc:.*")
                 .setTabKey(tab)
                 .build();
@@ -155,7 +150,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 )
                 .requiresChildren(VanillaRockChildKeys.BRICKS)
                 .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
-                .addTag(ResourceLocation.fromNamespaceAndPath("tfc", "aqueducts"), Registries.BLOCK)
+                .addTag(modRes("aqueducts"), Registries.BLOCK)
                 .dropSelf()
                 .excludeBlockTypes("tfc:.*")
                 .setTabKey(tab)
@@ -237,8 +232,10 @@ public class CompatStoneZoneModule extends StoneZoneModule {
         super.addDynamicServerResources(executor);
 
         executor.accept((manager, sink) -> {
+
             for (StoneType stone : StoneTypeRegistry.INSTANCE) {
-                if (stone == null) return;
+                if (stone == null) continue;
+                if(Objects.equals(stone.getNamespace(), "tfc")) continue;
 
                 Block hardenedBlock = HARDENED.blocks.get(stone);
                 Block looseRockBlock = LOOSE.blocks.get(stone);
@@ -249,9 +246,9 @@ public class CompatStoneZoneModule extends StoneZoneModule {
 
                 //============== Loot Tables
                 // raw
-                generateLootTableForStone(null, stone.stone, looseRockBlock, sink, manager);
+                generateTFCStoneLootTable(sink, stone.stone, LOOSE.blocks.get(stone));
                 // hardened
-                generateLootTableForStone("hardened", hardenedBlock, looseRockBlock, sink, manager);
+                generateTFCStoneLootTable(sink, HARDENED.blocks.get(stone), LOOSE.blocks.get(stone));
 
                 //================ Recipe
                 if(LOOSE.items.get(stone) != null){
@@ -438,7 +435,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 FirmaCompat.LOGGER.info("Generated placed feature: {}", placedPath);
             }
 
-        // Create a single tag JSON with all placed feature references + conditional loading
+            // Create a single tag JSON with all placed feature references + conditional loading
             JsonObject tagJson = new JsonObject();
 
             // === ADD CONDITIONAL LOADING ===
@@ -635,7 +632,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
 
         ResourceLocation poorLoc = ResourceLocation.fromNamespaceAndPath(
                 FirmaCompat.MODID,
-                "recipe/collapse/" + looseNs + "/" + stoneName + ".json"
+                "recipes/collapse/" + looseNs + "/" + stoneName + ".json"
         );
         sink.addJson(poorLoc, poorCollapseJson, ResType.GENERIC);
 
@@ -669,7 +666,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 String oreType = key.substring("rich_".length());
                 ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(
                         FirmaCompat.MODID,
-                        "recipe/collapse/" + looseNs + "/rich_to_normal/" + stoneName + "_" + oreType + ".json"
+                        "recipes/collapse/" + looseNs + "/rich_to_normal/" + stoneName + "_" + oreType + ".json"
                 );
                 sink.addJson(loc, recipe, ResType.GENERIC);
 
@@ -707,7 +704,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 String oreType = key.substring("normal_".length());
                 ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(
                         FirmaCompat.MODID,
-                        "recipe/collapse/" + looseNs + "/normal_to_poor/" + stoneName + "_" + oreType + ".json"
+                        "recipes/collapse/" + looseNs + "/normal_to_poor/" + stoneName + "_" + oreType + ".json"
                 );
                 sink.addJson(loc, recipe, ResType.GENERIC);
 
@@ -975,58 +972,92 @@ public class CompatStoneZoneModule extends StoneZoneModule {
         sink.addJson(recipeId, recipe, ResType.RECIPES);
     }
 
-    private void generateLootTableForStone(
-            @Nullable String type,
-            Block hardenedBlock,
-            Block looseBlock,
+    /**
+     * Generates a TFC-style loot table for hardened stone / raw stone variants.
+     *
+     * @param sink          The ResourceSink from addDynamicServerResources
+     * @param rawBlock         The block this loot table is for (e.g. your hardened block)
+     * @param looseBlock    The loose rock block/item dropped otherwise (with random 1-4 count)
+     */
+    private void generateTFCStoneLootTable(
             ResourceSink sink,
-            ResourceManager manager
-    ) {
-        ResourceLocation templateLoc = modRes("loot_tables/blocks/stone_hardened.json");
-        String outputNamespace = "";
+            Block rawBlock,
+            Block looseBlock) {
 
-        ResourceLocation hardenedId = BuiltInRegistries.BLOCK.getKey(hardenedBlock);
-        ResourceLocation looseId = BuiltInRegistries.BLOCK.getKey(looseBlock);
+        ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(rawBlock);
+        String blockPath = blockId.getPath();   // e.g. "granite_hardened"
 
-        if ((hardenedId == null || hardenedId.equals(BuiltInRegistries.BLOCK.getDefaultKey())) &&
-                (looseId == null || looseId.equals(BuiltInRegistries.BLOCK.getDefaultKey()))) return;
+        // Build the JSON structure
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "minecraft:block");
 
-        String hardenedPath = "";
-        String loosePath = looseId.getPath();
-        String outputPath = "loot_tables/blocks/";
+        JsonArray pools = new JsonArray();
+        JsonObject pool = new JsonObject();
+        pool.addProperty("name", "loot_pool");
+        pool.addProperty("rolls", 1);
 
-        if(type != null){
-            hardenedPath = hardenedId.getPath() + "_" + type;
-            outputNamespace = StoneZone.MOD_ID;
-            outputPath = outputPath + FirmaCompat.MODID + "/" + hardenedId.getNamespace() + "/" +  hardenedPath;
-        } else {
-            hardenedPath = hardenedId.getPath();
-            outputNamespace = hardenedId.getNamespace();
-            outputPath = outputPath + hardenedPath;
-        }
+        JsonArray entries = new JsonArray();
+        JsonObject alternativesEntry = new JsonObject();
+        alternativesEntry.addProperty("type", "minecraft:alternatives");
 
-        ResourceLocation outputLoc = ResourceLocation.fromNamespaceAndPath(
-                outputNamespace,outputPath + ".json");
+        JsonArray children = new JsonArray();
 
+        // Child 1: Raw rock when isolated
+        JsonObject rawChild = new JsonObject();
+        rawChild.addProperty("type", "minecraft:item");
+        rawChild.addProperty("name", BuiltInRegistries.ITEM.getKey(rawBlock.asItem()).toString());
 
-        try (InputStream stream = manager.getResource(templateLoc).orElseThrow(
-                () -> new FileNotFoundException("Loot template not found: " + templateLoc)).open()) {
+        JsonArray rawConditions = new JsonArray();
+        JsonObject isolatedCondition = new JsonObject();
+        isolatedCondition.addProperty("condition", "tfc:is_isolated");
+        rawConditions.add(isolatedCondition);
+        rawChild.add("conditions", rawConditions);
 
-            String templateText = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+        children.add(rawChild);
 
-            // Replace with clean block ID string (e.g. "firma_compat:granite_loose")
-            String modifiedText = templateText.replace("minecraft:stone", hardenedId.toString());
-            modifiedText = modifiedText.replace("firma_compat:stone_loose", looseId.toString());
-            modifiedText = modifiedText.replace("firma_compat:blocks/stone", hardenedId.getNamespace() + "blocks/" + hardenedId.getPath());
+        // Child 2: Loose rock (1-4 count)
+        JsonObject looseChild = new JsonObject();
+        looseChild.addProperty("type", "minecraft:item");
+        looseChild.addProperty("name", BuiltInRegistries.ITEM.getKey(looseBlock.asItem()).toString());
 
-            JsonObject json = JsonParser.parseString(modifiedText).getAsJsonObject();
+        JsonArray functions = new JsonArray();
+        JsonObject setCount = new JsonObject();
+        setCount.addProperty("function", "minecraft:set_count");
 
-            sink.addJson(outputLoc, json, ResType.GENERIC);
+        JsonObject countRange = new JsonObject();
+        countRange.addProperty("min", 1);
+        countRange.addProperty("max", 4);
+        countRange.addProperty("type", "minecraft:uniform");
+        setCount.add("count", countRange);
 
-        } catch (Exception e) {  // catch broader to log everything
-            EveryCompat.LOGGER.error("Failed generating loot table for {} from {}: {}",
-                    hardenedId, templateLoc, e.getMessage(), e);
-        }
+        functions.add(setCount);
+        looseChild.add("functions", functions);
+        children.add(looseChild);
+
+        alternativesEntry.add("children", children);
+        entries.add(alternativesEntry);
+
+        pool.add("entries", entries);
+
+        // Pool condition: survives explosion
+        JsonArray poolConditions = new JsonArray();
+        JsonObject explosionCondition = new JsonObject();
+        explosionCondition.addProperty("condition", "minecraft:survives_explosion");
+        poolConditions.add(explosionCondition);
+        pool.add("conditions", poolConditions);
+
+        pools.add(pool);
+        root.add("pools", pools);
+
+        // Write the file
+        ResourceLocation lootPath = ResourceLocation.fromNamespaceAndPath(
+                StoneZone.MOD_ID,
+                "loot_tables/blocks/" + FirmaCompat.MODID + "/" + blockId.getNamespace() + "/" + blockPath + ".json"
+        );
+
+        sink.addJson(lootPath, root, ResType.GENERIC);
+
+        FirmaCompat.LOGGER.info("Generated TFC loot table for: {}", lootPath);
     }
 
     public static void generateLoosePlacedFeature(

@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "firma_compat:loose/andesite",
+    "firma_compat:loose/diorite",
+    "firma_compat:loose/granite",
+    "firma_compat:loose/stone",
+    "firma_compat:loose/deepslate",
+    "firma_compat:loose/tuff",
+    "firma_compat:loose/calcite",
+    "firma_compat:loose/dripstone",
+    "firma_compat:loose/basalt",
+    "firma_compat:loose/blackstone",
+    "firma_compat:loose/netherrack",
+    "firma_compat:loose/end_stone"
+
+  ]
+}

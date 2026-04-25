@@ -1,9 +1,9 @@
 {
-  "ingredient": "tfc:deposit/native_silver/andesite",
+  "ingredient": "firma_compat:native_silver_gravel_deposit",
   "model_stages": [
     "tfc:item/pan/native_silver/andesite_full",
     "tfc:item/pan/native_silver/andesite_half",
     "tfc:item/pan/native_silver/result"
   ],
-  "loot_table": "firma_compat:deposit/native_silver_gravel_deposit"
+  "loot_table": "firma_compat:panning/deposits/native_silver_gravel_deposit"
 }

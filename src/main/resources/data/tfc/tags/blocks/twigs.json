@@ -1,15 +1,6 @@
 {
   "replace": false,
   "values": [
-    "firma_compat:acacia_twig",
-    "firma_compat:birch_twig",
-    "firma_compat:cherry_twig",
-    "firma_compat:dark_oak_twig",
-    "firma_compat:jungle_twig",
-    "firma_compat:mangrove_twig",
-    "firma_compat:oak_twig",
-    "firma_compat:spruce_twig",
-    "firma_compat:crimson_twig",
-    "firma_compat:warped_twig"
+    "#firma_compat:twigs"
   ]
 }

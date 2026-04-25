@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": "#firma_compat:loose_rock_patches",
+  "step": "vegetal_decoration"
+}

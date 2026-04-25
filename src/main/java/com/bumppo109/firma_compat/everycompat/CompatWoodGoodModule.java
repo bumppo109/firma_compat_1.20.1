@@ -98,7 +98,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresChildren("planks")
                 .addTexture(modRes("item/oak_lumber"), PaletteStrategies.MAIN_CHILD)
-                .addTag(modRes("compat_lumber"), Registries.ITEM)
+                .addTag(modRes("lumber"), Registries.ITEM)
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*")
                 .excludeBlockTypes("afc:.*")
@@ -139,7 +139,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                                 VerticalSupportBlock(ExtendedProperties.of().strength(1.0F).noOcclusion().flammableLikeLogs())
                 )
                 .requiresChildren("log")
-                .addTag(modRes("compat_support_beams"), Registries.BLOCK)
+                .addTag(modRes("support_beams"), Registries.BLOCK)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
 
                 .setTabKey(tab)
@@ -153,7 +153,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                                 HorizontalSupportBlock(ExtendedProperties.of().strength(1.0F).noOcclusion().flammableLikeLogs())
                 )
                 .requiresChildren("log")
-                .addTag(modRes("compat_support_beams"), Registries.BLOCK)
+                .addTag(modRes("support_beams"), Registries.BLOCK)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
@@ -166,7 +166,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresFromMap(VERTICAL_SUPPORT.blocks)
                 .requiresFromMap(HORIZONTAL_SUPPORT.blocks)
-                .addTag(modRes("compat_support_items"), Registries.ITEM)
+                .addTag(modRes("support_beams"), Registries.ITEM)
                 .requiresChildren("log")
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
@@ -221,8 +221,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresChildren("planks")
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                .addTag(modRes("compat_barrels"), Registries.ITEM)
-                .addTag(modRes("compat_barrels"), Registries.BLOCK)
+                .addTag(modRes("barrels"), Registries.ITEM)
                 .setRenderType(RenderLayer.CUTOUT)
                 .addCustomItem((wood, block, itemProperties) ->
                         new BarrelBlockItem(block, itemProperties))
@@ -239,7 +238,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresChildren("planks", "slab")
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_scribing_table"))
                 .setRenderType(RenderLayer.CUTOUT)
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
@@ -253,7 +251,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresChildren("planks", "log")
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_sewing_table"))
                 .setRenderType(RenderLayer.CUTOUT)
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
@@ -267,7 +264,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresChildren("planks")
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_shelf"))
                 .setRenderType(RenderLayer.CUTOUT)
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
@@ -288,7 +284,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                                 getPlanksTextureId(w)
                         ))
                 .requiresChildren("stripped_log")
-                //.addRecipe(modRes("crafting/oak_axle"))
                 .dropSelf()
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
                 .setRenderType(RenderLayer.CUTOUT)
@@ -325,7 +320,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresFromMap(AXLE.blocks)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_bladed_axle"))
                 .dropSelf()
                 .setRenderType(RenderLayer.CUTOUT)
                 .setTabKey(tab)
@@ -340,7 +334,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresFromMap(AXLE.blocks)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_encased_axle"))
                 .setRenderType(RenderLayer.CUTOUT)
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
@@ -354,7 +347,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresFromMap(AXLE.blocks)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_clutch"))
                 .dropSelf()
                 .setRenderType(RenderLayer.CUTOUT)
                 .setTabKey(tab)
@@ -369,7 +361,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresFromMap(AXLE.blocks)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_gear_box"))
                 .dropSelf()
                 .setRenderType(RenderLayer.CUTOUT)
                 .setTabKey(tab)
@@ -377,7 +368,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 .build();
         this.addEntry(GEAR_BOX);
 
-        //TODO - waterwheel not registering & check texture resLoc
         WATER_WHEEL = SimpleEntrySet.builder(WoodType.class, "water_wheel",
                         () -> getModBlock("oak_water_wheel").get(), () -> VanillaWoodTypes.OAK,
                         w -> new
@@ -388,7 +378,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 )
                 .requiresFromMap(AXLE.blocks)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                //.addRecipe(modRes("crafting/oak_water_wheel"))
                 .addTexture(modRes("item/oak_water_wheel"), PaletteStrategies.MAIN_CHILD)
                 .addTexture(modRes("entity/oak_water_wheel"), PaletteStrategies.MAIN_CHILD)
                 .dropSelf()
@@ -399,18 +388,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         this.addEntry(WATER_WHEEL);
     }
 
-    /*
     @Override
-    //public boolean isEntryAlreadyRegistered(String entrySetId, String blockId, BlockType blockType, Registry<?> registry) {
-    public boolean isEntryAlreadyRegistered(String entrySetId, ResourceLocation blockId, BlockType blockType, Registry<?> registry) {
-        return false;
-    }
-
-     */
-
-    @Override
-    // RECIPES, TAGS
-    //everycomp log tags formatted -> everycomp:[modid]/[woodType]_logs
     public void addDynamicServerResources(Consumer<ResourceGenTask> executor) {
         super.addDynamicServerResources(executor);
 

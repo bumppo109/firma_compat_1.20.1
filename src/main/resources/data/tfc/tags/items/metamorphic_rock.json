@@ -1,10 +1,6 @@
 {
   "replace": false,
   "values": [
-    "#firma_compat:compat_loose",
-    "firma_compat:stone_loose",
-    "firma_compat:blackstone_loose",
-    "firma_compat:netherrack_loose",
-    "firma_compat:end_stone_loose"
+    "#firma_compat:loose_rocks"
   ]
 }

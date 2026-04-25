@@ -1,6 +1,0 @@
-{
-  "type": "forge:add_features",
-  "biomes": "#minecraft:is_overworld",
-  "features": "#firma_compat:veins",
-  "step": "underground_decoration"
-}
