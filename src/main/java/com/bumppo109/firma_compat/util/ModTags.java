@@ -34,6 +34,7 @@ public class ModTags {
         public static final TagKey<Item> CHAINS = tag("chains");
         public static final TagKey<Item> COMPAT_LOOSE = tag("compat_loose");
         public static final TagKey<Item> PREVENT_INTERACTION = tag("prevent_interaction");
+        public static final TagKey<Item> PIGLIN_BARTERING_ITEMS = tag("piglin_bartering_items");
 
         public static final TagKey<Item> HAMMERS = tag("hammers");
 

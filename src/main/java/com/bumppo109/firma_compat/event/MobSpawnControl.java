@@ -48,6 +48,7 @@ public class MobSpawnControl {
      * Returns the TFC replacement EntityType for a given vanilla mob, or null if no replacement.
      */
     private static EntityType<?> getReplacement(EntityType<?> original) {
+        /* TODO - currently always replacing with baby of a single gender
         if (original == EntityType.COW) {
             return TFCEntities.COW.get();
         }
@@ -73,6 +74,7 @@ public class MobSpawnControl {
             return TFCEntities.RABBIT.get();
         }
 
+         */
 
         return null; // no replacement
     }

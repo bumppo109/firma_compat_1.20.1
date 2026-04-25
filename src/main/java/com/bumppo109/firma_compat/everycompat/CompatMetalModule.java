@@ -52,7 +52,8 @@ public class CompatMetalModule extends GemsRealmModule {
                 .requiresChildren(INGOT) //REASON: recipes, textures
                 .addTexture(modRes("item/iron_rod"), MetalPaletteStrategies.INGOT_STANDARD)
                 .generateItemModels(modRes("item/iron_rod"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(ROD);
@@ -64,7 +65,8 @@ public class CompatMetalModule extends GemsRealmModule {
                 .requiresChildren(INGOT) //REASON: recipes, textures
                 .addTexture(modRes("item/iron_double_ingot"), MetalPaletteStrategies.INGOT_STANDARD)
                 .generateItemModels(modRes("item/iron_double_ingot"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(DOUBLE_INGOT);
@@ -76,7 +78,8 @@ public class CompatMetalModule extends GemsRealmModule {
                 .requiresChildren(INGOT) //REASON: recipes, textures
                 .addTexture(modRes("item/iron_sheet"), MetalPaletteStrategies.INGOT_STANDARD)
                 .generateItemModels(modRes("item/iron_sheet"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(SHEET);
@@ -88,7 +91,8 @@ public class CompatMetalModule extends GemsRealmModule {
                 .requiresChildren(INGOT) //REASON: recipes, textures
                 .addTexture(modRes("item/iron_double_sheet"), MetalPaletteStrategies.INGOT_STANDARD)
                 .generateItemModels(modRes("item/iron_double_sheet"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(DOUBLE_SHEET);
@@ -98,9 +102,10 @@ public class CompatMetalModule extends GemsRealmModule {
                         metalType -> new Item(new Item.Properties())
                 )
                 .requiresChildren(INGOT) //REASON: recipes, textures
-                .addTexture(modRes("item/sword_blade"), MetalPaletteStrategies.INGOT_STANDARD)
+                .addTexture(modRes("item/sword_blade"), MetalPaletteStrategies.MAIN_CHILD)
                 .generateItemModels(modRes("item/sword_blade"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(SWORD_BLADE);
@@ -110,9 +115,10 @@ public class CompatMetalModule extends GemsRealmModule {
                         metalType -> new Item(new Item.Properties())
                 )
                 .requiresChildren(INGOT) //REASON: recipes, textures
-                .addTexture(modRes("item/pickaxe_head"), MetalPaletteStrategies.INGOT_STANDARD)
+                .addTexture(modRes("item/pickaxe_head"), MetalPaletteStrategies.MAIN_CHILD)
                 .generateItemModels(modRes("item/pickaxe_head"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(PICKAXE_HEAD);
@@ -122,9 +128,10 @@ public class CompatMetalModule extends GemsRealmModule {
                         metalType -> new Item(new Item.Properties())
                 )
                 .requiresChildren(INGOT) //REASON: recipes, textures
-                .addTexture(modRes("item/shovel_head"), MetalPaletteStrategies.INGOT_STANDARD)
+                .addTexture(modRes("item/shovel_head"), MetalPaletteStrategies.MAIN_CHILD)
                 .generateItemModels(modRes("item/shovel_head"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(SHOVEL_HEAD);
@@ -134,9 +141,10 @@ public class CompatMetalModule extends GemsRealmModule {
                         metalType -> new Item(new Item.Properties())
                 )
                 .requiresChildren(INGOT) //REASON: recipes, textures
-                .addTexture(modRes("item/axe_head"), MetalPaletteStrategies.INGOT_STANDARD)
+                .addTexture(modRes("item/axe_head"), MetalPaletteStrategies.MAIN_CHILD)
                 .generateItemModels(modRes("item/axe_head"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(AXE_HEAD);
@@ -146,9 +154,10 @@ public class CompatMetalModule extends GemsRealmModule {
                         metalType -> new Item(new Item.Properties())
                 )
                 .requiresChildren(INGOT) //REASON: recipes, textures
-                .addTexture(modRes("item/hoe_head"), MetalPaletteStrategies.INGOT_STANDARD)
+                .addTexture(modRes("item/hoe_head"), MetalPaletteStrategies.MAIN_CHILD)
                 .generateItemModels(modRes("item/hoe_head"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(HOE_HEAD);
@@ -158,9 +167,10 @@ public class CompatMetalModule extends GemsRealmModule {
                         metalType -> new Item(new Item.Properties())
                 )
                 .requiresChildren(INGOT) //REASON: recipes, textures
-                .addTexture(modRes("item/unfinished_helmet"), MetalPaletteStrategies.INGOT_STANDARD)
+                .addTexture(modRes("item/unfinished_helmet"), MetalPaletteStrategies.MAIN_CHILD)
                 .generateItemModels(modRes("item/unfinished_helmet"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(UNFINISHED_HELMET);
@@ -170,9 +180,10 @@ public class CompatMetalModule extends GemsRealmModule {
                         metalType -> new Item(new Item.Properties())
                 )
                 .requiresChildren(INGOT) //REASON: recipes, textures
-                .addTexture(modRes("item/unfinished_chestplate"), MetalPaletteStrategies.INGOT_STANDARD)
+                .addTexture(modRes("item/unfinished_chestplate"), MetalPaletteStrategies.MAIN_CHILD)
                 .generateItemModels(modRes("item/unfinished_chestplate"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(UNFINISHED_CHESTPLATE);
@@ -182,9 +193,10 @@ public class CompatMetalModule extends GemsRealmModule {
                         metalType -> new Item(new Item.Properties())
                 )
                 .requiresChildren(INGOT) //REASON: recipes, textures
-                .addTexture(modRes("item/unfinished_leggings"), MetalPaletteStrategies.INGOT_STANDARD)
+                .addTexture(modRes("item/unfinished_leggings"), MetalPaletteStrategies.MAIN_CHILD)
                 .generateItemModels(modRes("item/unfinished_leggings"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(UNFINISHED_LEGGINGS);
@@ -194,9 +206,10 @@ public class CompatMetalModule extends GemsRealmModule {
                         metalType -> new Item(new Item.Properties())
                 )
                 .requiresChildren(INGOT) //REASON: recipes, textures
-                .addTexture(modRes("item/unfinished_boots"), MetalPaletteStrategies.INGOT_STANDARD)
+                .addTexture(modRes("item/unfinished_boots"), MetalPaletteStrategies.MAIN_CHILD)
                 .generateItemModels(modRes("item/unfinished_boots"))
-                .excludeBlockTypes("tfc:.*", "firmalife:.*")
+                .excludeBlockTypes("tfc:.*")
+                .excludeBlockTypes("firmalife:.*")
                 .setTabKey(ingredients)
                 .build();
         this.addEntry(UNFINISHED_BOOTS);
