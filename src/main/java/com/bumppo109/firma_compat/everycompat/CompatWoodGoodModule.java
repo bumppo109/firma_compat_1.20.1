@@ -429,7 +429,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
 
                     if(woodType.getChild("planks") != null){
                         generatePlanksRecipe(sink, woodType, null);
-                        generateToolItemRecipe(sink, woodType.planks.asItem(), "c:tools/saw", lumberItem, 4, "from_planks");
+                        generateToolItemRecipe(sink, woodType.planks.asItem(), "tfc:saws", lumberItem, 4, "from_planks");
                         UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, woodType.planks.asItem());
                         generateShelfRecipe(sink, woodType, null);
                         if(woodType.getChild("fence") != null){
@@ -445,16 +445,16 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                         }
                         if(woodType.getChild("slab") != null){
                             generateScribingTableRecipe(sink, woodType, null);
-                            generateToolItemRecipe(sink, woodType.getItemOfThis("slab"), "c:tools/saw", lumberItem, 2, "from_slab");
+                            generateToolItemRecipe(sink, woodType.getItemOfThis("slab"), "tfc:saws", lumberItem, 2, "from_slab");
 
                         }
                         if(woodType.getChild("stairs") != null) {
-                            generateToolItemRecipe(sink, woodType.getItemOfThis("stairs"), "c:tools/saw", lumberItem, 3, "from_stairs");
+                            generateToolItemRecipe(sink, woodType.getItemOfThis("stairs"), "tfc:saws", lumberItem, 3, "from_stairs");
                         }
                     }
                     if(woodType.getChild("log") != null){
-                        generateSupportRecipe(sink, logTag, "c:tools/saw", Utils.getID(SUPPORT.items.get(woodType)).getPath(), 8, null);
-                        generateToolTagRecipe(sink, logTag, "c:tools/saw", lumberItem, 8, null);
+                        generateSupportRecipe(sink, logTag, "tfc:saws", Utils.getID(SUPPORT.items.get(woodType)).getPath(), 8, null);
+                        generateToolTagRecipe(sink, logTag, "tfc:saws", lumberItem, 8, null);
                         generateFenceRecipe(sink, woodType, "log_fence", null);
                         supportData(sink, woodType);
                     }
@@ -520,6 +520,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 }
             }
 
+            tagJson.addProperty("replace", false);
             tagJson.add("values", valuesArray);
 
             // Write the tag file
@@ -530,24 +531,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
 
             sink.addJson(tagPath, tagJson, ResType.GENERIC);
             FirmaCompat.LOGGER.info("Generated placed feature tag: {}", tagPath);
-
-            //Biome Modifier File
-            JsonObject biomeModifier = new JsonObject();
-
-            String twigFeatureTag = FirmaCompat.MODID + ":woodgood_twig_patches";
-
-            biomeModifier.addProperty("type", "forge:add_features");
-            biomeModifier.addProperty("biomes", "#c:is_overworld");
-            biomeModifier.addProperty("features", "#" + twigFeatureTag);
-            biomeModifier.addProperty("step", "vegetal_decoration");
-
-            // Write individual placed feature
-            ResourceLocation biomeModifierPath = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
-                    "forge/biome_modifier/add_woodgood_twig_patches.json"
-            );
-
-            sink.addJson(biomeModifierPath, biomeModifier, ResType.GENERIC);
-            FirmaCompat.LOGGER.info("Generated biome modifier: {}", biomeModifierPath);
         });
     }
 
@@ -586,7 +569,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  doorNamespace + ":" + doorItemPath);
+        result.addProperty("item",  doorNamespace + ":" + doorItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -636,7 +619,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  doorNamespace + ":" + doorItemPath);
+        result.addProperty("item",  doorNamespace + ":" + doorItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -685,7 +668,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 2);
-        result.addProperty("id",  doorNamespace + ":" + doorItemPath);
+        result.addProperty("item",  doorNamespace + ":" + doorItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -733,7 +716,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  doorNamespace + ":" + doorItemPath);
+        result.addProperty("item",  doorNamespace + ":" + doorItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -809,7 +792,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 8);
-        result.addProperty("id",  outputNamespace + ":" + outputPath);
+        result.addProperty("item",  outputNamespace + ":" + outputPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -872,7 +855,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 2);
-        result.addProperty("id",  outputNamespace + ":" + outputPath);
+        result.addProperty("item",  outputNamespace + ":" + outputPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -922,7 +905,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -963,7 +946,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         key.add("L", logKey);
 
         JsonObject sawKey = new JsonObject();
-        sawKey.addProperty("tag", "c:rods/wooden");
+        sawKey.addProperty("tag", "forge:rods/wooden");
         key.add("S", sawKey);
 
         recipe.add("key", key);
@@ -978,7 +961,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1019,7 +1002,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         key.add("L", logKey);
 
         JsonObject sawKey = new JsonObject();
-        sawKey.addProperty("tag", "c:rods/wooden");
+        sawKey.addProperty("tag", "forge:rods/wooden");
         key.add("S", sawKey);
 
         recipe.add("key", key);
@@ -1034,7 +1017,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1086,7 +1069,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1131,7 +1114,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         key.add("L", logKey);
 
         JsonObject sawKey = new JsonObject();
-        sawKey.addProperty("tag", "c:rods/wooden");
+        sawKey.addProperty("tag", "forge:rods/wooden");
         key.add("S", sawKey);
 
         JsonObject planksKey = new JsonObject();
@@ -1150,7 +1133,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 2);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1204,7 +1187,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 4);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1258,7 +1241,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1325,7 +1308,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 4);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1382,7 +1365,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         key.add("X", strippedKey);
 
         JsonObject redstoneKey = new JsonObject();
-        redstoneKey.addProperty("tag", "c:dusts/redstone");
+        redstoneKey.addProperty("tag", "forge:dusts/redstone");
         key.add("R", redstoneKey);
 
         JsonObject brassMechKey = new JsonObject();
@@ -1401,7 +1384,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 2);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1457,7 +1440,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 2);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1525,7 +1508,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 2);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1578,7 +1561,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         key.add("F", featherKey);
 
         JsonObject inkKey = new JsonObject();
-        inkKey.addProperty("tag", "c:tools/shear");
+        inkKey.addProperty("tag", "forge:shears");
         key.add("I", inkKey);
 
         recipe.add("key", key);
@@ -1593,7 +1576,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 2);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1660,7 +1643,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1702,7 +1685,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         key.add("L", logKey);
 
         JsonObject axleKey = new JsonObject();
-        axleKey.addProperty("tag", "c:rods/wooden");
+        axleKey.addProperty("tag", "forge:rods/wooden");
         key.add("S", axleKey);
 
         recipe.add("key", key);
@@ -1717,7 +1700,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 3);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1759,7 +1742,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         key.add("L", logKey);
 
         JsonObject axleKey = new JsonObject();
-        axleKey.addProperty("tag", "c:chains");
+        axleKey.addProperty("tag", "firma_compat:chains");
         key.add("S", axleKey);
 
         recipe.add("key", key);
@@ -1774,7 +1757,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 3);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -1789,6 +1772,68 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         sink.addJson(recipeId, recipe, ResType.RECIPES);
     }
 
+    public void generateSupportRecipe(
+            ResourceSink sink,
+            ResourceLocation tag,
+            String toolTag,
+            String outputItem,
+            int count,
+            @Nullable String suffix
+    ) {
+        if (count < 1) {
+            count = 1;
+            EveryCompat.LOGGER.warn("Invalid count {} for support recipe → {}, clamped to 1", count, outputItem);
+        }
+
+        JsonObject recipe = new JsonObject();
+        recipe.addProperty("type", "tfc:damage_inputs_shapeless_crafting");
+
+        // Inner vanilla shapeless recipe
+        JsonObject innerRecipe = new JsonObject();
+        innerRecipe.addProperty("type", "minecraft:crafting_shapeless");
+
+        JsonArray ingredients = new JsonArray();
+
+        // First log
+        JsonObject log1 = new JsonObject();
+        log1.addProperty("tag", String.valueOf(tag));
+        ingredients.add(log1);
+
+        // Second log
+        JsonObject log2 = new JsonObject();
+        log2.addProperty("tag", String.valueOf(tag));
+        ingredients.add(log2);
+
+        // Saw
+        JsonObject saw = new JsonObject();
+        saw.addProperty("tag", toolTag);
+        ingredients.add(saw);
+
+        innerRecipe.add("ingredients", ingredients);
+
+        // Result
+        JsonObject result = new JsonObject();
+        result.addProperty("item", FirmaCompat.MODID + ":" + outputItem);
+        result.addProperty("count", count);
+        innerRecipe.add("result", result);
+
+        // Wrap the inner recipe
+        recipe.add("recipe", innerRecipe);
+
+        // Build recipe ResourceLocation (unchanged from your original)
+        ResourceLocation outLoc = ResourceLocation.parse(outputItem);
+        String basePath = "crafting/" + outLoc.getPath();  // e.g. supports/acacia_support
+
+        if (suffix != null && !suffix.isEmpty()) {
+            basePath += suffix;
+        }
+
+        ResourceLocation recipeId = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, basePath);
+
+        sink.addJson(recipeId, recipe, ResType.RECIPES);
+    }
+
+    /*
     public void generateSupportRecipe(
             ResourceSink sink,
             ResourceLocation tag,
@@ -1839,7 +1884,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         // Result
         JsonObject result = new JsonObject();
         result.addProperty("count", count);
-        result.addProperty("id", FirmaCompat.MODID + ":" + outputItem);
+        result.addProperty("item", FirmaCompat.MODID + ":" + outputItem);
         recipe.add("result", result);
 
         // Build recipe ResourceLocation based on output item namespace + path
@@ -1855,10 +1900,12 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         sink.addJson(recipeId, recipe, ResType.RECIPES);
     }
 
+     */
+
     public void generateToolItemRecipe(
             ResourceSink sink,
             Item inputItem,
-            String toolTag,               // e.g. "c:tools/saw"
+            String toolTag,               // e.g. "tfc:saws"
             Item ouptutItem,
             int count,
             @Nullable String recipeSuffix
@@ -1913,7 +1960,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         JsonObject result = new JsonObject();
         result.addProperty("count", count);
 
-        result.addProperty("id", outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item", outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe ID
@@ -1930,7 +1977,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
     public void generateToolTagRecipe(
             ResourceSink sink,
             ResourceLocation inputTag,
-            String toolTag,               // e.g. "c:tools/saw"
+            String toolTag,               // e.g. "tfc:saws"
             Item ouptutItem,
             int count,
             @Nullable String recipeSuffix
@@ -1982,7 +2029,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
         JsonObject result = new JsonObject();
         result.addProperty("count", count);
 
-        result.addProperty("id", outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item", outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe ID

@@ -2,6 +2,7 @@ package com.bumppo109.firma_compat;
 
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.event.ModEvents;
+import com.bumppo109.firma_compat.everycompat.CompatStoneZoneModule;
 import com.bumppo109.firma_compat.everycompat.EveryCompatHandler;
 import com.bumppo109.firma_compat.fluid.ModFluids;
 import com.bumppo109.firma_compat.item.ModCreativeModeTab;
@@ -42,7 +43,7 @@ public class FirmaCompat
 
         modEventBus.addListener(this::commonSetup);
 
-        if(ModList.get().isLoaded("everycomp") || ModList.get().isLoaded("stonezone")){
+        if(ModList.get().isLoaded("everycomp") || ModList.get().isLoaded("stonezone") || ModList.get().isLoaded("gemsrealm")){
             EveryCompatHandler.registerModules();
         }
 
@@ -62,10 +63,8 @@ public class FirmaCompat
 
     }
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
+    public void onServerStarting(ServerStartingEvent event) {
 
     }
 

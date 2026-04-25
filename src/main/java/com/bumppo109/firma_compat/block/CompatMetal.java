@@ -31,12 +31,14 @@ import java.util.function.Supplier;
 
 public enum CompatMetal implements RegistryMetal {
 
-    NETHERITE(0x593F3C, Rarity.EPIC, Metal.Tier.TIER_V, Tiers.NETHERITE, ArmorMaterials.NETHERITE, true, true, false),
-    POOR_NETHERITE(0x854038, Rarity.EPIC, Metal.Tier.TIER_V, Tiers.NETHERITE, null, true, false, false)
+    NETHERITE(0x593F3C, Rarity.EPIC, Metal.Tier.TIER_V, Tiers.NETHERITE, ArmorMaterials.NETHERITE, false, true, true, false),
+    POOR_NETHERITE(0x854038, Rarity.EPIC, Metal.Tier.TIER_V, null, null, true, true, false, false),
+    //IRON is used to enable EveryCompat Gems Realm module
+    IRON(0x854038, Rarity.COMMON, Metal.Tier.TIER_I, Tiers.IRON, ArmorMaterials.IRON, true, true, true, true)
     ;
 
     private final String serializedName;
-    private final boolean parts, armor, utility;
+    private final boolean ingot, parts, armor, utility;
     private final Metal.Tier metalTier;
     @Nullable
     private final net.minecraft.world.item.Tier toolTier;
@@ -45,12 +47,12 @@ public enum CompatMetal implements RegistryMetal {
     private final Rarity rarity;
     private final int color;
 
-    CompatMetal(int color, Rarity rarity, Metal.Tier tier, boolean parts, boolean armor, boolean utility)
+    CompatMetal(int color, Rarity rarity, Metal.Tier tier, boolean ingot, boolean parts, boolean armor, boolean utility)
     {
-        this(color, rarity, tier, null, null, parts, armor, utility);
+        this(color, rarity, tier, null, null, ingot, parts, armor, utility);
     }
 
-    CompatMetal(int color, Rarity rarity, Metal.Tier metalTier, @Nullable net.minecraft.world.item.Tier toolTier, @Nullable ArmorMaterial armorTier, boolean parts, boolean armor, boolean utility)
+    CompatMetal(int color, Rarity rarity, Metal.Tier metalTier, @Nullable net.minecraft.world.item.Tier toolTier, @Nullable ArmorMaterial armorTier, boolean ingot, boolean parts, boolean armor, boolean utility)
     {
         this.serializedName = name().toLowerCase(Locale.ROOT);
         this.metalTier = metalTier;
@@ -59,6 +61,7 @@ public enum CompatMetal implements RegistryMetal {
         this.rarity = rarity;
         this.color = color;
 
+        this.ingot = ingot;
         this.parts = parts;
         this.armor = armor;
         this.utility = utility;
@@ -79,6 +82,11 @@ public enum CompatMetal implements RegistryMetal {
     public Rarity getRarity()
     {
         return rarity;
+    }
+
+    public boolean hasIngot()
+    {
+        return ingot;
     }
 
     public boolean hasParts()
@@ -133,7 +141,7 @@ public enum CompatMetal implements RegistryMetal {
     }
 
     private enum Type {
-        DEFAULT((metal) -> true),
+        DEFAULT(CompatMetal::hasIngot),
         PART(CompatMetal::hasParts),
         TOOL(CompatMetal::hasTools),
         ARMOR(CompatMetal::hasArmor),

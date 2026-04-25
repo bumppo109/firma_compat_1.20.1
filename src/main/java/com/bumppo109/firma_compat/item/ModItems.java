@@ -94,14 +94,29 @@ public class ModItems {
     //Metals
     public static final RegistryObject<Item> NETHERITE_SCRAP_INGOT = register("netherite_scrap_ingot");
 
+
+    public static final Map<CompatMetal, Map<CompatMetal.ItemType, RegistryObject<Item>>> METAL_ITEMS =
+            Helpers.mapOfKeys(CompatMetal.class, metal ->
+                    Helpers.mapOfKeys(CompatMetal.ItemType.class,
+                            type -> type.has(metal),                    // ← THIS FILTER IS REQUIRED
+                            type -> register(
+                                    metal.getSerializedName() + "_" + type.name().toLowerCase(Locale.ROOT),
+                                    () -> type.create(metal)
+                            )
+                    )
+            );
+
+    /*
     public static final Map<CompatMetal, Map<CompatMetal.ItemType, RegistryObject<Item>>> METAL_ITEMS = Helpers.mapOfKeys(CompatMetal.class, metal ->
             Helpers.mapOfKeys(CompatMetal.ItemType.class, type ->
-                    register("metal/" + type.name() + "/" + metal.name(), () -> type.create(metal))
+                    register(metal.name() + "_" + type.name(), () -> type.create(metal))
             )
     );
 
+     */
+
     public static final Map<CompatMetal, RegistryObject<BucketItem>> METAL_FLUID_BUCKETS = Helpers.mapOfKeys(CompatMetal.class, metal ->
-            register("bucket/metal/" + metal.name(), () -> new BucketItem(ModFluids.METALS.get(metal).source(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)))
+            register("molten_" + metal.name() + "_bucket", () -> new BucketItem(ModFluids.METALS.get(metal).source(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)))
     );
 
     private static RegistryObject<Item> register(String name)

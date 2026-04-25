@@ -1,0 +1,14 @@
+{
+  "type": "tfc:block_with_fluid",
+  "config": {
+    "to_place": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "firma_compat:cherry_twig",
+        "Properties": {
+          "fluid": "empty"
+        }
+      }
+    }
+  }
+}

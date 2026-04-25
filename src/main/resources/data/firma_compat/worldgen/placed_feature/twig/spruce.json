@@ -1,0 +1,24 @@
+{
+  "feature": "firma_compat:twig/spruce",
+  "placement": [
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:matching_block_tag",
+        "tag": "minecraft:replaceable"
+      }
+    },
+    {
+      "type": "block_predicate_filter",
+      "predicate": {
+        "type": "tfc:would_survive_with_fluid",
+        "state": {
+          "Name": "firma_compat:spruce_twig",
+          "Properties": {
+            "fluid": "empty"
+          }
+        }
+      }
+    }
+  ]
+}

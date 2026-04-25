@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "firma_compat:woodgood_twig_patches",
+
+    "firma_compat:twig/acacia_patch",
+    "firma_compat:twig/birch_patch",
+    "firma_compat:twig/cherry_patch",
+    "firma_compat:twig/dark_oak_patch",
+    "firma_compat:twig/jungle_patch",
+    "firma_compat:twig/mangrove_patch",
+    "firma_compat:twig/oak_patch",
+    "firma_compat:twig/spruce_patch",
+    "firma_compat:twig/warped_patch",
+    "firma_compat:twig/crimson_patch"
+  ]
+}

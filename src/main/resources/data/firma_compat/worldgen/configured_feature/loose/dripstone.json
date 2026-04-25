@@ -1,0 +1,67 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "chance": 0.3,
+        "feature": {
+          "feature": {
+            "type": "tfc:block_with_fluid",
+            "config": {
+              "to_place": {
+                "type": "minecraft:simple_state_provider",
+                "state": {
+                  "Name": "firma_compat:dripstone_loose",
+                  "Properties": {
+                    "fluid": "empty",
+                    "count": "2"
+                  }
+                }
+              }
+            }
+          },
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.2,
+        "feature": {
+          "feature": {
+            "type": "tfc:block_with_fluid",
+            "config": {
+              "to_place": {
+                "type": "minecraft:simple_state_provider",
+                "state": {
+                  "Name": "firma_compat:dripstone_loose",
+                  "Properties": {
+                    "fluid": "empty",
+                    "count": "3"
+                  }
+                }
+              }
+            }
+          },
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": {
+        "type": "tfc:block_with_fluid",
+        "config": {
+          "to_place": {
+            "type": "minecraft:simple_state_provider",
+            "state": {
+              "Name": "firma_compat:dripstone_loose",
+              "Properties": {
+                "fluid": "empty",
+                "count": "1"
+              }
+            }
+          }
+        }
+      },
+      "placement": []
+    }
+  }
+}

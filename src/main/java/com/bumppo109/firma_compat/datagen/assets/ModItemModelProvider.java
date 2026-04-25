@@ -1,6 +1,7 @@
 package com.bumppo109.firma_compat.datagen.assets;
 
 import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.block.CompatMetal;
 import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
@@ -118,6 +119,15 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.MUD_BRICK.get());
         basicItem(ModItems.UNFIRED_POT.get());
         basicItem(ModItems.NETHERITE_SCRAP_INGOT.get());
+
+        for (CompatMetal metal : CompatMetal.values()) {
+            var metalItems = ModItems.METAL_ITEMS.get(metal);
+            if(metalItems != null) {
+                metalItems.forEach((type, reg) -> {
+                    basicItem(reg.get());
+                });
+            }
+        }
     }
 
     public void evenSimplerBlockItem(Supplier<? extends Block> block) {

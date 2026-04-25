@@ -384,6 +384,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
 
         //mud
         selfLandslide(cache, Blocks.PACKED_MUD);
+        selfLandslide(cache, Blocks.MUD);
         planksRecipe(cache, Items.MUD, Items.PACKED_MUD);
 
         //clay grasses

@@ -1,5 +1,6 @@
 package com.bumppo109.firma_compat.everycompat;
 
+import com.bumppo109.firma_compat.FirmaCompat;
 import net.mehvahdjukaar.every_compat.api.EveryCompatAPI;
 import net.minecraftforge.fml.ModList;
 
@@ -15,6 +16,10 @@ public class EveryCompatHandler {
         if(ModList.get().isLoaded("stonezone")){
             CompatStoneZoneModule stoneModule = new CompatStoneZoneModule();
             EveryCompatAPI.registerModule(stoneModule);
+        }
+        if(ModList.get().isLoaded("gemsrealm")){
+            CompatMetalModule metalModule = new CompatMetalModule(FirmaCompat.MODID);
+            EveryCompatAPI.registerModule(metalModule);
         }
 
         /*
