@@ -1,0 +1,10 @@
+{
+  "type": "tfc:quern",
+  "ingredient": {
+    "tag": "firma_compat:makes_cyan_dye"
+  },
+  "result": {
+    "item": "minecraft:cyan_dye",
+    "count": 2
+  }
+}

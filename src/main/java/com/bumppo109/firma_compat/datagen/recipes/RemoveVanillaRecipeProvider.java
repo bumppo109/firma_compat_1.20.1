@@ -2,177 +2,158 @@ package com.bumppo109.firma_compat.datagen.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.mehvahdjukaar.moonlight.api.resources.ResType;
-import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
-public class RemoveVanillaRecipeProvider extends RecipeProvider implements IConditionBuilder {
-    // Recipes to ALWAYS remove (unconditional)
-    private static final List<String> MINECRAFT_UNCONDITIONAL_REMOVALS = List.of(
-            //Food
-            "bread",
-            "rabbit_stew",
-            "beetroot_soup",
-            "mushroom_stew",
-            "pumpkin_pie",
-            "cake",
-            "cookie",
-            "rabbit_stew",
-            "mushroom_soup",
-            "beetroot_soup",
+public class RemoveVanillaRecipeProvider implements DataProvider, IConditionBuilder {
 
-            //Metal
-            "copper_block",
-            "netherite_axe",
-            "netherite_pickaxe",
-            "netherite_shovel",
-            "netherite_hoe",
-            "netherite_helmet",
-            "netherite_chestplate",
-            "netherite_leggings",
-            "netherite_boots",
-            "netherite_ingot",
+    // === Your unconditional removals (cleaned up duplicates) ===
+    private static final List<String> VANILLA_RECIPES_TO_REMOVE = List.of(
+            // Food
+            "bread", "rabbit_stew", "beetroot_soup", "mushroom_stew", "pumpkin_pie",
+            "cake", "cookie",
 
-            //Dye
-            "dye_white_wool",
-            "dye_light_gray_wool",
-            "dye_gray_wool",
-            "dye_black_wool",
-            "dye_brown_wool",
-            "dye_red_wool",
-            "dye_orange_wool",
-            "dye_yellow_wool",
-            "dye_lime_wool",
-            "dye_green_wool",
-            "dye_cyan_wool",
-            "dye_light_blue_wool",
-            "dye_blue_wool",
-            "dye_purple_wool",
-            "dye_magenta_wool",
-            "dye_pink_wool",
+            // Metal / Netherite
+            "copper_block", "netherite_ingot",
+            "netherite_axe", "netherite_pickaxe", "netherite_shovel", "netherite_hoe",
+            "netherite_helmet", "netherite_chestplate", "netherite_leggings", "netherite_boots",
 
-            "dye_white_carpet",
-            "dye_light_gray_carpet",
-            "dye_gray_carpet",
-            "dye_black_carpet",
-            "dye_brown_carpet",
-            "dye_red_carpet",
-            "dye_orange_carpet",
-            "dye_yellow_carpet",
-            "dye_lime_carpet",
-            "dye_green_carpet",
-            "dye_cyan_carpet",
-            "dye_light_blue_carpet",
-            "dye_blue_carpet",
-            "dye_purple_carpet",
-            "dye_magenta_carpet",
-            "dye_pink_carpet",
+            "iron_block",
+            "iron_ingot_from_iron_block",
+            "iron_bars",
+            "iron_nugget",
+            "gold_nugget",
+            "chain",
+            "gold_block",
+            "emerald_block",
+            "lapis_block",
+            "diamond_block",
+            "netherite_block",
+            "netherite_ingot_from_netherite_block",
+            "diamond",
 
-            "dye_white_bed",
-            "dye_light_gray_bed",
-            "dye_gray_bed",
-            "dye_black_bed",
-            "dye_brown_bed",
-            "dye_red_bed",
-            "dye_orange_bed",
-            "dye_yellow_bed",
-            "dye_lime_bed",
-            "dye_green_bed",
-            "dye_cyan_bed",
-            "dye_light_blue_bed",
-            "dye_blue_bed",
-            "dye_purple_bed",
-            "dye_magenta_bed",
-            "dye_pink_bed",
+            // Dyeing wool, carpets, beds, terracotta, candles
+            "dye_white_wool", "dye_light_gray_wool", "dye_gray_wool", "dye_black_wool",
+            "dye_brown_wool", "dye_red_wool", "dye_orange_wool", "dye_yellow_wool",
+            "dye_lime_wool", "dye_green_wool", "dye_cyan_wool", "dye_light_blue_wool",
+            "dye_blue_wool", "dye_purple_wool", "dye_magenta_wool", "dye_pink_wool",
 
-            "white_terracotta",
-            "light_gray_terracotta",
-            "gray_terracotta",
-            "black_terracotta",
-            "brown_terracotta",
-            "red_terracotta",
-            "orange_terracotta",
-            "yellow_terracotta",
-            "lime_terracotta",
-            "green_terracotta",
-            "cyan_terracotta",
-            "light_blue_terracotta",
-            "blue_terracotta",
-            "purple_terracotta",
-            "magenta_terracotta",
-            "pink_terracotta",
+            "dye_white_carpet", "dye_light_gray_carpet", "dye_gray_carpet", "dye_black_carpet",
+            "dye_brown_carpet", "dye_red_carpet", "dye_orange_carpet", "dye_yellow_carpet",
+            "dye_lime_carpet", "dye_green_carpet", "dye_cyan_carpet", "dye_light_blue_carpet",
+            "dye_blue_carpet", "dye_purple_carpet", "dye_magenta_carpet", "dye_pink_carpet",
 
-            "white_candle",
-            "light_gray_candle",
-            "gray_candle",
-            "black_candle",
-            "brown_candle",
-            "red_candle",
-            "orange_candle",
-            "yellow_candle",
-            "lime_candle",
-            "green_candle",
-            "cyan_candle",
-            "light_blue_candle",
-            "blue_candle",
-            "purple_candle",
-            "magenta_candle",
-            "pink_candle",
-            //Stone
-            "prismarine_bricks",
-            "quartz_pillar",
-            "packed_mud",
-            "mud_bricks",
-            "quartz_bricks",
-            "nether_bricks",
+            "candle", "white_candle", "light_gray_candle", "gray_candle", "black_candle",
+            "brown_candle", "red_candle", "orange_candle", "yellow_candle",
+            "lime_candle", "green_candle", "cyan_candle", "light_blue_candle",
+            "blue_candle", "purple_candle", "magenta_candle", "pink_candle",
 
-            "stone_bricks",
-            "cobblestone",
-            "smooth_stone",
-            "cracked_stone_bricks",
-            "chiseled_stone_bricks",
+            "dye_white_bed", "dye_light_gray_bed", "dye_gray_bed", "dye_black_bed",
+            "dye_brown_bed", "dye_red_bed", "dye_orange_bed", "dye_yellow_bed",
+            "dye_lime_bed", "dye_green_bed", "dye_cyan_bed", "dye_light_blue_bed",
+            "dye_blue_bed", "dye_purple_bed", "dye_magenta_bed", "dye_pink_bed",
 
-            "granite",
-            "polished_granite",
-            "andesite",
-            "polished_andesite",
-            "diorite",
-            "polished_diorite",
+            "white_terracotta", "light_gray_terracotta", "gray_terracotta", "black_terracotta",
+            "brown_terracotta", "red_terracotta", "orange_terracotta", "yellow_terracotta",
+            "lime_terracotta", "green_terracotta", "cyan_terracotta", "light_blue_terracotta",
+            "blue_terracotta", "purple_terracotta", "magenta_terracotta", "pink_terracotta",
 
-            "deepslate_bricks",
-            "cobbled_deepslate",
-            "chiseled_deepslate",
-            "polished_deepslate",
-            "cracked_deepslate",
-            "cracked_deepslate_tiles",
+            // Stone-related
+            "quartz_pillar", "quartz_bricks",
+            "nether_bricks", "red_nether_bricks",
 
-            "smooth_sandstone",
-            "cut_sandstone",
-            "chiseled_sandstone",
-            "smooth_red_sandstone",
-            "cut_red_sandstone",
-            "chiseled_red_sandstone",
+            "stone_bricks", "cobblestone", "smooth_stone", "cracked_stone_bricks", "chiseled_stone_bricks",
+            "granite", "polished_granite", "andesite", "polished_andesite", "diorite", "polished_diorite",
 
-            "smooth_basalt",
-            "polished_basalt",
+            "stone_brick_slab_from_stone_stonecutting",
+            "stone_brick_stairs_from_stone_stonecutting",
+            "stone_brick_walls_from_stone_stonecutting",
+            "chiseled_stone_bricks_from_stone_stonecutting",
+            "stone_bricks_from_stone_stonecutting",
+            "stone_pressure_plate",
+            "stone_button",
 
-            "chiseled_polished_blackstone",
-            "polished_blackstone",
-            "polished_blackstone_bricks",
-            "cracked_polished_blackstone_bricks",
+            "deepslate_bricks", "cobbled_deepslate", "chiseled_deepslate", "polished_deepslate",
+            "cracked_deepslate_bricks", "cracked_deepslate_tiles",
+
+            "deepslate_brick_slab_from_cobbled_deepslate_stonecutting",
+            "deepslate_brick_stairs_from_cobbled_deepslate_stonecutting",
+            "deepslate_brick_walls_from_cobbled_deepslate_stonecutting",
+            "deepslate_bricks_from_cobbled_deepslate_stonecutting",
+            "deepslate_tiles_from_cobbled_deepslate_stonecutting",
+
+            "sandstone", "smooth_sandstone", "cut_sandstone", "chiseled_sandstone",
+            "red_sandstone", "smooth_red_sandstone", "cut_red_sandstone", "chiseled_red_sandstone",
+
+            "prismarine", "prismarine_bricks", "dark_prismarine",
+
+            "smooth_basalt", "polished_basalt",
+
+            "chiseled_polished_blackstone", "polished_blackstone", "polished_blackstone_bricks",
+            "cracked_polished_blackstone_bricks", "polished_blackstone_pressure_plate", "polished_blackstone_button",
+
+            "polished_blackstone_bricks_from_blackstone_stonecutting",
+            "polished_blackstone_brick_slab_from_blackstone_stonecutting",
+            "polished_blackstone_brick_stairs_from_blackstone_stonecutting",
+            "polished_blackstone_brick_wall_from_blackstone_stonecutting",
+            "chiseled_polished_blackstone_from_blackstone_stonecutting",
 
             "end_stone_bricks",
 
-            "stone_button",
-            "stone_pressure_plate",
-            "polished_blackstone_button",
-            "polished_blackstone_pressure_plate",
+            "stone_button", "stone_pressure_plate",
+            "polished_blackstone_button", "polished_blackstone_pressure_plate",
+
+            //Natural
+            "packed_mud", "mud_bricks",
+            "bone_block", "bone_meal_from_bone_block",
+
+            "decorated_pot",
+            "stonecutter",
+            "smithing_table",
+            "blast_furnace",
+            "cauldron",
+            "chiseled_bookshelf",
+            "tripwire_hook",
+            "piston",
+            "daylight_detector",
+            "hopper",
+            "observer",
+            "detector_rail",
+            "activator_rail",
+            "minecart",
+            "tnt",
+            "shears",
+            "carrot_on_a_stick",
+            "warped_fungus_on_a_stick",
+            "crossbow",
+            "honey_bottle",
+
+            "yellow_dye_from_dandelion",
+            "red_dye_from_poppy",
+            "light_blue_dye_from_blue_orchid",
+            "magenta_dye_from_allium",
+            "light_gray_dye_from_azure_bluet",
+            "red_dye_from_tulip",
+            "orange_dye_from_orange_tulip",
+            "light_gray_dye_from_white_tulip",
+            "pink_dye_from_pink_tulip",
+            "light_gray_dye_from_oxeye_daisy",
+            "blue_dye_from_cornflower",
+            "white_dye_from_lily_of_the_valley",
+            "orange_dye_from_torchflower",
+            "black_dye_from_wither_rose",
+            "pink_dye_from_pink_petals",
+            "yellow_dye_from_sunflower",
+            "magenta_dye_from_lilac",
+            "red_dye_from_rose_bush",
+            "pink_dye_from_peony",
+            "cyan_dye_from_pitcher_plant",
 
             //Wood
             "bamboo_planks",
@@ -313,75 +294,71 @@ public class RemoveVanillaRecipeProvider extends RecipeProvider implements ICond
             "warped_pressure_plate"
     );
 
-    // Conditional removals (only if a mod is loaded)
-    private static final List<ConditionalRemoval> MINECRAFT_CONDITIONAL_REMOVALS = List.of(
-            // Example: new ConditionalRemoval("bread", "firmaciv")
+    // === Remove these recipes ONLY when a specific mod is loaded ===
+    // Format: "recipe_id", "modid"
+    private static final List<ConditionalRemoval> CONDITIONAL_REMOVALS = List.of(
+            // new ConditionalRemoval("acacia_planks", "firmaciv")
     );
 
+    private final PackOutput packOutput;
+
     public RemoveVanillaRecipeProvider(PackOutput output) {
-        super(output);
+        this.packOutput = output;
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> writer) {
-        // This is no longer used for dynamic generation
-    }
-
-    /**
-     * Called from DataGenerators to generate all removal recipes dynamically
-     */
-    public void generateRemovalRecipes(ResourceSink sink) {
-        // Unconditional removals
-        for (String recipeId : MINECRAFT_UNCONDITIONAL_REMOVALS) {
-            String path = "recipes/" + recipeId;
-            generateDisabledRecipe(sink, path);
+    public CompletableFuture<?> run(CachedOutput cache) {
+        // 1. Unconditional removals (forge:false only)
+        for (String recipeName : VANILLA_RECIPES_TO_REMOVE) {
+            generateDisabledRecipe(cache, recipeName, null);
         }
 
-        // Conditional removals
-        for (ConditionalRemoval entry : MINECRAFT_CONDITIONAL_REMOVALS) {
-            String path = "recipes/" + entry.recipeId;
-            generateDisabledRecipeWithModCondition(sink, path, entry.modId);
+        // 2. Conditional removals (forge:false + mod_loaded)
+        for (ConditionalRemoval entry : CONDITIONAL_REMOVALS) {
+            generateDisabledRecipe(cache, entry.recipeId, entry.modId);
         }
+
+        return CompletableFuture.completedFuture(null);
     }
 
     /**
-     * Simple disabled recipe: {"conditions": [{"type": "forge:false"}]}
+     * Generates a disabled recipe JSON in data/minecraft/recipes/
+     * If modId is null → only {"conditions": [{"type": "forge:false"}]}
+     * If modId is provided → {"conditions": [{"type": "forge:false"}, {"type": "forge:mod_loaded", "modid": "..."}]}
      */
-    private void generateDisabledRecipe(ResourceSink sink, String recipePath) {
-        JsonObject root = new JsonObject();
-        JsonArray conditions = new JsonArray();
-        JsonObject condition = new JsonObject();
-        condition.addProperty("type", "forge:false");
-        conditions.add(condition);
-        root.add("conditions", conditions);
-
-        ResourceLocation loc = ResourceLocation.withDefaultNamespace(recipePath);
-        sink.addJson(loc, root, ResType.RECIPES);
-    }
-
-    /**
-     * Disabled recipe with additional mod loaded condition
-     */
-    private void generateDisabledRecipeWithModCondition(ResourceSink sink, String recipePath, String modId) {
+    private void generateDisabledRecipe(CachedOutput cache, String recipeName, @javax.annotation.Nullable String modId) {
         JsonObject root = new JsonObject();
         JsonArray conditions = new JsonArray();
 
-        // forge:false
+        // Always add forge:false
         JsonObject falseCondition = new JsonObject();
         falseCondition.addProperty("type", "forge:false");
         conditions.add(falseCondition);
 
-        // forge:mod_loaded
-        JsonObject modCondition = new JsonObject();
-        modCondition.addProperty("type", "forge:mod_loaded");
-        modCondition.addProperty("modid", modId);
-        conditions.add(modCondition);
+        // Add mod_loaded condition if specified
+        if (modId != null && !modId.isEmpty()) {
+            JsonObject modCondition = new JsonObject();
+            modCondition.addProperty("type", "forge:mod_loaded");
+            modCondition.addProperty("modid", modId);
+            conditions.add(modCondition);
+        }
 
         root.add("conditions", conditions);
 
-        ResourceLocation loc = ResourceLocation.withDefaultNamespace(recipePath);
-        sink.addJson(loc, root, ResType.RECIPES);
+        // Write to data/minecraft/recipes/<recipeName>.json
+        ResourceLocation recipeId = ResourceLocation.withDefaultNamespace(recipeName);
+        DataProvider.saveStable(cache,
+                root,
+                packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "recipes")
+                        .json(recipeId)
+        );
     }
 
+    @Override
+    public String getName() {
+        return "Firma Compat - Vanilla Recipe Removals";
+    }
+
+    // Simple record for conditional entries
     private record ConditionalRemoval(String recipeId, String modId) {}
 }

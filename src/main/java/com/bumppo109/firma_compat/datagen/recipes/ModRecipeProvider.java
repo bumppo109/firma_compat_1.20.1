@@ -6,6 +6,7 @@ import com.bumppo109.firma_compat.item.ModItems;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.util.Metal;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
@@ -204,6 +205,11 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 Map.of('X', ingredient("tfc:mortar"), 'A', ingredient(ModItems.PRISMARINE_BRICK.get())),
                 simpleResult(Blocks.PRISMARINE_BRICKS.asItem(), 4),
                 null);
+        vanillaShaped(cache, Blocks.PRISMARINE.asItem(),
+                new String[]{"AXA", "XAX", "AXA"},
+                Map.of('X', ingredient("tfc:mortar"), 'A', ingredient(Items.PRISMARINE_SHARD)),
+                simpleResult(Blocks.PRISMARINE.asItem(), 4),
+                null);
 
         //extra aqueducts
         vanillaShapeless(cache,"from_moss", Items.MOSS_BLOCK, ModBlocks.ROCK_BLOCKS.get(CompatRock.STONE).get(CompatRock.BlockType.BRICK_AQUEDUCT).get().asItem() , ModBlocks.AQUEDUCTS.get(Aqueducts.MOSSY_STONE_BRICKS).get().asItem(), 1);
@@ -355,31 +361,33 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         chisel(cache, Items.SMOOTH_QUARTZ, Items.SMOOTH_QUARTZ_SLAB, ChiselMode.SLAB);
         chisel(cache, Items.QUARTZ_BRICKS, Items.CHISELED_QUARTZ_BLOCK, ChiselMode.SMOOTH);
 
-        damageToolShapeless(cache, null, Items.CRACKED_STONE_BRICKS, "tfc:hammers", Items.STONE_BRICKS, 1);
-        damageToolShapeless(cache, null, Items.CRACKED_DEEPSLATE_BRICKS, "tfc:hammers", Items.DEEPSLATE_BRICKS, 1);
-        damageToolShapeless(cache, null, Items.CRACKED_DEEPSLATE_TILES, "tfc:hammers", Items.DEEPSLATE_TILES, 1);
-        damageToolShapeless(cache, null, Items.CRACKED_NETHER_BRICKS, "tfc:hammers", Items.NETHER_BRICKS, 1);
-        damageToolShapeless(cache, null, Items.CRACKED_POLISHED_BLACKSTONE_BRICKS, "tfc:hammers", Items.POLISHED_BLACKSTONE_BRICKS, 1);
+        // Hammer recipes (cracked → normal)
+        damageToolShapeless(cache, null, Items.STONE_BRICKS, "tfc:hammers", Items.CRACKED_STONE_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.DEEPSLATE_BRICKS, "tfc:hammers", Items.CRACKED_DEEPSLATE_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.DEEPSLATE_TILES, "tfc:hammers", Items.CRACKED_DEEPSLATE_TILES, 1);
+        damageToolShapeless(cache, null, Items.NETHER_BRICKS, "tfc:hammers", Items.CRACKED_NETHER_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.POLISHED_BLACKSTONE_BRICKS, "tfc:hammers", Items.CRACKED_POLISHED_BLACKSTONE_BRICKS, 1);
 
-        damageToolShapeless(cache, null, Items.CHISELED_STONE_BRICKS, "tfc:chisels", Items.STONE_BRICKS, 1);
-        damageToolShapeless(cache, null, Items.SMOOTH_STONE, "tfc:chisels", Items.STONE, 1);
-        damageToolShapeless(cache, null, Items.POLISHED_GRANITE, "tfc:chisels", Items.GRANITE, 1);
-        damageToolShapeless(cache, null, Items.POLISHED_ANDESITE, "tfc:chisels", Items.ANDESITE, 1);
-        damageToolShapeless(cache, null, Items.POLISHED_DIORITE, "tfc:chisels", Items.DIORITE, 1);
-        damageToolShapeless(cache, null, Items.CHISELED_DEEPSLATE, "tfc:chisels", Items.DEEPSLATE_BRICKS, 1);
-        damageToolShapeless(cache, null, Items.POLISHED_DEEPSLATE, "tfc:chisels", Items.DEEPSLATE, 1);
-        damageToolShapeless(cache, null, Items.CHISELED_SANDSTONE, "tfc:chisels", Items.CUT_SANDSTONE, 1);
-        damageToolShapeless(cache, null, Items.CUT_SANDSTONE, "tfc:chisels", Items.SMOOTH_SANDSTONE, 1);
-        damageToolShapeless(cache, null, Items.SMOOTH_SANDSTONE, "tfc:chisels", Items.SANDSTONE, 1);
-        damageToolShapeless(cache, null, Items.CHISELED_RED_SANDSTONE, "tfc:chisels", Items.CUT_RED_SANDSTONE, 1);
-        damageToolShapeless(cache, null, Items.CUT_RED_SANDSTONE, "tfc:chisels", Items.SMOOTH_RED_SANDSTONE, 1);
-        damageToolShapeless(cache, null, Items.SMOOTH_RED_SANDSTONE, "tfc:chisels", Items.RED_SANDSTONE, 1);
-        damageToolShapeless(cache, null, Items.DARK_PRISMARINE, "tfc:chisels", Items.PRISMARINE_BRICKS, 1);
-        damageToolShapeless(cache, null, Items.CHISELED_NETHER_BRICKS, "tfc:chisels", Items.NETHER_BRICKS, 1);
-        damageToolShapeless(cache, null, Items.SMOOTH_BASALT, "tfc:chisels", Items.BASALT, 1);
-        damageToolShapeless(cache, null, Items.POLISHED_BASALT, "tfc:chisels", Items.SMOOTH_BASALT, 1);
-        damageToolShapeless(cache, null, Items.CHISELED_QUARTZ_BLOCK, "tfc:chisels", Items.QUARTZ_BRICKS, 1);
-        damageToolShapeless(cache, null, Items.SMOOTH_QUARTZ, "tfc:chisels", Items.QUARTZ_BLOCK, 1);
+        // Chisel recipes (processed → raw / previous stage)
+        damageToolShapeless(cache, null, Items.STONE_BRICKS, "tfc:chisels", Items.CHISELED_STONE_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.STONE, "tfc:chisels", Items.SMOOTH_STONE, 1);
+        damageToolShapeless(cache, null, Items.GRANITE, "tfc:chisels", Items.POLISHED_GRANITE, 1);
+        damageToolShapeless(cache, null, Items.ANDESITE, "tfc:chisels", Items.POLISHED_ANDESITE, 1);
+        damageToolShapeless(cache, null, Items.DIORITE, "tfc:chisels", Items.POLISHED_DIORITE, 1);
+        damageToolShapeless(cache, null, Items.DEEPSLATE_BRICKS, "tfc:chisels", Items.CHISELED_DEEPSLATE, 1);
+        damageToolShapeless(cache, null, Items.DEEPSLATE, "tfc:chisels", Items.POLISHED_DEEPSLATE, 1);
+        damageToolShapeless(cache, null, Items.CUT_SANDSTONE, "tfc:chisels", Items.CHISELED_SANDSTONE, 1);
+        damageToolShapeless(cache, null, Items.SMOOTH_SANDSTONE, "tfc:chisels", Items.CUT_SANDSTONE, 1);
+        damageToolShapeless(cache, null, Items.SANDSTONE, "tfc:chisels", Items.SMOOTH_SANDSTONE, 1);
+        damageToolShapeless(cache, null, Items.CUT_RED_SANDSTONE, "tfc:chisels", Items.CHISELED_RED_SANDSTONE, 1);
+        damageToolShapeless(cache, null, Items.SMOOTH_RED_SANDSTONE, "tfc:chisels", Items.CUT_RED_SANDSTONE, 1);
+        damageToolShapeless(cache, null, Items.RED_SANDSTONE, "tfc:chisels", Items.SMOOTH_RED_SANDSTONE, 1);
+        damageToolShapeless(cache, null, Items.PRISMARINE_BRICKS, "tfc:chisels", Items.DARK_PRISMARINE, 1);
+        damageToolShapeless(cache, null, Items.NETHER_BRICKS, "tfc:chisels", Items.CHISELED_NETHER_BRICKS, 1);
+        damageToolShapeless(cache, null, Items.BASALT, "tfc:chisels", Items.SMOOTH_BASALT, 1);
+        damageToolShapeless(cache, null, Items.SMOOTH_BASALT, "tfc:chisels", Items.POLISHED_BASALT, 1);
+        damageToolShapeless(cache, null, Items.QUARTZ_BRICKS, "tfc:chisels", Items.CHISELED_QUARTZ_BLOCK, 1);
+        damageToolShapeless(cache, null, Items.QUARTZ_BLOCK, "tfc:chisels", Items.SMOOTH_QUARTZ, 1);
 
     // ================ NATURAL
 
@@ -416,6 +424,8 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         //TODO - confirm blast furnace output amt
         generateMeltingRecipe(cache, CompatMetal.POOR_NETHERITE, Items.NETHERITE_SCRAP, 25);
         generateMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_INGOT, 100);
+
+        generateToolMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_BLOCK, 100);
 
         generateToolMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_HELMET, 600);
         generateToolMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_CHESTPLATE, 800);
@@ -462,28 +472,28 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_HELMET).get(),
                 5,
                 UNFINISHED_HELMET_RULES,
-                true);
+                false);
 
         generateAnvilRecipe(cache,
                 "forge:double_sheets/netherite",
                 ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_CHESTPLATE).get(),
                 5,
                 UNFINISHED_CHESTPLATE_RULES,
-                true);
+                false);
 
         generateAnvilRecipe(cache,
                 "forge:double_sheets/netherite",
                 ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_LEGGINGS).get(),
                 5,
                 UNFINISHED_GREAVES_RULES,
-                true);
+                false);
 
         generateAnvilRecipe(cache,
                 "forge:sheets/netherite",
                 ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_BOOTS).get(),
                 5,
                 UNFINISHED_BOOTS_RULES,
-                true);
+                false);
 
         generateWeldingRecipe(cache,
                 ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_BOOTS).get(),
@@ -511,8 +521,8 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         );
 
         generateWeldingRecipe(cache,
-                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.INGOT).get(),
-                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.INGOT).get(),
+                Items.NETHERITE_INGOT,
+                Items.NETHERITE_INGOT,
                 5,
                 ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.DOUBLE_INGOT).get()
         );
@@ -527,13 +537,13 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.SHEET).get(),
                 5,
                 HIT_3X,
-                true);
+                false);
         generateAnvilRecipe(cache,
                 "forge:ingots/netherite",
                 ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.ROD).get(),
                 5,
                 HIT_3X,
-                true);
+                false);
 
         generateWeldingRecipe(cache,
                 ModItems.METAL_ITEMS.get(CompatMetal.POOR_NETHERITE).get(CompatMetal.ItemType.INGOT).get(),
@@ -552,13 +562,32 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 ModItems.METAL_ITEMS.get(CompatMetal.POOR_NETHERITE).get(CompatMetal.ItemType.SHEET).get(),
                 3,
                 HIT_3X,
-                true);
+                false);
         generateAnvilRecipe(cache,
                 "forge:ingots/poor_netherite",
                 ModItems.METAL_ITEMS.get(CompatMetal.POOR_NETHERITE).get(CompatMetal.ItemType.ROD).get(),
                 3,
                 HIT_3X,
-                true);
+                false);
+
+        //Misc Metal
+        generateAnvilRecipe(cache,
+                "forge:ingot/cast_iron",
+                Items.CHAIN, 16,
+                3,
+                CHAIN_RULES,
+                false);
+        generateAnvilRecipe(cache,
+                "forge:sheets/cast_iron",
+                Items.IRON_TRAPDOOR,
+                3,
+                TRAPDOOR_RULES,
+                false);
+
+        generateMeltingRecipe(cache, Metal.Default.GOLD, Items.GOLD_BLOCK, 100, 1060);
+        generateMeltingRecipe(cache, Metal.Default.GOLD, Items.GOLD_NUGGET, 10, 1060);
+
+        generateMeltingRecipe(cache, Metal.Default.CAST_IRON, Items.IRON_NUGGET, 10, 1535);
 
         generateMeltingRecipe(cache, Metal.Default.COPPER, Items.COPPER_BLOCK, 100, 1080);
         generateMeltingRecipe(cache, Metal.Default.COPPER, Items.EXPOSED_COPPER, 100, 1080);
@@ -606,6 +635,43 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         generateFoodHeatingRecipe(cache, Items.POTATO, Items.BAKED_POTATO);
         generateFoodHeatingRecipe(cache, Items.KELP, Items.DRIED_KELP);
         generateFoodHeatingRecipe(cache, Items.CHORUS_FRUIT, Items.POPPED_CHORUS_FRUIT);
+
+
+        //Misc
+        vanillaShaped(cache, Blocks.STONECUTTER.asItem(),
+                new String[]{" X ", "ABA", "BCB"},
+                Map.of('X', ingredient("tfc:metal/saw_blade/wrought_iron"), 'A', tagIngredient("tfc:lumber"), 'B', ingredient("firma_compat:stone_brick"), 'C', ingredient("tfc:brass_mechanisms")),
+                simpleResult(Blocks.STONECUTTER.asItem(), 1),
+                null);
+
+        vanillaShaped(cache, Blocks.ENCHANTING_TABLE.asItem(),
+                new String[]{" X ", "ABA", "AAA"},
+                Map.of('X', ingredient("minecraft:book"), 'A', tagIngredient("tfc:gem/diamond"), 'B', ingredient("minecraft:obsidian")),
+                simpleResult(Blocks.ENCHANTING_TABLE.asItem(), 1),
+                null);
+
+        vanillaShaped(cache, Blocks.LECTERN.asItem(),
+                new String[]{"XXX", " B ", " X "},
+                Map.of('X', tagIngredient("firma_compat:lumber"), 'B', ingredient("minecraft:chiseled_bookshelf")),
+                simpleResult(Blocks.LECTERN.asItem(), 1),
+                null);
+
+        vanillaShaped(cache, Blocks.CHISELED_BOOKSHELF.asItem(),
+                new String[]{"XXX", "BBB", "XXX"},
+                Map.of('X', tagIngredient("firma_compat:lumber"), 'B', tagIngredient("forge:rods/wooden")),
+                simpleResult(Blocks.CHISELED_BOOKSHELF.asItem(), 1),
+                null);
+
+        vanillaShaped(cache, Items.CARROT_ON_A_STICK,
+                new String[]{"  X", " XA", "X B"},
+                Map.of('X', tagIngredient("forge:rods/wooden"), 'B', ingredient("minecraft:carrot"), 'A', tagIngredient("forge:string")),
+                simpleResult(Items.CARROT_ON_A_STICK, 1),
+                null);
+        vanillaShaped(cache, Items.WARPED_FUNGUS_ON_A_STICK,
+                new String[]{"  X", " XA", "X B"},
+                Map.of('X', tagIngredient("forge:rods/wooden"), 'B', ingredient("minecraft:warped_fungus"), 'A', tagIngredient("forge:string")),
+                simpleResult(Items.WARPED_FUNGUS_ON_A_STICK, 1),
+                null);
 
         return CompletableFuture.completedFuture(null);
     }
@@ -667,6 +733,14 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
             "shrink_third_last",
             "bend_second_last",
             "bend_last"
+    };
+
+    private static final String[] TRAPDOOR_RULES = {
+            "bend_last","draw_second_last","draw_third_last"
+    };
+
+    private static final String[] CHAIN_RULES = {
+            "hit_any","hit_any","draw_last",
     };
 
     /**

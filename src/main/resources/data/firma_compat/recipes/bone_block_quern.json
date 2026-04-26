@@ -1,0 +1,10 @@
+{
+  "type": "tfc:quern",
+  "ingredient": {
+    "item": "minecraft:bone_block"
+  },
+  "result": {
+    "item": "minecraft:bone_meal",
+    "count": 8
+  }
+}

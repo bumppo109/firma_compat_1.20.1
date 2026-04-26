@@ -9,7 +9,7 @@
     ],
     "key": {
       "S": {
-        "tag": "forge:sheets/copper"
+        "tag": "forge:sheets/gold"
       },
       "W": {
         "tag": "minecraft:planks"
@@ -19,7 +19,7 @@
       }
     },
     "result": {
-      "item": "minecraft:copper_block",
+      "item": "minecraft:gold_block",
       "count": 8
     }
   }

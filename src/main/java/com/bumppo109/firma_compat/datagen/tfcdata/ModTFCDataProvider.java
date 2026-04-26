@@ -60,6 +60,12 @@ public class ModTFCDataProvider extends TFCDataBuilder {
         itemHeat(cache, Items.NETHERITE_SHOVEL, 5.714, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
         itemHeat(cache, Items.NETHERITE_HOE, 5.714, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
 
+        itemHeat(cache, Items.NETHERITE_BLOCK, 2.857, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
+
+        itemHeat(cache, Items.GOLD_BLOCK, 1.667, 636, 848);
+        itemHeat(cache, Items.GOLD_NUGGET, 0.833, 648, 864);
+        itemHeat(cache, Items.IRON_NUGGET, 0.955, 921, 1228);
+
         itemHeat(cache, Items.COPPER_BLOCK, 2.857, 648, 864);
         itemHeat(cache, Items.EXPOSED_COPPER, 2.857, 648, 864);
         itemHeat(cache, Items.WEATHERED_COPPER, 2.857, 648, 864);

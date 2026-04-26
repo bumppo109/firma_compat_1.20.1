@@ -55,7 +55,7 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                 .add(ModBlocks.COMPAT_CHEST.get().asItem())
                 .add(ModBlocks.COMPAT_TRAPPED_CHEST.get().asItem());
 
-        this.tag(ModTags.Items.CHAINS)
+        tag(ModTags.Items.CHAINS)
                 .add(Items.CHAIN)
                 .add(TFCBlocks.METALS.get(Metal.Default.COPPER).get(Metal.BlockType.CHAIN).get().asItem())
                 .add(TFCBlocks.METALS.get(Metal.Default.BISMUTH_BRONZE).get(Metal.BlockType.CHAIN).get().asItem())

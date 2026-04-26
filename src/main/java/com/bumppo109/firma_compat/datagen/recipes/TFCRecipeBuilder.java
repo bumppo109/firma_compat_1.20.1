@@ -77,10 +77,7 @@ public abstract class TFCRecipeBuilder implements DataProvider {
 
         root.addProperty("temperature", 200);
 
-        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
-                "recipes/heating/food/" + outputKey.getPath() + ".json");
-
-        saveRecipe(cache, loc.toString(), root);
+        saveRecipe(cache, "heating/food" + inputKey.getPath(), root);
     }
 
     /**
@@ -108,10 +105,7 @@ public abstract class TFCRecipeBuilder implements DataProvider {
         root.addProperty("temperature", metal.meltTemp());
         root.addProperty("use_durability", true);
 
-        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
-                "recipes/heating/" + inputKey.getPath() + ".json");
-
-        saveRecipe(cache, loc.toString(), root);
+        saveRecipe(cache, "heating/" + inputKey.getPath(), root);
     }
 
     public void generateMeltingRecipe(CachedOutput cache, CompatMetal metal, Item input, int amount) {
@@ -134,10 +128,7 @@ public abstract class TFCRecipeBuilder implements DataProvider {
 
         root.addProperty("temperature", metal.meltTemp());
 
-        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
-                "recipes/heating/" + inputKey.getPath() + ".json");
-
-        saveRecipe(cache, loc.toString(), root);
+        saveRecipe(cache, "heating/" + inputKey.getPath(), root);
     }
 
     public void generateMeltingRecipe(CachedOutput cache, Metal.Default metal, Item input, int amount, int temperature) {
@@ -160,10 +151,7 @@ public abstract class TFCRecipeBuilder implements DataProvider {
 
         root.addProperty("temperature", temperature);
 
-        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
-                "recipes/heating/" + inputKey.getPath() + ".json");
-
-        saveRecipe(cache, loc.toString(), root);
+        saveRecipe(cache, "heating/" + inputKey.getPath(), root);
     }
 
     public void generateMeltingRecipe(CachedOutput cache, CompatMetal metal, CompatMetal.ItemType itemType) {
@@ -186,10 +174,7 @@ public abstract class TFCRecipeBuilder implements DataProvider {
 
         root.addProperty("temperature", metal.meltTemp());
 
-        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
-                "recipes/heating/" + inputKey.getPath() + ".json");
-
-        saveRecipe(cache, loc.toString(), root);
+        saveRecipe(cache, "heating/" + inputKey.getPath(), root);
     }
 
     /**
@@ -233,15 +218,7 @@ public abstract class TFCRecipeBuilder implements DataProvider {
         resultObj.addProperty("item", resultKey.toString());
         root.add("result", resultObj);
 
-        // Output path: recipes/welding/bismuth_bronze_chestplate.json
-        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(
-                FirmaCompat.MODID,
-                "recipes/welding/" + resultKey.getPath() + ".json"
-        );
-
-        saveRecipe(cache, loc.toString(), root);
-
-        FirmaCompat.LOGGER.debug("Generated welding recipe: {}", loc);
+        saveRecipe(cache, "welding/" + resultKey.getPath(), root);
     }
 
     /**
@@ -286,15 +263,49 @@ public abstract class TFCRecipeBuilder implements DataProvider {
 
         root.addProperty("apply_forging_bonus", applyForgingBonus);
 
-        // Output location
-        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(
-                FirmaCompat.MODID,
-                "recipes/anvil/" + resultKey.getPath() + ".json"
-        );
+        saveRecipe(cache, "anvil/" + resultKey.getPath(), root);
+    }
 
-        saveRecipe(cache, loc.toString(), root);
+    public void generateAnvilRecipe(CachedOutput cache,
+                                    String inputTag,
+                                    Item resultItem,
+                                    int resultCount,
+                                    int tier,
+                                    String[] rules,
+                                    boolean applyForgingBonus) {
 
-        FirmaCompat.LOGGER.info("Generated TFC anvil recipe: {}", loc);
+        ResourceLocation resultKey = BuiltInRegistries.ITEM.getKey(resultItem);
+
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "tfc:anvil");
+
+        // Input Tag
+        JsonObject input = new JsonObject();
+        input.addProperty("tag", inputTag);
+        root.add("input", input);
+
+        // Result with optional count
+        JsonObject result = new JsonObject();
+        result.addProperty("item", resultItem.toString());
+
+        if (resultCount > 1) {
+            result.addProperty("count", resultCount);
+        }
+        root.add("result", result);
+
+        root.addProperty("tier", tier);
+
+        // Rules array
+        JsonArray rulesArray = new JsonArray();
+        for (String rule : rules) {
+            rulesArray.add(rule);
+        }
+        root.add("rules", rulesArray);
+
+        root.addProperty("apply_forging_bonus", applyForgingBonus);
+
+        // Save the recipe
+        saveRecipe(cache, "anvil/" + resultKey.getPath(), root);
     }
 
     /**

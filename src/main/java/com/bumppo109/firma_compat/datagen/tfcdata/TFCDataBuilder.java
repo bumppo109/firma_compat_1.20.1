@@ -116,7 +116,7 @@ public abstract class TFCDataBuilder implements DataProvider {
         root.addProperty("protein", protein);
         root.addProperty("dairy", dairy);
 
-        saveData(cache, "food_items/" + path, root);
+        saveData(cache, "food_items/" + food, root);
     }
 
     /**
