@@ -4,7 +4,7 @@
     "item": "tfc:ceramic/pickaxe_head_mold"
   },
   "fluid": {
-    "ingredient": "firma_compat:netherite",
+    "ingredient": "firma_compat:metal/netherite",
     "amount": 100
   },
   "result": {

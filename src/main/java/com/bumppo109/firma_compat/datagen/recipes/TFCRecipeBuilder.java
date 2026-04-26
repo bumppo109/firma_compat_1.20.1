@@ -249,7 +249,7 @@ public abstract class TFCRecipeBuilder implements DataProvider {
 
         // Result
         JsonObject result = new JsonObject();
-        result.addProperty("item", resultItem.toString());
+        result.addProperty("item", resultKey.toString());
         root.add("result", result);
 
         root.addProperty("tier", tier);
@@ -286,7 +286,7 @@ public abstract class TFCRecipeBuilder implements DataProvider {
 
         // Result with optional count
         JsonObject result = new JsonObject();
-        result.addProperty("item", resultItem.toString());
+        result.addProperty("item", resultKey.toString());
 
         if (resultCount > 1) {
             result.addProperty("count", resultCount);

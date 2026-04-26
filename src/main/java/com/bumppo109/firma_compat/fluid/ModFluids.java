@@ -38,7 +38,7 @@ public class ModFluids
                     .bucket(ModItems.METAL_FLUID_BUCKETS.get(metal))
                     .explosionResistance(100),
             lavaLike()
-                    .descriptionId("fluid.firmalife.metal." + metal.getSerializedName())
+                    .descriptionId("fluid.firma_compat.metal." + metal.getSerializedName())
                     .canConvertToSource(false),
             new FluidTypeClientProperties(ALPHA_MASK | metal.getColor(), MOLTEN_STILL, MOLTEN_FLOW, null, null),
             MoltenFluid.Source::new,

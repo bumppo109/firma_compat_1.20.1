@@ -1,11 +1,11 @@
 {
   "type": "tfc:blast_furnace",
   "fluid": {
-    "ingredient": "firma_compat:poor_netherite",
+    "ingredient": "firma_compat:metal/poor_netherite",
     "amount": 1
   },
   "result": {
-    "fluid": "firma_compat:netherite",
+    "fluid": "firma_compat:metal/netherite",
     "amount": 1
   },
   "catalyst": {
