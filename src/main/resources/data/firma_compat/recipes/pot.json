@@ -1,0 +1,10 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "firma_compat:unfired_pot"
+  },
+  "result_item": {
+    "item": "minecraft:decorated_pot"
+  },
+  "temperature": 1399
+}

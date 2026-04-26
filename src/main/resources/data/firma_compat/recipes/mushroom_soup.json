@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AA ",
+    " E "
+  ],
+  "key": {
+    "A": {
+      "type": "tfc:not_rotten",
+      "ingredient": {
+        "tag": "forge:mushrooms"
+      }
+    },
+    "E": {
+      "item": "minecraft:bowl"
+    }
+  },
+  "result": {
+    "item": "minecraft:mushroom_soup"
+  }
+}

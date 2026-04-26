@@ -7,9 +7,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
@@ -32,6 +34,89 @@ public abstract class TFCDataBuilder implements DataProvider {
     public TFCDataBuilder(PackOutput output, String modId) {
         this.output = output;
         this.modId = modId;
+    }
+
+    /**
+     * Generates a TFC Food Item JSON file.
+     *
+     * Example output:
+     * {
+     *   "ingredient": {"item": "tfc:food/cooked_beef"},
+     *   "hunger": 4,
+     *   "saturation": 2,
+     *   "decay_modifier": 1.5,
+     *   "protein": 2.5
+     * }
+     */
+    public void generateTFCFoodData(CachedOutput cache,
+                                     Item food,
+                                     int hunger,
+                                     float saturation,
+                                     float water,
+                                     float decayModifier,
+                                     float grain,
+                                     float fruit,
+                                     float vegetables,
+                                     float protein,
+                                     float dairy
+    ) {
+        ResourceLocation foodKey = BuiltInRegistries.ITEM.getKey(food);
+
+        JsonObject root = new JsonObject();
+
+        // Ingredient
+        JsonObject ingredient = new JsonObject();
+        ingredient.addProperty("item", foodKey.toString());
+        root.add("ingredient", ingredient);
+
+        // Stats
+        root.addProperty("hunger", hunger);
+        root.addProperty("saturation", saturation);
+        root.addProperty("water", water);
+        root.addProperty("decay_modifier", decayModifier);
+        root.addProperty("grain", grain);
+        root.addProperty("fruit", fruit);
+        root.addProperty("vegetables", vegetables);
+        root.addProperty("protein", protein);
+        root.addProperty("dairy", dairy);
+
+        saveData(cache, "food_items/" + foodKey.getPath(), root);
+    }
+
+    public void generateMinecraftFoodData(CachedOutput cache,
+                                     String food,
+                                     int hunger,
+                                     float saturation,
+                                     float water,
+                                     float decayModifier,
+                                     float grain,
+                                     float fruit,
+                                     float vegetables,
+                                     float protein,
+                                     float dairy
+    ) {
+        String path = "minecraft";
+        String id = food;
+
+        JsonObject root = new JsonObject();
+
+        // Ingredient
+        JsonObject ingredient = new JsonObject();
+        ingredient.addProperty("item", path + ":" + id);
+        root.add("ingredient", ingredient);
+
+        // Stats
+        root.addProperty("hunger", hunger);
+        root.addProperty("saturation", saturation);
+        root.addProperty("water", water);
+        root.addProperty("decay_modifier", decayModifier);
+        root.addProperty("grain", grain);
+        root.addProperty("fruit", fruit);
+        root.addProperty("vegetables", vegetables);
+        root.addProperty("protein", protein);
+        root.addProperty("dairy", dairy);
+
+        saveData(cache, "food_items/" + path, root);
     }
 
     /**
@@ -117,6 +202,24 @@ public abstract class TFCDataBuilder implements DataProvider {
 
         json.addProperty("heat_capacity", heatCapacity);
         json.addProperty("forging_temperature", forgingTemperature);
+
+        saveData(cache, "item_heats/" + subPath, json);
+    }
+
+    protected void itemHeat(CachedOutput cache, String subPath,
+                            JsonElement ingredient,
+                            double heatCapacity) {
+
+        JsonObject json = new JsonObject();
+
+        // Automatically handle single object vs array
+        if (ingredient.isJsonArray()) {
+            json.add("ingredient", ingredient);
+        } else {
+            json.add("ingredient", ingredient);  // single object or primitive
+        }
+
+        json.addProperty("heat_capacity", heatCapacity);
 
         saveData(cache, "item_heats/" + subPath, json);
     }

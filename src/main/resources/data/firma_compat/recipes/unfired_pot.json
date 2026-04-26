@@ -1,0 +1,15 @@
+{
+  "type": "tfc:knapping",
+  "knapping_type": "tfc:clay",
+  "outside_slot_required": true,
+  "pattern": [
+    "XXXXX",
+    "X   X",
+    "X X X",
+    "X   X",
+    "XXXXX"
+  ],
+  "result": {
+    "item": "firma_compat:unfired_pot"
+  }
+}

@@ -1,350 +1,387 @@
 package com.bumppo109.firma_compat.datagen.recipes;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import net.mehvahdjukaar.moonlight.api.resources.ResType;
+import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
-import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public class RemoveVanillaRecipeProvider extends RecipeProvider implements IConditionBuilder {
-
-    // ===================== DEFINE YOUR RECIPE REMOVALS HERE =====================
-
     // Recipes to ALWAYS remove (unconditional)
-    private static final List<String> UNCONDITIONAL_REMOVALS = List.of(
+    private static final List<String> MINECRAFT_UNCONDITIONAL_REMOVALS = List.of(
+            //Food
+            "bread",
+            "rabbit_stew",
+            "beetroot_soup",
+            "mushroom_stew",
+            "pumpkin_pie",
+            "cake",
+            "cookie",
+            "rabbit_stew",
+            "mushroom_soup",
+            "beetroot_soup",
+
+            //Metal
+            "copper_block",
+            "netherite_axe",
+            "netherite_pickaxe",
+            "netherite_shovel",
+            "netherite_hoe",
+            "netherite_helmet",
+            "netherite_chestplate",
+            "netherite_leggings",
+            "netherite_boots",
+            "netherite_ingot",
+
             //Dye
-            "minecraft:dye_white_wool",
-            "minecraft:dye_light_gray_wool",
-            "minecraft:dye_gray_wool",
-            "minecraft:dye_black_wool",
-            "minecraft:dye_brown_wool",
-            "minecraft:dye_red_wool",
-            "minecraft:dye_orange_wool",
-            "minecraft:dye_yellow_wool",
-            "minecraft:dye_lime_wool",
-            "minecraft:dye_green_wool",
-            "minecraft:dye_cyan_wool",
-            "minecraft:dye_light_blue_wool",
-            "minecraft:dye_blue_wool",
-            "minecraft:dye_purple_wool",
-            "minecraft:dye_magenta_wool",
-            "minecraft:dye_pink_wool",
+            "dye_white_wool",
+            "dye_light_gray_wool",
+            "dye_gray_wool",
+            "dye_black_wool",
+            "dye_brown_wool",
+            "dye_red_wool",
+            "dye_orange_wool",
+            "dye_yellow_wool",
+            "dye_lime_wool",
+            "dye_green_wool",
+            "dye_cyan_wool",
+            "dye_light_blue_wool",
+            "dye_blue_wool",
+            "dye_purple_wool",
+            "dye_magenta_wool",
+            "dye_pink_wool",
 
-            "minecraft:dye_white_carpet",
-            "minecraft:dye_light_gray_carpet",
-            "minecraft:dye_gray_carpet",
-            "minecraft:dye_black_carpet",
-            "minecraft:dye_brown_carpet",
-            "minecraft:dye_red_carpet",
-            "minecraft:dye_orange_carpet",
-            "minecraft:dye_yellow_carpet",
-            "minecraft:dye_lime_carpet",
-            "minecraft:dye_green_carpet",
-            "minecraft:dye_cyan_carpet",
-            "minecraft:dye_light_blue_carpet",
-            "minecraft:dye_blue_carpet",
-            "minecraft:dye_purple_carpet",
-            "minecraft:dye_magenta_carpet",
-            "minecraft:dye_pink_carpet",
+            "dye_white_carpet",
+            "dye_light_gray_carpet",
+            "dye_gray_carpet",
+            "dye_black_carpet",
+            "dye_brown_carpet",
+            "dye_red_carpet",
+            "dye_orange_carpet",
+            "dye_yellow_carpet",
+            "dye_lime_carpet",
+            "dye_green_carpet",
+            "dye_cyan_carpet",
+            "dye_light_blue_carpet",
+            "dye_blue_carpet",
+            "dye_purple_carpet",
+            "dye_magenta_carpet",
+            "dye_pink_carpet",
 
-            "minecraft:dye_white_bed",
-            "minecraft:dye_light_gray_bed",
-            "minecraft:dye_gray_bed",
-            "minecraft:dye_black_bed",
-            "minecraft:dye_brown_bed",
-            "minecraft:dye_red_bed",
-            "minecraft:dye_orange_bed",
-            "minecraft:dye_yellow_bed",
-            "minecraft:dye_lime_bed",
-            "minecraft:dye_green_bed",
-            "minecraft:dye_cyan_bed",
-            "minecraft:dye_light_blue_bed",
-            "minecraft:dye_blue_bed",
-            "minecraft:dye_purple_bed",
-            "minecraft:dye_magenta_bed",
-            "minecraft:dye_pink_bed",
+            "dye_white_bed",
+            "dye_light_gray_bed",
+            "dye_gray_bed",
+            "dye_black_bed",
+            "dye_brown_bed",
+            "dye_red_bed",
+            "dye_orange_bed",
+            "dye_yellow_bed",
+            "dye_lime_bed",
+            "dye_green_bed",
+            "dye_cyan_bed",
+            "dye_light_blue_bed",
+            "dye_blue_bed",
+            "dye_purple_bed",
+            "dye_magenta_bed",
+            "dye_pink_bed",
 
-            "minecraft:white_terracotta",
-            "minecraft:light_gray_terracotta",
-            "minecraft:gray_terracotta",
-            "minecraft:black_terracotta",
-            "minecraft:brown_terracotta",
-            "minecraft:red_terracotta",
-            "minecraft:orange_terracotta",
-            "minecraft:yellow_terracotta",
-            "minecraft:lime_terracotta",
-            "minecraft:green_terracotta",
-            "minecraft:cyan_terracotta",
-            "minecraft:light_blue_terracotta",
-            "minecraft:blue_terracotta",
-            "minecraft:purple_terracotta",
-            "minecraft:magenta_terracotta",
-            "minecraft:pink_terracotta",
+            "white_terracotta",
+            "light_gray_terracotta",
+            "gray_terracotta",
+            "black_terracotta",
+            "brown_terracotta",
+            "red_terracotta",
+            "orange_terracotta",
+            "yellow_terracotta",
+            "lime_terracotta",
+            "green_terracotta",
+            "cyan_terracotta",
+            "light_blue_terracotta",
+            "blue_terracotta",
+            "purple_terracotta",
+            "magenta_terracotta",
+            "pink_terracotta",
 
-            "minecraft:white_candle",
-            "minecraft:light_gray_candle",
-            "minecraft:gray_candle",
-            "minecraft:black_candle",
-            "minecraft:brown_candle",
-            "minecraft:red_candle",
-            "minecraft:orange_candle",
-            "minecraft:yellow_candle",
-            "minecraft:lime_candle",
-            "minecraft:green_candle",
-            "minecraft:cyan_candle",
-            "minecraft:light_blue_candle",
-            "minecraft:blue_candle",
-            "minecraft:purple_candle",
-            "minecraft:magenta_candle",
-            "minecraft:pink_candle",
+            "white_candle",
+            "light_gray_candle",
+            "gray_candle",
+            "black_candle",
+            "brown_candle",
+            "red_candle",
+            "orange_candle",
+            "yellow_candle",
+            "lime_candle",
+            "green_candle",
+            "cyan_candle",
+            "light_blue_candle",
+            "blue_candle",
+            "purple_candle",
+            "magenta_candle",
+            "pink_candle",
             //Stone
-            "minecraft:prismarine_bricks",
-            "minecraft:quartz_pillar",
-            "minecraft:packed_mud",
-            "minecraft:mud_bricks",
-            "minecraft:quartz_bricks",
-            "minecraft:nether_bricks",
+            "prismarine_bricks",
+            "quartz_pillar",
+            "packed_mud",
+            "mud_bricks",
+            "quartz_bricks",
+            "nether_bricks",
 
-            "minecraft:stone_bricks",
-            "minecraft:cobblestone",
-            "minecraft:smooth_stone",
-            "minecraft:cracked_stone_bricks",
-            "minecraft:chiseled_stone_bricks",
+            "stone_bricks",
+            "cobblestone",
+            "smooth_stone",
+            "cracked_stone_bricks",
+            "chiseled_stone_bricks",
 
-            "minecraft:granite",
-            "minecraft:polished_granite",
-            "minecraft:andesite",
-            "minecraft:polished_andesite",
-            "minecraft:diorite",
-            "minecraft:polished_diorite",
+            "granite",
+            "polished_granite",
+            "andesite",
+            "polished_andesite",
+            "diorite",
+            "polished_diorite",
 
-            "minecraft:deepslate_bricks",
-            "minecraft:cobbled_deepslate",
-            "minecraft:chiseled_deepslate",
-            "minecraft:polished_deepslate",
-            "minecraft:cracked_deepslate",
-            "minecraft:cracked_deepslate_tiles",
+            "deepslate_bricks",
+            "cobbled_deepslate",
+            "chiseled_deepslate",
+            "polished_deepslate",
+            "cracked_deepslate",
+            "cracked_deepslate_tiles",
 
-            "minecraft:smooth_sandstone",
-            "minecraft:cut_sandstone",
-            "minecraft:chiseled_sandstone",
-            "minecraft:smooth_red_sandstone",
-            "minecraft:cut_red_sandstone",
-            "minecraft:chiseled_red_sandstone",
+            "smooth_sandstone",
+            "cut_sandstone",
+            "chiseled_sandstone",
+            "smooth_red_sandstone",
+            "cut_red_sandstone",
+            "chiseled_red_sandstone",
 
-            "minecraft:smooth_basalt",
-            "minecraft:polished_basalt",
+            "smooth_basalt",
+            "polished_basalt",
 
-            "minecraft:chiseled_polished_blackstone",
-            "minecraft:polished_blackstone",
-            "minecraft:polished_blackstone_bricks",
-            "minecraft:cracked_polished_blackstone_bricks",
+            "chiseled_polished_blackstone",
+            "polished_blackstone",
+            "polished_blackstone_bricks",
+            "cracked_polished_blackstone_bricks",
 
-            "minecraft:end_stone_bricks",
+            "end_stone_bricks",
 
-            "minecraft:stone_button",
-            "minecraft:stone_pressure_plate",
-            "minecraft:polished_blackstone_button",
-            "minecraft:polished_blackstone_pressure_plate",
+            "stone_button",
+            "stone_pressure_plate",
+            "polished_blackstone_button",
+            "polished_blackstone_pressure_plate",
 
             //Wood
-            "minecraft:bamboo_planks",
-            "minecraft:bamboo_fence",
-            "minecraft:bamboo_fence_gate",
-            "minecraft:bamboo_door",
-            "minecraft:bamboo_trapdoor",
-            "minecraft:bamboo_pressure_plate",
+            "bamboo_planks",
+            "bamboo_fence",
+            "bamboo_fence_gate",
+            "bamboo_door",
+            "bamboo_trapdoor",
+            "bamboo_pressure_plate",
 
-            "minecraft:acacia_log",
-            "minecraft:acacia_stripped_log",
-            "minecraft:acacia_wood",
-            "minecraft:acacia_stripped_wood",
-            "minecraft:acacia_planks",
-            "minecraft:acacia_fence",
-            "minecraft:acacia_fence_gate",
-            "minecraft:acacia_sign",
-            "minecraft:acacia_hanging_sign",
-            "minecraft:acacia_trapdoor",
-            "minecraft:acacia_door",
-            "minecraft:acacia_pressure_plate",
+            "acacia_log",
+            "acacia_stripped_log",
+            "acacia_wood",
+            "acacia_stripped_wood",
+            "acacia_planks",
+            "acacia_fence",
+            "acacia_fence_gate",
+            "acacia_sign",
+            "acacia_hanging_sign",
+            "acacia_trapdoor",
+            "acacia_door",
+            "acacia_pressure_plate",
 
-            "minecraft:birch_log",
-            "minecraft:birch_stripped_log",
-            "minecraft:birch_wood",
-            "minecraft:birch_stripped_wood",
-            "minecraft:birch_planks",
-            "minecraft:birch_fence",
-            "minecraft:birch_fence_gate",
-            "minecraft:birch_sign",
-            "minecraft:birch_hanging_sign",
-            "minecraft:birch_trapdoor",
-            "minecraft:birch_door",
-            "minecraft:birch_pressure_plate",
+            "birch_log",
+            "birch_stripped_log",
+            "birch_wood",
+            "birch_stripped_wood",
+            "birch_planks",
+            "birch_fence",
+            "birch_fence_gate",
+            "birch_sign",
+            "birch_hanging_sign",
+            "birch_trapdoor",
+            "birch_door",
+            "birch_pressure_plate",
 
-            "minecraft:cherry_log",
-            "minecraft:cherry_stripped_log",
-            "minecraft:cherry_wood",
-            "minecraft:cherry_stripped_wood",
-            "minecraft:cherry_planks",
-            "minecraft:cherry_fence",
-            "minecraft:cherry_fence_gate",
-            "minecraft:cherry_sign",
-            "minecraft:cherry_hanging_sign",
-            "minecraft:cherry_trapdoor",
-            "minecraft:cherry_door",
-            "minecraft:cherry_pressure_plate",
+            "cherry_log",
+            "cherry_stripped_log",
+            "cherry_wood",
+            "cherry_stripped_wood",
+            "cherry_planks",
+            "cherry_fence",
+            "cherry_fence_gate",
+            "cherry_sign",
+            "cherry_hanging_sign",
+            "cherry_trapdoor",
+            "cherry_door",
+            "cherry_pressure_plate",
 
-            "minecraft:dark_oak_log",
-            "minecraft:dark_oak_stripped_log",
-            "minecraft:dark_oak_wood",
-            "minecraft:dark_oak_stripped_wood",
-            "minecraft:dark_oak_planks",
-            "minecraft:dark_oak_fence",
-            "minecraft:dark_oak_fence_gate",
-            "minecraft:dark_oak_sign",
-            "minecraft:dark_oak_hanging_sign",
-            "minecraft:dark_oak_trapdoor",
-            "minecraft:dark_oak_door",
-            "minecraft:dark_oak_pressure_plate",
+            "dark_oak_log",
+            "dark_oak_stripped_log",
+            "dark_oak_wood",
+            "dark_oak_stripped_wood",
+            "dark_oak_planks",
+            "dark_oak_fence",
+            "dark_oak_fence_gate",
+            "dark_oak_sign",
+            "dark_oak_hanging_sign",
+            "dark_oak_trapdoor",
+            "dark_oak_door",
+            "dark_oak_pressure_plate",
 
-            "minecraft:jungle_log",
-            "minecraft:jungle_stripped_log",
-            "minecraft:jungle_wood",
-            "minecraft:jungle_stripped_wood",
-            "minecraft:jungle_planks",
-            "minecraft:jungle_fence",
-            "minecraft:jungle_fence_gate",
-            "minecraft:jungle_sign",
-            "minecraft:jungle_hanging_sign",
-            "minecraft:jungle_trapdoor",
-            "minecraft:jungle_door",
-            "minecraft:jungle_pressure_plate",
+            "jungle_log",
+            "jungle_stripped_log",
+            "jungle_wood",
+            "jungle_stripped_wood",
+            "jungle_planks",
+            "jungle_fence",
+            "jungle_fence_gate",
+            "jungle_sign",
+            "jungle_hanging_sign",
+            "jungle_trapdoor",
+            "jungle_door",
+            "jungle_pressure_plate",
 
-            "minecraft:mangrove_log",
-            "minecraft:mangrove_stripped_log",
-            "minecraft:mangrove_wood",
-            "minecraft:mangrove_stripped_wood",
-            "minecraft:mangrove_planks",
-            "minecraft:mangrove_fence",
-            "minecraft:mangrove_fence_gate",
-            "minecraft:mangrove_sign",
-            "minecraft:mangrove_hanging_sign",
-            "minecraft:mangrove_trapdoor",
-            "minecraft:mangrove_door",
-            "minecraft:mangrove_pressure_plate",
+            "mangrove_log",
+            "mangrove_stripped_log",
+            "mangrove_wood",
+            "mangrove_stripped_wood",
+            "mangrove_planks",
+            "mangrove_fence",
+            "mangrove_fence_gate",
+            "mangrove_sign",
+            "mangrove_hanging_sign",
+            "mangrove_trapdoor",
+            "mangrove_door",
+            "mangrove_pressure_plate",
 
-            "minecraft:oak_log",
-            "minecraft:oak_stripped_log",
-            "minecraft:oak_wood",
-            "minecraft:oak_stripped_wood",
-            "minecraft:oak_planks",
-            "minecraft:oak_fence",
-            "minecraft:oak_fence_gate",
-            "minecraft:oak_sign",
-            "minecraft:oak_hanging_sign",
-            "minecraft:oak_trapdoor",
-            "minecraft:oak_door",
-            "minecraft:oak_pressure_plate",
+            "oak_log",
+            "oak_stripped_log",
+            "oak_wood",
+            "oak_stripped_wood",
+            "oak_planks",
+            "oak_fence",
+            "oak_fence_gate",
+            "oak_sign",
+            "oak_hanging_sign",
+            "oak_trapdoor",
+            "oak_door",
+            "oak_pressure_plate",
 
-            "minecraft:spruce_log",
-            "minecraft:spruce_stripped_log",
-            "minecraft:spruce_wood",
-            "minecraft:spruce_stripped_wood",
-            "minecraft:spruce_planks",
-            "minecraft:spruce_fence",
-            "minecraft:spruce_fence_gate",
-            "minecraft:spruce_sign",
-            "minecraft:spruce_hanging_sign",
-            "minecraft:spruce_trapdoor",
-            "minecraft:spruce_door",
-            "minecraft:spruce_pressure_plate",
+            "spruce_log",
+            "spruce_stripped_log",
+            "spruce_wood",
+            "spruce_stripped_wood",
+            "spruce_planks",
+            "spruce_fence",
+            "spruce_fence_gate",
+            "spruce_sign",
+            "spruce_hanging_sign",
+            "spruce_trapdoor",
+            "spruce_door",
+            "spruce_pressure_plate",
 
-            "minecraft:crimson_stem",
-            "minecraft:crimson_stripped_stem",
-            "minecraft:crimson_hyphae",
-            "minecraft:crimson_stripped_hyphae",
-            "minecraft:crimson_planks",
-            "minecraft:crimson_fence",
-            "minecraft:crimson_fence_gate",
-            "minecraft:crimson_sign",
-            "minecraft:crimson_hanging_sign",
-            "minecraft:crimson_trapdoor",
-            "minecraft:crimson_door",
-            "minecraft:crimson_pressure_plate",
+            "crimson_stem",
+            "crimson_stripped_stem",
+            "crimson_hyphae",
+            "crimson_stripped_hyphae",
+            "crimson_planks",
+            "crimson_fence",
+            "crimson_fence_gate",
+            "crimson_sign",
+            "crimson_hanging_sign",
+            "crimson_trapdoor",
+            "crimson_door",
+            "crimson_pressure_plate",
 
-            "minecraft:warped_stem",
-            "minecraft:warped_stripped_stem",
-            "minecraft:warped_hyphae",
-            "minecraft:warped_stripped_hyphae",
-            "minecraft:warped_planks",
-            "minecraft:warped_fence",
-            "minecraft:warped_fence_gate",
-            "minecraft:warped_sign",
-            "minecraft:warped_hanging_sign",
-            "minecraft:warped_trapdoor",
-            "minecraft:warped_door",
-            "minecraft:warped_pressure_plate"
+            "warped_stem",
+            "warped_stripped_stem",
+            "warped_hyphae",
+            "warped_stripped_hyphae",
+            "warped_planks",
+            "warped_fence",
+            "warped_fence_gate",
+            "warped_sign",
+            "warped_hanging_sign",
+            "warped_trapdoor",
+            "warped_door",
+            "warped_pressure_plate"
     );
 
-    // Recipes to remove ONLY if a specific mod is loaded
-    // Format: "recipe_id"  →  "modid"
-    private static final List<ConditionalRemoval> CONDITIONAL_REMOVALS = List.of(
-            //new ConditionalRemoval("minecraft:bread", "firmaciv")
+    // Conditional removals (only if a mod is loaded)
+    private static final List<ConditionalRemoval> MINECRAFT_CONDITIONAL_REMOVALS = List.of(
+            // Example: new ConditionalRemoval("bread", "firmaciv")
     );
 
-    // ===========================================================================
-
-    public RemoveVanillaRecipeProvider(PackOutput pOutput) {
-        super(pOutput);
+    public RemoveVanillaRecipeProvider(PackOutput output) {
+        super(output);
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> pWriter) {
-        // Process unconditional removals
-        for (String recipeId : UNCONDITIONAL_REMOVALS) {
-            addFalseRecipe(pWriter, ResourceLocation.parse(recipeId));
+    protected void buildRecipes(Consumer<FinishedRecipe> writer) {
+        // This is no longer used for dynamic generation
+    }
+
+    /**
+     * Called from DataGenerators to generate all removal recipes dynamically
+     */
+    public void generateRemovalRecipes(ResourceSink sink) {
+        // Unconditional removals
+        for (String recipeId : MINECRAFT_UNCONDITIONAL_REMOVALS) {
+            String path = "recipes/" + recipeId;
+            generateDisabledRecipe(sink, path);
         }
 
-        // Process conditional removals
-        for (ConditionalRemoval entry : CONDITIONAL_REMOVALS) {
-            addConditionalFalseRecipe(pWriter,
-                    ResourceLocation.parse(entry.recipeId),
-                    entry.modId);
+        // Conditional removals
+        for (ConditionalRemoval entry : MINECRAFT_CONDITIONAL_REMOVALS) {
+            String path = "recipes/" + entry.recipeId;
+            generateDisabledRecipeWithModCondition(sink, path, entry.modId);
         }
     }
 
     /**
-     * Creates the minimal JSON with only {"conditions": [{"type": "forge:false"}]}
+     * Simple disabled recipe: {"conditions": [{"type": "forge:false"}]}
      */
-    private void addFalseRecipe(Consumer<FinishedRecipe> pWriter, ResourceLocation recipeId) {
-        ConditionalRecipe.builder()
-                .addCondition(FALSE())
-                .addRecipe(c -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.AIR)
-                        .requires(Items.AIR)
-                        .unlockedBy("has_air", has(Items.AIR))
-                        .save(c, "forge:remove_dummy"))
-                .build(pWriter, recipeId);
+    private void generateDisabledRecipe(ResourceSink sink, String recipePath) {
+        JsonObject root = new JsonObject();
+        JsonArray conditions = new JsonArray();
+        JsonObject condition = new JsonObject();
+        condition.addProperty("type", "forge:false");
+        conditions.add(condition);
+        root.add("conditions", conditions);
+
+        ResourceLocation loc = ResourceLocation.withDefaultNamespace(recipePath);
+        sink.addJson(loc, root, ResType.RECIPES);
     }
 
-    private void addConditionalFalseRecipe(Consumer<FinishedRecipe> pWriter, ResourceLocation recipeId, String modId) {
-        ConditionalRecipe.builder()
-                .addCondition(new ModLoadedCondition(modId))
-                .addRecipe(innerConsumer -> ConditionalRecipe.builder()
-                        .addCondition(FALSE())
-                        .addRecipe(dummyConsumer -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.AIR)
-                                .requires(Items.AIR)
-                                .unlockedBy("has_air", has(Items.AIR))
-                                .save(dummyConsumer, "forge:remove_dummy"))
-                        .build(innerConsumer, recipeId))
-                .build(pWriter, recipeId);
+    /**
+     * Disabled recipe with additional mod loaded condition
+     */
+    private void generateDisabledRecipeWithModCondition(ResourceSink sink, String recipePath, String modId) {
+        JsonObject root = new JsonObject();
+        JsonArray conditions = new JsonArray();
+
+        // forge:false
+        JsonObject falseCondition = new JsonObject();
+        falseCondition.addProperty("type", "forge:false");
+        conditions.add(falseCondition);
+
+        // forge:mod_loaded
+        JsonObject modCondition = new JsonObject();
+        modCondition.addProperty("type", "forge:mod_loaded");
+        modCondition.addProperty("modid", modId);
+        conditions.add(modCondition);
+
+        root.add("conditions", conditions);
+
+        ResourceLocation loc = ResourceLocation.withDefaultNamespace(recipePath);
+        sink.addJson(loc, root, ResType.RECIPES);
     }
 
-    // Helper record for conditional removals
-    private record ConditionalRemoval(String recipeId, String modId) {
-    }
+    private record ConditionalRemoval(String recipeId, String modId) {}
 }

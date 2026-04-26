@@ -1,5 +1,9 @@
 package com.bumppo109.firma_compat.datagen.recipes;
 
+import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.block.CompatMetal;
+import com.bumppo109.firma_compat.fluid.ModFluids;
+import com.bumppo109.firma_compat.item.ModItems;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
@@ -7,10 +11,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.dries007.tfc.common.fluids.TFCFluids;
+import net.dries007.tfc.util.Metal;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -36,6 +43,258 @@ public abstract class TFCRecipeBuilder implements DataProvider {
     public TFCRecipeBuilder(PackOutput output, String modId) {
         this.output = output;
         this.modId = modId;
+    }
+
+    /**
+     * Creates a TFC heating recipe that turns raw food into cooked food
+     * Example: beef → cooked_beef at 200°C
+     */
+    public void generateFoodHeatingRecipe(CachedOutput cache, Item inputFood, Item outputFood) {
+        ResourceLocation inputKey = BuiltInRegistries.ITEM.getKey(inputFood);
+        ResourceLocation outputKey = BuiltInRegistries.ITEM.getKey(outputFood);
+
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "tfc:heating");
+
+        // Ingredient with not_rotten wrapper
+        JsonObject ingredient = new JsonObject();
+        ingredient.addProperty("type", "tfc:not_rotten");
+        JsonObject inner = new JsonObject();
+        inner.addProperty("item", inputKey.toString());
+        ingredient.add("ingredient", inner);
+        root.add("ingredient", ingredient);
+
+        // Result item with copy_food modifier
+        JsonObject resultItem = new JsonObject();
+        JsonObject stack = new JsonObject();
+        stack.addProperty("item", outputKey.toString());
+        resultItem.add("stack", stack);
+
+        JsonArray modifiers = new JsonArray();
+        modifiers.add("tfc:copy_food");
+        resultItem.add("modifiers", modifiers);
+        root.add("result_item", resultItem);
+
+        root.addProperty("temperature", 200);
+
+        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
+                "recipes/heating/food/" + outputKey.getPath() + ".json");
+
+        saveRecipe(cache, loc.toString(), root);
+    }
+
+    /**
+     * Creates a TFC heating recipe that melts a tool into molten metal
+     * Example: bismuth_bronze axe → 100mb bismuth bronze at 985°C
+     */
+    public void generateToolMeltingRecipe(CachedOutput cache, CompatMetal metal, Item input, int amount) {
+        ResourceLocation inputKey = BuiltInRegistries.ITEM.getKey(input);
+        ResourceLocation moltenKey = BuiltInRegistries.FLUID.getKey(ModFluids.METALS.get(metal).getSource());
+
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "tfc:heating");
+
+        // Ingredient: metal tool
+        JsonObject ingredient = new JsonObject();
+        ingredient.addProperty("item", inputKey.toString());
+        root.add("ingredient", ingredient);
+
+        // Result fluid
+        JsonObject resultFluidObj = new JsonObject();
+        resultFluidObj.addProperty("fluid", moltenKey.toString());
+        resultFluidObj.addProperty("amount", amount);
+        root.add("result_fluid", resultFluidObj);
+
+        root.addProperty("temperature", metal.meltTemp());
+        root.addProperty("use_durability", true);
+
+        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
+                "recipes/heating/" + inputKey.getPath() + ".json");
+
+        saveRecipe(cache, loc.toString(), root);
+    }
+
+    public void generateMeltingRecipe(CachedOutput cache, CompatMetal metal, Item input, int amount) {
+        ResourceLocation inputKey = BuiltInRegistries.ITEM.getKey(input);
+        ResourceLocation moltenKey = BuiltInRegistries.FLUID.getKey(ModFluids.METALS.get(metal).getSource());
+
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "tfc:heating");
+
+        // Ingredient: metal tool
+        JsonObject ingredient = new JsonObject();
+        ingredient.addProperty("item", inputKey.toString());
+        root.add("ingredient", ingredient);
+
+        // Result fluid
+        JsonObject resultFluidObj = new JsonObject();
+        resultFluidObj.addProperty("fluid", moltenKey.toString());
+        resultFluidObj.addProperty("amount", amount);
+        root.add("result_fluid", resultFluidObj);
+
+        root.addProperty("temperature", metal.meltTemp());
+
+        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
+                "recipes/heating/" + inputKey.getPath() + ".json");
+
+        saveRecipe(cache, loc.toString(), root);
+    }
+
+    public void generateMeltingRecipe(CachedOutput cache, Metal.Default metal, Item input, int amount, int temperature) {
+        ResourceLocation inputKey = BuiltInRegistries.ITEM.getKey(input);
+        ResourceLocation moltenKey = BuiltInRegistries.FLUID.getKey(TFCFluids.METALS.get(metal).getSource());
+
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "tfc:heating");
+
+        // Ingredient: metal tool
+        JsonObject ingredient = new JsonObject();
+        ingredient.addProperty("item", inputKey.toString());
+        root.add("ingredient", ingredient);
+
+        // Result fluid
+        JsonObject resultFluidObj = new JsonObject();
+        resultFluidObj.addProperty("fluid", moltenKey.toString());
+        resultFluidObj.addProperty("amount", amount);
+        root.add("result_fluid", resultFluidObj);
+
+        root.addProperty("temperature", temperature);
+
+        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
+                "recipes/heating/" + inputKey.getPath() + ".json");
+
+        saveRecipe(cache, loc.toString(), root);
+    }
+
+    public void generateMeltingRecipe(CachedOutput cache, CompatMetal metal, CompatMetal.ItemType itemType) {
+        ResourceLocation inputKey = BuiltInRegistries.ITEM.getKey(ModItems.METAL_ITEMS.get(metal).get(itemType).get());
+        ResourceLocation moltenKey = BuiltInRegistries.FLUID.getKey(ModFluids.METALS.get(metal).getSource());
+
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "tfc:heating");
+
+        // Ingredient: metal tool
+        JsonObject ingredient = new JsonObject();
+        ingredient.addProperty("item", inputKey.toString());
+        root.add("ingredient", ingredient);
+
+        // Result fluid
+        JsonObject resultFluidObj = new JsonObject();
+        resultFluidObj.addProperty("fluid", moltenKey.toString());
+        resultFluidObj.addProperty("amount", itemType.metalAmount());
+        root.add("result_fluid", resultFluidObj);
+
+        root.addProperty("temperature", metal.meltTemp());
+
+        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
+                "recipes/heating/" + inputKey.getPath() + ".json");
+
+        saveRecipe(cache, loc.toString(), root);
+    }
+
+    /**
+     * Generates a TFC Welding recipe.
+     *
+     * Example: Unfinished bismuth bronze chestplate + double sheet → finished chestplate
+     *
+     * @param cache          cache
+     * @param inputA    Item ID of the first input (usually the unfinished piece)
+     * @param inputB   Item ID of the second input (usually the double sheet)
+     * @param tier          Welding tier (1 = stone anvil, 2 = bronze, 3 = wrought iron, 4 = steel, 5 = black steel, 6 = blue/red steel)
+     * @param result        Resulting item ID
+     */
+    public void generateWeldingRecipe(CachedOutput cache,
+                                       Item inputA,
+                                       Item inputB,
+                                       int tier,
+                                       Item result) {
+
+        ResourceLocation inputAKey = BuiltInRegistries.ITEM.getKey(inputA);
+        ResourceLocation inputBKey = BuiltInRegistries.ITEM.getKey(inputB);
+        ResourceLocation resultKey = BuiltInRegistries.ITEM.getKey(result);
+
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "tfc:welding");
+
+        // First input
+        JsonObject first = new JsonObject();
+        first.addProperty("item", inputAKey.toString());
+        root.add("first_input", first);
+
+        // Second input
+        JsonObject second = new JsonObject();
+        second.addProperty("item", inputBKey.toString());
+        root.add("second_input", second);
+
+        root.addProperty("tier", tier);
+
+        // Result
+        JsonObject resultObj = new JsonObject();
+        resultObj.addProperty("item", resultKey.toString());
+        root.add("result", resultObj);
+
+        // Output path: recipes/welding/bismuth_bronze_chestplate.json
+        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(
+                FirmaCompat.MODID,
+                "recipes/welding/" + resultKey.getPath() + ".json"
+        );
+
+        saveRecipe(cache, loc.toString(), root);
+
+        FirmaCompat.LOGGER.debug("Generated welding recipe: {}", loc);
+    }
+
+    /**
+     *
+     * @param cache
+     * @param inputTag
+     * @param resultItem
+     * @param tier
+     * @param rules
+     * @param applyForgingBonus
+     */
+    public void generateAnvilRecipe(CachedOutput cache,
+                                     String inputTag,
+                                     Item resultItem,
+                                     int tier,
+                                     String[] rules,
+                                     boolean applyForgingBonus) {
+
+        ResourceLocation resultKey = BuiltInRegistries.ITEM.getKey(resultItem);
+
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "tfc:anvil");
+
+        // Input Tag
+        JsonObject input = new JsonObject();
+        input.addProperty("tag", inputTag);
+        root.add("input", input);
+
+        // Result
+        JsonObject result = new JsonObject();
+        result.addProperty("item", resultItem.toString());
+        root.add("result", result);
+
+        root.addProperty("tier", tier);
+
+        // Rules array
+        JsonArray rulesArray = new JsonArray();
+        for (String rule : rules) {
+            rulesArray.add(rule);
+        }
+        root.add("rules", rulesArray);
+
+        root.addProperty("apply_forging_bonus", applyForgingBonus);
+
+        // Output location
+        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(
+                FirmaCompat.MODID,
+                "recipes/anvil/" + resultKey.getPath() + ".json"
+        );
+
+        saveRecipe(cache, loc.toString(), root);
+
+        FirmaCompat.LOGGER.info("Generated TFC anvil recipe: {}", loc);
     }
 
     /**

@@ -6,6 +6,7 @@ import com.bumppo109.firma_compat.item.ModItems;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.dries007.tfc.util.Metal;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
@@ -380,7 +381,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         damageToolShapeless(cache, null, Items.CHISELED_QUARTZ_BLOCK, "tfc:chisels", Items.QUARTZ_BRICKS, 1);
         damageToolShapeless(cache, null, Items.SMOOTH_QUARTZ, "tfc:chisels", Items.QUARTZ_BLOCK, 1);
 
-        // ================ NATURAL
+    // ================ NATURAL
 
         //mud
         selfLandslide(cache, Blocks.PACKED_MUD);
@@ -402,12 +403,271 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         selfLandslide(cache, ModBlocks.NATIVE_COPPER_GRAVEL_DEPOSIT.get());
         selfLandslide(cache, ModBlocks.CASSITERITE_GRAVEL_DEPOSIT.get());
 
+
+    // ===================== METAL =====================
+        for (CompatMetal metal : CompatMetal.values()) {
+            var metalItems = ModItems.METAL_ITEMS.get(metal);
+            if(metalItems != null && !metal.equals(CompatMetal.IRON)) {
+                metalItems.forEach((type, reg) -> {
+                    generateMeltingRecipe(cache, metal, type);
+                });
+            }
+        }
+        //TODO - confirm blast furnace output amt
+        generateMeltingRecipe(cache, CompatMetal.POOR_NETHERITE, Items.NETHERITE_SCRAP, 25);
+        generateMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_INGOT, 100);
+
+        generateToolMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_HELMET, 600);
+        generateToolMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_CHESTPLATE, 800);
+        generateToolMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_LEGGINGS, 600);
+        generateToolMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_BOOTS, 400);
+
+        generateToolMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_SWORD, 200);
+        generateToolMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_PICKAXE, 100);
+        generateToolMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_AXE, 100);
+        generateToolMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_SHOVEL, 100);
+        generateToolMeltingRecipe(cache, CompatMetal.NETHERITE, Items.NETHERITE_HOE, 100);
+// Tool Heads
+        generateAnvilRecipe(cache,
+                "forge:ingots/netherite",
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.PICKAXE_HEAD).get(),
+                5,
+                PICKAXE_HEAD_RULES,
+                true);
+
+        generateAnvilRecipe(cache,
+                "forge:ingots/netherite",
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.SHOVEL_HEAD).get(),
+                5,
+                SHOVEL_HEAD_RULES,
+                true);
+
+        generateAnvilRecipe(cache,
+                "forge:ingots/netherite",
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.AXE_HEAD).get(),
+                5,
+                AXE_HEAD_RULES,
+                true);
+
+        generateAnvilRecipe(cache,
+                "forge:ingots/netherite",
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.HOE_HEAD).get(),
+                5,
+                HOE_HEAD_RULES,
+                true);
+
+// Unfinished Armor Pieces
+        generateAnvilRecipe(cache,
+                "forge:double_sheets/netherite",
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_HELMET).get(),
+                5,
+                UNFINISHED_HELMET_RULES,
+                true);
+
+        generateAnvilRecipe(cache,
+                "forge:double_sheets/netherite",
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_CHESTPLATE).get(),
+                5,
+                UNFINISHED_CHESTPLATE_RULES,
+                true);
+
+        generateAnvilRecipe(cache,
+                "forge:double_sheets/netherite",
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_LEGGINGS).get(),
+                5,
+                UNFINISHED_GREAVES_RULES,
+                true);
+
+        generateAnvilRecipe(cache,
+                "forge:sheets/netherite",
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_BOOTS).get(),
+                5,
+                UNFINISHED_BOOTS_RULES,
+                true);
+
+        generateWeldingRecipe(cache,
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_BOOTS).get(),
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.SHEET).get(),
+                5,
+                Items.NETHERITE_BOOTS
+        );
+        generateWeldingRecipe(cache,
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_LEGGINGS).get(),
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.SHEET).get(),
+                5,
+                Items.NETHERITE_LEGGINGS
+        );
+        generateWeldingRecipe(cache,
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_CHESTPLATE).get(),
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.DOUBLE_SHEET).get(),
+                5,
+                Items.NETHERITE_CHESTPLATE
+        );
+        generateWeldingRecipe(cache,
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_HELMET).get(),
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.SHEET).get(),
+                5,
+                Items.NETHERITE_HELMET
+        );
+
+        generateWeldingRecipe(cache,
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.INGOT).get(),
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.INGOT).get(),
+                5,
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.DOUBLE_INGOT).get()
+        );
+        generateWeldingRecipe(cache,
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.SHEET).get(),
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.SHEET).get(),
+                5,
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.DOUBLE_SHEET).get()
+        );
+        generateAnvilRecipe(cache,
+                "forge:double_ingots/netherite",
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.SHEET).get(),
+                5,
+                HIT_3X,
+                true);
+        generateAnvilRecipe(cache,
+                "forge:ingots/netherite",
+                ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.ROD).get(),
+                5,
+                HIT_3X,
+                true);
+
+        generateWeldingRecipe(cache,
+                ModItems.METAL_ITEMS.get(CompatMetal.POOR_NETHERITE).get(CompatMetal.ItemType.INGOT).get(),
+                ModItems.METAL_ITEMS.get(CompatMetal.POOR_NETHERITE).get(CompatMetal.ItemType.INGOT).get(),
+                3,
+                ModItems.METAL_ITEMS.get(CompatMetal.POOR_NETHERITE).get(CompatMetal.ItemType.DOUBLE_INGOT).get()
+        );
+        generateWeldingRecipe(cache,
+                ModItems.METAL_ITEMS.get(CompatMetal.POOR_NETHERITE).get(CompatMetal.ItemType.SHEET).get(),
+                ModItems.METAL_ITEMS.get(CompatMetal.POOR_NETHERITE).get(CompatMetal.ItemType.SHEET).get(),
+                3,
+                ModItems.METAL_ITEMS.get(CompatMetal.POOR_NETHERITE).get(CompatMetal.ItemType.DOUBLE_SHEET).get()
+        );
+        generateAnvilRecipe(cache,
+                "forge:double_ingots/poor_netherite",
+                ModItems.METAL_ITEMS.get(CompatMetal.POOR_NETHERITE).get(CompatMetal.ItemType.SHEET).get(),
+                3,
+                HIT_3X,
+                true);
+        generateAnvilRecipe(cache,
+                "forge:ingots/poor_netherite",
+                ModItems.METAL_ITEMS.get(CompatMetal.POOR_NETHERITE).get(CompatMetal.ItemType.ROD).get(),
+                3,
+                HIT_3X,
+                true);
+
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.COPPER_BLOCK, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.EXPOSED_COPPER, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WEATHERED_COPPER, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.OXIDIZED_COPPER, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_COPPER_BLOCK, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_EXPOSED_COPPER, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_WEATHERED_COPPER, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_OXIDIZED_COPPER, 100, 1080);
+
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.CUT_COPPER, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.EXPOSED_CUT_COPPER, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WEATHERED_CUT_COPPER, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.OXIDIZED_CUT_COPPER, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_CUT_COPPER, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_EXPOSED_CUT_COPPER, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_WEATHERED_CUT_COPPER, 100, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_OXIDIZED_CUT_COPPER, 100, 1080);
+
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.CUT_COPPER_STAIRS, 75, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.EXPOSED_CUT_COPPER_STAIRS, 75, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WEATHERED_CUT_COPPER_STAIRS, 75, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.OXIDIZED_CUT_COPPER_STAIRS, 75, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_CUT_COPPER_STAIRS, 75, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_EXPOSED_CUT_COPPER_STAIRS, 75, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_WEATHERED_CUT_COPPER_STAIRS, 75, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_OXIDIZED_CUT_COPPER_STAIRS, 75, 1080);
+
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.CUT_COPPER_SLAB, 50, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.EXPOSED_CUT_COPPER_SLAB, 50, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WEATHERED_CUT_COPPER_SLAB, 50, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.OXIDIZED_CUT_COPPER_SLAB, 50, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_CUT_COPPER_SLAB, 50, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_EXPOSED_CUT_COPPER_SLAB, 50, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_WEATHERED_CUT_COPPER_SLAB, 50, 1080);
+        generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_OXIDIZED_CUT_COPPER_SLAB, 50, 1080);
+
+        generateFoodHeatingRecipe(cache, Items.SALMON, Items.COOKED_SALMON);
+        generateFoodHeatingRecipe(cache, Items.COD, Items.COOKED_COD);
+        generateFoodHeatingRecipe(cache, Items.BEEF, Items.COOKED_BEEF);
+        generateFoodHeatingRecipe(cache, Items.CHICKEN, Items.COOKED_CHICKEN);
+        generateFoodHeatingRecipe(cache, Items.MUTTON, Items.COOKED_MUTTON);
+        generateFoodHeatingRecipe(cache, Items.RABBIT, Items.COOKED_RABBIT);
+        generateFoodHeatingRecipe(cache, Items.PORKCHOP, Items.COOKED_PORKCHOP);
+        generateFoodHeatingRecipe(cache, Items.POTATO, Items.BAKED_POTATO);
+        generateFoodHeatingRecipe(cache, Items.KELP, Items.DRIED_KELP);
+        generateFoodHeatingRecipe(cache, Items.CHORUS_FRUIT, Items.POPPED_CHORUS_FRUIT);
+
         return CompletableFuture.completedFuture(null);
     }
 
     protected String itemId(ItemLike itemLike) {
         return BuiltInRegistries.ITEM.getKey(itemLike.asItem()).getPath();
     }
+
+    //=========== Metal
+    // ===================== ANVIL FORGING RULES =====================
+    private static final String[] HIT_3X = {
+            "hit_third_last",
+            "hit_second_last",
+            "hit_last"
+    };
+
+    private static final String[] PICKAXE_HEAD_RULES = {
+            "draw_not_last",
+            "bend_not_last",
+            "punch_last"
+    };
+
+    private static final String[] SHOVEL_HEAD_RULES = {
+            "hit_not_last",
+            "punch_last"
+    };
+
+    private static final String[] AXE_HEAD_RULES = {
+            "upset_third_last",
+            "hit_second_last",
+            "punch_last"
+    };
+
+    private static final String[] HOE_HEAD_RULES = {
+            "bend_not_last",
+            "hit_not_last",
+            "punch_last"
+    };
+
+    private static final String[] UNFINISHED_HELMET_RULES = {
+            "bend_third_last",
+            "bend_second_last",
+            "hit_last"
+    };
+
+    private static final String[] UNFINISHED_CHESTPLATE_RULES = {
+            "upset_third_last",
+            "hit_second_last",
+            "hit_last"
+    };
+
+    private static final String[] UNFINISHED_GREAVES_RULES = {
+            "bend_any",
+            "draw_any",
+            "hit_any"
+    };
+
+    private static final String[] UNFINISHED_BOOTS_RULES = {
+            "shrink_third_last",
+            "bend_second_last",
+            "bend_last"
+    };
 
     /**
      * Generates a TFC collapse recipe for a CompatRock.

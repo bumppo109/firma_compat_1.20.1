@@ -62,9 +62,6 @@ import java.util.function.Consumer;
 import static net.mehvahdjukaar.every_compat.misc.UtilityTag.getATagOrCreateANew;
 
 public final class CompatWoodGoodModule extends EveryCompatModule {
-
-    //TODO - worldgen placed feature tags
-
     public final ItemOnlyEntrySet<WoodType, Item> LUMBER;
     public final ItemOnlyEntrySet<WoodType, Item> SUPPORT;
     public final SimpleEntrySet<WoodType, Block> TWIG;
@@ -85,9 +82,6 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
     public final SimpleEntrySet<WoodType, Block> GEAR_BOX;
     public SimpleEntrySet<WoodType, Block> WINDMILL;
     public final SimpleEntrySet<WoodType, Block> WATER_WHEEL;
-
-    //private final Map<WoodType, RotationDevicePair> rotationPairs = new HashMap<>();
-
 
     public CompatWoodGoodModule() {
         super(FirmaCompat.MODID, FirmaCompat.MODID, FirmaCompat.MODID);

@@ -1,0 +1,17 @@
+{
+  "type": "tfc:quern",
+  "ingredient": {
+    "type": "tfc:not_rotten",
+    "ingredient": {
+      "item": "minecraft:wheat"
+    }
+  },
+  "result": {
+    "stack": {
+      "item": "tfc:food/wheat_flour"
+    },
+    "modifiers": [
+      "tfc:copy_food"
+    ]
+  }
+}

@@ -4,15 +4,20 @@ import com.bumppo109.firma_compat.FirmaCompat;
 import com.bumppo109.firma_compat.block.CompatMetal;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.fluid.ModFluids;
+import com.bumppo109.firma_compat.item.CompatFood;
+import com.bumppo109.firma_compat.item.CompatMeal;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.dries007.tfc.util.Metal;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +46,86 @@ public class ModTFCDataProvider extends TFCDataBuilder {
             metalDef(cache, metal);
         }
 
+        itemHeat(cache, Items.NETHERITE_SCRAP, 2.857, CompatMetal.POOR_NETHERITE.tierForgeTemp(), CompatMetal.POOR_NETHERITE.tierWeldTemp());
+        itemHeat(cache, Items.NETHERITE_INGOT, 2.857, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
+
+        itemHeat(cache, Items.NETHERITE_HELMET, 11.429, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
+        itemHeat(cache, Items.NETHERITE_CHESTPLATE, 11.429, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
+        itemHeat(cache, Items.NETHERITE_LEGGINGS, 11.429, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
+        itemHeat(cache, Items.NETHERITE_BOOTS, 5.714, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
+
+        itemHeat(cache, Items.NETHERITE_SWORD, 5.714, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
+        itemHeat(cache, Items.NETHERITE_PICKAXE, 5.714, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
+        itemHeat(cache, Items.NETHERITE_AXE, 5.714, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
+        itemHeat(cache, Items.NETHERITE_SHOVEL, 5.714, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
+        itemHeat(cache, Items.NETHERITE_HOE, 5.714, CompatMetal.NETHERITE.tierForgeTemp(), CompatMetal.NETHERITE.tierWeldTemp());
+
+        itemHeat(cache, Items.COPPER_BLOCK, 2.857, 648, 864);
+        itemHeat(cache, Items.EXPOSED_COPPER, 2.857, 648, 864);
+        itemHeat(cache, Items.WEATHERED_COPPER, 2.857, 648, 864);
+        itemHeat(cache, Items.OXIDIZED_COPPER, 2.857, 648, 864);
+        itemHeat(cache, Items.WAXED_COPPER_BLOCK, 2.857, 648, 864);
+        itemHeat(cache, Items.WAXED_EXPOSED_COPPER, 2.857, 648, 864);
+        itemHeat(cache, Items.WAXED_WEATHERED_COPPER, 2.857, 648, 864);
+        itemHeat(cache, Items.WAXED_OXIDIZED_COPPER, 2.857, 648, 864);
+
+        itemHeat(cache, Items.CUT_COPPER, 2.857, 648, 864);
+        itemHeat(cache, Items.EXPOSED_CUT_COPPER, 2.857, 648, 864);
+        itemHeat(cache, Items.WEATHERED_CUT_COPPER, 2.857, 648, 864);
+        itemHeat(cache, Items.OXIDIZED_CUT_COPPER, 2.857, 648, 864);
+        itemHeat(cache, Items.WAXED_CUT_COPPER, 2.857, 648, 864);
+        itemHeat(cache, Items.WAXED_EXPOSED_CUT_COPPER, 2.857, 648, 864);
+        itemHeat(cache, Items.WAXED_WEATHERED_CUT_COPPER, 2.857, 648, 864);
+        itemHeat(cache, Items.WAXED_OXIDIZED_CUT_COPPER, 2.857, 648, 864);
+
+        itemHeat(cache, Items.CUT_COPPER_STAIRS, 2.143, 648, 864);
+        itemHeat(cache, Items.EXPOSED_CUT_COPPER_STAIRS, 2.143, 648, 864);
+        itemHeat(cache, Items.WEATHERED_CUT_COPPER_STAIRS, 2.143, 648, 864);
+        itemHeat(cache, Items.OXIDIZED_CUT_COPPER_STAIRS, 2.143, 648, 864);
+        itemHeat(cache, Items.WAXED_CUT_COPPER_STAIRS, 2.143, 648, 864);
+        itemHeat(cache, Items.WAXED_EXPOSED_CUT_COPPER_STAIRS, 2.143, 648, 864);
+        itemHeat(cache, Items.WAXED_WEATHERED_CUT_COPPER_STAIRS, 2.143, 648, 864);
+        itemHeat(cache, Items.WAXED_OXIDIZED_CUT_COPPER_STAIRS, 2.143, 648, 864);
+
+        itemHeat(cache, Items.CUT_COPPER_SLAB, 1.429, 648, 864);
+        itemHeat(cache, Items.EXPOSED_CUT_COPPER_SLAB, 1.429, 648, 864);
+        itemHeat(cache, Items.WEATHERED_CUT_COPPER_SLAB, 1.429, 648, 864);
+        itemHeat(cache, Items.OXIDIZED_CUT_COPPER_SLAB, 1.429, 648, 864);
+        itemHeat(cache, Items.WAXED_CUT_COPPER_SLAB, 1.429, 648, 864);
+        itemHeat(cache, Items.WAXED_EXPOSED_CUT_COPPER_SLAB, 1.429, 648, 864);
+        itemHeat(cache, Items.WAXED_WEATHERED_CUT_COPPER_SLAB, 1.429, 648, 864);
+        itemHeat(cache, Items.WAXED_OXIDIZED_CUT_COPPER_SLAB, 1.429, 648, 864);
+
+        foodHeat(cache, Items.SALMON);
+        foodHeat(cache, Items.COD);
+        foodHeat(cache, Items.RABBIT);
+        foodHeat(cache, Items.BEEF);
+        foodHeat(cache, Items.CHICKEN);
+        foodHeat(cache, Items.PORKCHOP);
+        foodHeat(cache, Items.MUTTON);
+        foodHeat(cache, Items.POTATO);
+        foodHeat(cache, Items.KELP);
+        foodHeat(cache, Items.CHORUS_FRUIT);
+
+        for (CompatFood food : CompatFood.values()) {
+            generateMinecraftFoodData(cache, food.getSerializedName(), food.getHunger(), food.getSaturation(), food.getWater(), food.getDecayModifier(),
+                    food.getGrain(), food.getFruit(), food.getVegetable(), food.getProtein(), food.getDairy());
+        }
+
+        for (CompatMeal meal : CompatMeal.values()) {
+            CompatMeal.FoodStats stats = meal.calculateFoodStats();
+
+            generateMinecraftFoodData(cache, meal.getSerializedName(), stats.hunger(),
+                    stats.saturation(),
+                    stats.decayModifier(),
+                    stats.protein(),
+                    stats.grain(),
+                    stats.fruit(),
+                    stats.vegetable(),
+                    stats.dairy(),
+                    stats.water());
+        }
+
         return CompletableFuture.completedFuture(null);
     }
 
@@ -60,6 +145,16 @@ public class ModTFCDataProvider extends TFCDataBuilder {
         }
 
         metal(cache, metal.getSerializedName(), tier, fluidId, metal.meltTemp(), 0.00857);
+    }
+
+    protected void foodHeat(CachedOutput cache, Item item) {
+        ResourceLocation itemRes = ForgeRegistries.ITEMS.getKey(item);
+        String itemId = Objects.requireNonNull(itemRes).toString();
+        String itemPath = Objects.requireNonNull(itemRes).getPath();
+
+        JsonObject singleIng = ingredient(itemId);
+
+        itemHeat(cache, itemPath, singleIng, 1.0);
     }
 
     protected void itemHeat(CachedOutput cache, Item item, double heatCapacity, double forgeTemp, double weldTemp) {

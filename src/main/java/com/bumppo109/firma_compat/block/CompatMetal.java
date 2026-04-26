@@ -234,6 +234,15 @@ public enum CompatMetal implements RegistryMetal {
 
             return heatCapacity;
         }
+
+        public double metalAmount() {
+            return switch (this) {
+                case ROD -> 50;
+                case SHEET, SWORD_BLADE, DOUBLE_INGOT, UNFINISHED_BOOTS -> 200;
+                case DOUBLE_SHEET, UNFINISHED_CHESTPLATE, UNFINISHED_LEGGINGS, UNFINISHED_HELMET -> 400;
+                default -> 100;
+            };
+        }
     }
 
     public enum BlockType {

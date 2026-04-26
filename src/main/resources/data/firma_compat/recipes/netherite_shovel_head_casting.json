@@ -1,0 +1,14 @@
+{
+  "type": "tfc:casting",
+  "mold": {
+    "item": "tfc:ceramic/shovel_head_mold"
+  },
+  "fluid": {
+    "ingredient": "firma_compat:netherite",
+    "amount": 100
+  },
+  "result": {
+    "item": "firma_compat:netherite_shovel_head"
+  },
+  "break_chance": 1
+}

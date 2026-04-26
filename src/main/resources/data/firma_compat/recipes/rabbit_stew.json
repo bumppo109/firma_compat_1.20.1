@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "BCD",
+    " E "
+  ],
+  "key": {
+    "A": {
+      "type": "tfc:not_rotten",
+      "ingredient": {
+        "item": "minecraft:cooked_rabbit"
+      }
+    },
+    "B": {
+      "type": "tfc:not_rotten",
+      "ingredient": {
+        "item": "minecraft:carrot"
+      }
+    },
+    "C": {
+      "type": "tfc:not_rotten",
+      "ingredient": {
+        "item": "minecraft:baked_potato"
+      }
+    },
+    "D": {
+      "type": "tfc:not_rotten",
+      "ingredient": {
+        "tag": "forge:mushrooms"
+      }
+    },
+    "E": {
+      "item": "minecraft:bowl"
+    }
+  },
+  "result": {
+    "item": "minecraft:rabbit_stew"
+  }
+}

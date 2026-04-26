@@ -62,9 +62,6 @@ import static com.bumppo109.firma_compat.block.ModBlocks.GRADED_ORES;
 import static com.bumppo109.firma_compat.block.ModBlocks.ORES;
 
 public class CompatStoneZoneModule extends StoneZoneModule {
-
-    //TODO - worldgen placed feature tags
-
     public final SimpleEntrySet<StoneType, Block> LOOSE;
     public final SimpleEntrySet<StoneType, Block> LOOSE_COBBLE;
     public final SimpleEntrySet<StoneType, Block> HARDENED_COBBLE;
