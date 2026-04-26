@@ -1,7 +1,10 @@
 package com.bumppo109.firma_compat.everycompat;
 
 import net.mehvahdjukaar.every_compat.api.ItemOnlyEntrySet;
+import net.mehvahdjukaar.moonlight.api.set.BlockType;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;

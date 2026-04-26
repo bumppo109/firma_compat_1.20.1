@@ -21,6 +21,7 @@ public class ModTags {
         public static final TagKey<Block> AQUEDUCTS = tag("aqueducts");
         public static final TagKey<Block> TWIGS = tag("twigs");
         public static final TagKey<Block> SUPPORT_BEAMS = tag("support_beams");
+        public static final TagKey<Block> LOOSE_COBBLE = tag("loose_cobble");
 
 
 

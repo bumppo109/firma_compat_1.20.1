@@ -51,7 +51,7 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
                             .add(ModBlocks.ROCK_BLOCKS.get(rock).get(blockType).get());
                 }
                 if(blockType.equals(CompatRock.BlockType.LOOSE_COBBLE)) {
-                    tag(TFCTags.Blocks.CAN_LANDSLIDE)
+                    tag(ModTags.Blocks.LOOSE_COBBLE)
                             .add(ModBlocks.ROCK_BLOCKS.get(rock).get(blockType).get());
                 }
                 if(blockType.equals(CompatRock.BlockType.HARDENED)) {
@@ -101,6 +101,7 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
         ;
 
         tag(TFCTags.Blocks.CAN_LANDSLIDE)
+                .addTag(ModTags.Blocks.LOOSE_COBBLE)
                 .add(ModBlocks.CLAY_GRASS_BLOCK.get())
                 .add(ModBlocks.CLAY_PODZOL.get())
                 .add(ModBlocks.CLAY_DIRT.get())

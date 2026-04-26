@@ -63,6 +63,8 @@ import static net.mehvahdjukaar.every_compat.misc.UtilityTag.getATagOrCreateANew
 
 public final class CompatWoodGoodModule extends EveryCompatModule {
 
+    //TODO - worldgen placed feature tags
+
     public final ItemOnlyEntrySet<WoodType, Item> LUMBER;
     public final ItemOnlyEntrySet<WoodType, Item> SUPPORT;
     public final SimpleEntrySet<WoodType, Block> TWIG;

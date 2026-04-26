@@ -63,6 +63,8 @@ import static com.bumppo109.firma_compat.block.ModBlocks.ORES;
 
 public class CompatStoneZoneModule extends StoneZoneModule {
 
+    //TODO - worldgen placed feature tags
+
     public final SimpleEntrySet<StoneType, Block> LOOSE;
     public final SimpleEntrySet<StoneType, Block> LOOSE_COBBLE;
     public final SimpleEntrySet<StoneType, Block> HARDENED_COBBLE;
@@ -99,6 +101,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 )
                 .requiresChildren(VanillaStoneChildKeys.STONE)
                 .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
+                .addTag(modRes("loose_cobble"), Registries.BLOCK)
                 .addTexture(modRes("block/andesite_loose_cobblestone"), PaletteStrategies.MAIN_CHILD)
                 .dropSelf()
                 .setTabKey(tab)
@@ -126,7 +129,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 .requiresChildren(VanillaStoneChildKeys.STONE)
                 .addTag(modRes("rock_hardened"), Registries.BLOCK)
                 .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
-                .noDrops()
+                .copyParentDrop()
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*")
                 .build();
@@ -151,6 +154,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 .requiresChildren(VanillaRockChildKeys.BRICKS)
                 .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
                 .addTag(modRes("aqueducts"), Registries.BLOCK)
+                .addRecipe(modRes("crafting/stone_brick_aqueduct"))
                 .dropSelf()
                 .excludeBlockTypes("tfc:.*")
                 .setTabKey(tab)
@@ -168,6 +172,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                             stoneType -> new Block(Utils.copyPropertySafe(stoneType.block))
                     )
                     .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
+                    .addTag(modRes("rock_ores"), Registries.BLOCK)
                     .setRenderType(RenderLayer.CUTOUT)
                     .setTabKey(tab)
                     .excludeBlockTypes("tfc:.*")
@@ -191,6 +196,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                                 stoneType -> new Block(Utils.copyPropertySafe(stoneType.block))
                         )
                         .addTag(BlockTags.MINEABLE_WITH_PICKAXE, Registries.BLOCK)
+                        .addTag(modRes("rock_ores"), Registries.BLOCK)
                         .setRenderType(RenderLayer.CUTOUT)
                         .setTabKey(tab)
                         .excludeBlockTypes("tfc:.*")
@@ -245,18 +251,15 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 Item brickItem = BRICK.items.get(stone);
 
                 //============== Loot Tables
-                // raw
-                generateTFCStoneLootTable(sink, stone.stone, LOOSE.blocks.get(stone));
-                // hardened
-                generateTFCStoneLootTable(sink, HARDENED.blocks.get(stone), LOOSE.blocks.get(stone));
 
                 //================ Recipe
                 if(LOOSE.items.get(stone) != null){
                     if(LOOSE_COBBLE.items.get(stone) != null){
                         generatelandslideSelfRecipe(sink, stone);
+                        generateLooseCobbleBlock(sink, BuiltInRegistries.ITEM.getKey(LOOSE.blocks.get(stone).asItem()).toString(), BuiltInRegistries.BLOCK.getKey(looseCobbleBlock).toString(), 1, null);
                     }
                     if(HARDENED_COBBLE.items.get(stone) != null){
-                        generateBrickBlockRecipe(sink, LOOSE.items.get(stone).toString(), HARDENED_COBBLE.items.get(stone).toString(), 4, null);
+                        generateBrickBlockRecipe(sink, BuiltInRegistries.BLOCK.getKey(looseRockBlock).toString(), BuiltInRegistries.BLOCK.getKey(hardCobbleBlock).toString(), 4, null);
                     }
                     if(BRICK.items.get(stone) != null){
                         if(stone.getChild(VanillaRockChildKeys.BRICKS) != null || stone.getChild(VanillaRockChildKeys.BUTTON)  != null || stone.getChild(VanillaRockChildKeys.PRESSURE_PLATE) != null){
@@ -264,19 +267,96 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                         }
                         if(stone.getChild(VanillaRockChildKeys.BUTTON) != null){
                             generateBrickRecipe(sink, BRICK.items.get(stone), stone.getItemOfThis("button"), "tfc:chisels", 1,null);
-                            UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, stone.getItemOfThis("button"));
                         }
                         if(stone.getChild(VanillaRockChildKeys.PRESSURE_PLATE) != null){
                             generatePressurePlateFromBrickRecipe(sink, stone, BRICK.items.get(stone).asItem(), 1, null);
-                            UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, stone.getItemOfThis("pressure_plate"));
                         }
                         if(stone.getChild(VanillaRockChildKeys.BRICKS) != null){
-                            generateBrickBlockRecipe(sink, BRICK.items.get(stone).toString(), Utils.getID(Objects.requireNonNull(stone.getChild(VanillaRockChildKeys.BRICKS))).toString(), 4, null);
-                            UtilityTag.createAndAddCustomTags(modRes("remove_from_crafting"), sink, stone.getItemOfThis("bricks"));
+                            generateBrickBlockRecipe(sink, BuiltInRegistries.ITEM.getKey(brickItem).toString(), Utils.getID(Objects.requireNonNull(stone.getChild(VanillaRockChildKeys.BRICKS))).toString(), 4, null);
                         }
                     }
 
                     generateCollapseRecipes(sink, stone);
+                    UtilityTag.createAndAddCustomTags(modRes("rock_raw"), sink, stone.stone);
+                }
+            }
+
+            // Generate individual loot tables for EVERY ore block variant
+            for (Map.Entry<String, SimpleEntrySet<StoneType, Block>> entry : ORE_ENTRY_SETS.entrySet()) {
+                String oreKey = entry.getKey(); // e.g. "poor_native_copper"
+                SimpleEntrySet<StoneType, Block> oreSet = entry.getValue();
+
+                // Determine the base dropped item for this ore variant
+                ResourceLocation baseDroppedItem;
+                String oreName;
+                String gradePrefix = "";
+
+                if (oreKey.startsWith("poor_")) {
+                    gradePrefix = "poor_";
+                    oreName = oreKey.substring("poor_".length());
+                } else if (oreKey.startsWith("normal_")) {
+                    gradePrefix = "normal_";
+                    oreName = oreKey.substring("normal_".length());
+                } else if (oreKey.startsWith("rich_")) {
+                    gradePrefix = "rich_";
+                    oreName = oreKey.substring("rich_".length());
+                } else if (oreKey.startsWith("ungraded_")) {
+                    oreName = oreKey.substring("ungraded_".length());
+                } else {
+                    FirmaCompat.LOGGER.warn("Unexpected ore key format: {}", oreKey);
+                    continue;
+                }
+
+                baseDroppedItem = ResourceLocation.fromNamespaceAndPath("tfc", "ore/" + gradePrefix + oreName);
+
+                // Now generate a loot table for EVERY stone variant of this ore
+                for (Map.Entry<StoneType, Block> blockEntry : oreSet.blocks.entrySet()) {
+                    StoneType stoneType = blockEntry.getKey();
+                    Block oreBlock = blockEntry.getValue();
+
+                    if (oreBlock == null || oreBlock == Blocks.AIR) continue;
+
+                    ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(oreBlock);
+                    if (blockId == null) continue;
+
+                    // Loot table path MUST match the block's registry path
+                    // e.g. data/firma_compat/loot_tables/blocks/poor_stone_native_copper_ore.json
+                    ResourceLocation lootLoc = ResourceLocation.fromNamespaceAndPath(
+                            blockId.getNamespace(),
+                            "loot_tables/blocks/" + blockId.getPath() + ".json"
+                    );
+
+                    // Build loot table JSON (identical structure for all)
+                    JsonObject lootTable = new JsonObject();
+                    lootTable.addProperty("type", "minecraft:block");
+
+                    JsonArray pools = new JsonArray();
+                    JsonObject pool = new JsonObject();
+                    pool.addProperty("rolls", 1);
+
+                    JsonArray entries = new JsonArray();
+                    JsonObject oreEntry = new JsonObject();
+                    oreEntry.addProperty("type", "minecraft:item");
+                    oreEntry.addProperty("name", baseDroppedItem.toString());
+                    entries.add(oreEntry);
+
+                    pool.add("entries", entries);
+
+                    JsonArray conditions = new JsonArray();
+                    JsonObject survivesExplosion = new JsonObject();
+                    survivesExplosion.addProperty("condition", "minecraft:survives_explosion");
+                    conditions.add(survivesExplosion);
+
+                    pool.add("conditions", conditions);
+                    pools.add(pool);
+
+                    lootTable.add("pools", pools);
+
+                    // Write the loot table
+                    sink.addJson(lootLoc, lootTable, ResType.GENERIC);
+
+                    FirmaCompat.LOGGER.debug("Generated loot table for block {} → drops {}",
+                            blockId, baseDroppedItem);
                 }
             }
 
@@ -760,7 +840,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
 
         JsonObject result = new JsonObject();
         result.addProperty("count", count);
-        result.addProperty("id", plateItemNamespace + ":" + plateItemPath);
+        result.addProperty("item", plateItemNamespace + ":" + plateItemPath);
         recipe.add("result", result);
 
         ResourceLocation outputLoc = ResourceLocation.parse(plateItemNamespace + ":" + plateItemPath);
@@ -810,7 +890,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
         // Result
         JsonObject result = new JsonObject();
         result.addProperty("count", count);
-        result.addProperty("id", outputItem);
+        result.addProperty("item", outputItem);
         recipe.add("result", result);
 
         // Build recipe ResourceLocation based on output item's namespace + path
@@ -839,6 +919,9 @@ public class CompatStoneZoneModule extends StoneZoneModule {
     ) {
         String input = Utils.getID(inputItem).getPath();
         String inputNamespace = Utils.getID(inputItem).getNamespace();
+
+        String output = Utils.getID(outputItem).getPath();
+        String outputNamespace = Utils.getID(outputItem).getNamespace();
 
         if (count < 1) {
             EveryCompat.LOGGER.warn("Invalid count {} for brick recipe {} → {}, defaulting to 1",
@@ -880,7 +963,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
         // Result
         JsonObject result = new JsonObject();
         result.addProperty("count", count);           // ← now uses the parameter
-        result.addProperty("id", String.valueOf(outputItem));
+        result.addProperty("item", outputNamespace + ":" + output);
         recipe.add("result", result);
 
         // Create recipe ResourceLocation based on output item's ID + optional suffix
@@ -953,7 +1036,61 @@ public class CompatStoneZoneModule extends StoneZoneModule {
         // Result
         JsonObject result = new JsonObject();
         result.addProperty("count", count);
-        result.addProperty("id", outputItem);
+        result.addProperty("item", outputItem);
+        recipe.add("result", result);
+
+        // Build recipe ResourceLocation based on output item's namespace + path
+        ResourceLocation outLoc = ResourceLocation.parse(outputItem);
+        String recipePath = "crafting/" + outLoc.getPath();  // e.g. "bricks/andesite"
+
+        if (suffix != null && !suffix.isEmpty()) {
+            recipePath += suffix;
+        }
+
+        // Final location: <output_namespace>:recipes/<recipePath>
+        ResourceLocation recipeId = ResourceLocation.fromNamespaceAndPath(
+                FirmaCompat.MODID, recipePath
+        );
+
+        sink.addJson(recipeId, recipe, ResType.RECIPES);
+    }
+
+    public void generateLooseCobbleBlock(
+            ResourceSink sink,
+            String inputItem,
+            String outputItem,
+            int count,
+            @Nullable String suffix
+    ) {
+        if (count < 1) {
+            count = 1;
+            EveryCompat.LOGGER.warn("Invalid count {} for brick recipe {} → {}, clamped to 1",
+                    count, inputItem, outputItem);
+        }
+
+        JsonObject recipe = new JsonObject();
+        recipe.addProperty("type", "minecraft:crafting_shaped");
+        recipe.addProperty("category", "misc");
+
+        // Key definitions
+        JsonObject key = new JsonObject();
+
+        JsonObject brickKey = new JsonObject();
+        brickKey.addProperty("item", inputItem);
+        key.add("X", brickKey);
+
+        recipe.add("key", key);
+
+        // Fixed 3x3 pattern from your example
+        JsonArray pattern = new JsonArray();
+        pattern.add("XX ");
+        pattern.add("XX ");
+        recipe.add("pattern", pattern);
+
+        // Result
+        JsonObject result = new JsonObject();
+        result.addProperty("count", count);
+        result.addProperty("item", outputItem);
         recipe.add("result", result);
 
         // Build recipe ResourceLocation based on output item's namespace + path
