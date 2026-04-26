@@ -82,17 +82,23 @@ public enum CompatMeal implements StringRepresentable {
                 dairy += food.getDairy();
                 water += food.getWater();
             }
-
-            //modify by 80%
-            protein = protein * 0.8f;
-            grain = grain * 0.8f;
-            fruit = fruit * 0.8f;
-            vegetable = vegetable * 0.8f;
-            dairy = dairy * 0.6f;
-            water = water * 0.5f;
-
             // If you pass a plain Item, you can add special handling here later
         }
+
+        //modify by 80%
+        protein     *= 0.8f;
+        grain       *= 0.8f;
+        fruit       *= 0.8f;
+        vegetable   *= 0.8f;
+        dairy       *= 0.6f;
+        water       *= 0.5f;
+
+        protein = Math.round(protein * 100f) / 100f;
+        grain   = Math.round(grain * 100f) / 100f;
+        fruit   = Math.round(fruit * 100f) / 100f;
+        vegetable   = Math.round(vegetable * 100f) / 100f;
+        dairy   = Math.round(dairy * 100f) / 100f;
+        water   = Math.round(water * 100f) / 100f;
 
         return new FoodStats(hunger, saturation, decayModifier,
                 protein, grain, fruit, vegetable, dairy, water);

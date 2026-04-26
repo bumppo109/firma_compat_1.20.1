@@ -1,0 +1,27 @@
+{
+  "type": "firma_compat:erosion",
+  "config": {
+    "replacements": [
+      {
+        "raw": "minecraft:stone",
+        "hardened": "firma_compat:hardened_stone"
+      },
+      {
+        "raw": "minecraft:andesite",
+        "hardened": "firma_compat:hardened_andesite"
+      },
+      {
+        "raw": "minecraft:diorite",
+        "hardened": "firma_compat:hardened_diorite"
+      },
+      {
+        "raw": "minecraft:granite",
+        "hardened": "firma_compat:hardened_granite"
+      },
+      {
+        "raw": "tfc:rock/raw/sandstone",
+        "hardened": "tfc:rock/hardened/sandstone"
+      }
+    ]
+  }
+}

@@ -3,6 +3,7 @@ package com.bumppo109.firma_compat.datagen;
 import com.bumppo109.firma_compat.FirmaCompat;
 import com.bumppo109.firma_compat.datagen.assets.ModBlockStateProvider;
 import com.bumppo109.firma_compat.datagen.assets.ModItemModelProvider;
+import com.bumppo109.firma_compat.datagen.assets.ModLang;
 import com.bumppo109.firma_compat.datagen.recipes.ModRecipeProvider;
 import com.bumppo109.firma_compat.datagen.recipes.RemoveVanillaRecipeProvider;
 import com.bumppo109.firma_compat.datagen.tfcdata.ModTFCDataProvider;
@@ -31,6 +32,7 @@ public class DataGenerators {
 
         generator.addProvider(event.includeClient(), new ModBlockStateProvider(packOutput, existingFileHelper));
         generator.addProvider(event.includeClient(), new ModItemModelProvider(packOutput, existingFileHelper));
+        generator.addProvider(event.includeClient(), new ModLang(packOutput));
 
         ModBlockTagGenerator blockTagGenerator = generator.addProvider(event.includeServer(),
                 new ModBlockTagGenerator(packOutput, lookupProvider, existingFileHelper));

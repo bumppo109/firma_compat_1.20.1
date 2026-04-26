@@ -88,7 +88,6 @@ public class ModCreativeModeTab {
                         accept(output, ModItems.MUD_BRICK);
                         accept(output, ModItems.UNFIRED_POT);
 
-                        accept(output, ModItems.NETHERITE_SCRAP_INGOT);
                         for (CompatMetal metal : CompatMetal.values()) {
                             var metalItems = ModItems.METAL_ITEMS.get(metal);
                             if(metalItems != null && !metal.equals(CompatMetal.IRON)) {

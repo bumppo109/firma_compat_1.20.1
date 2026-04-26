@@ -118,7 +118,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModBlocks.DRYING_MUD_BRICK.get().asItem());
         basicItem(ModItems.MUD_BRICK.get());
         basicItem(ModItems.UNFIRED_POT.get());
-        basicItem(ModItems.NETHERITE_SCRAP_INGOT.get());
 
         for (CompatMetal metal : CompatMetal.values()) {
             var metalItems = ModItems.METAL_ITEMS.get(metal);

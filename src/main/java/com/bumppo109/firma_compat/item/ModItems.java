@@ -92,9 +92,6 @@ public class ModItems {
     public static final RegistryObject<Item> UNFIRED_POT = register("unfired_pot");
 
     //Metals
-    public static final RegistryObject<Item> NETHERITE_SCRAP_INGOT = register("netherite_scrap_ingot");
-
-
     public static final Map<CompatMetal, Map<CompatMetal.ItemType, RegistryObject<Item>>> METAL_ITEMS =
             Helpers.mapOfKeys(CompatMetal.class, metal ->
                     Helpers.mapOfKeys(CompatMetal.ItemType.class,

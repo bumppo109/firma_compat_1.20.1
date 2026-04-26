@@ -8,6 +8,7 @@ import com.bumppo109.firma_compat.fluid.ModFluids;
 import com.bumppo109.firma_compat.item.ModCreativeModeTab;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.bumppo109.firma_compat.loot.ModLootModifiers;
+import com.bumppo109.firma_compat.worldgen.ModFeatures;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -41,6 +42,7 @@ public class FirmaCompat
         ModItems.ITEMS.register(modEventBus);
         ModFluids.FLUIDS.register(modEventBus);
         ModLootModifiers.register(modEventBus);
+        ModFeatures.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 
