@@ -1,6 +1,37 @@
 {
   "replace": false,
   "values": [
-
+    "firma_compat:overworld/vein/amethyst",
+    "firma_compat:overworld/vein/cinnabar",
+    "firma_compat:overworld/vein/diamond",
+    "firma_compat:overworld/vein/borax",
+    "firma_compat:overworld/vein/cryolite",
+    "firma_compat:overworld/vein/emerald",
+    "firma_compat:overworld/vein/pyrite",
+    "firma_compat:overworld/vein/graphite",
+    "firma_compat:overworld/vein/gypsum",
+    "firma_compat:overworld/vein/normal_bismuthinite",
+    "firma_compat:overworld/vein/normal_garnierite",
+    "firma_compat:overworld/vein/normal_malachite",
+    "firma_compat:overworld/vein/normal_native_gold",
+    "firma_compat:overworld/vein/normal_native_silver",
+    "firma_compat:overworld/vein/normal_tetrahedrite",
+    "firma_compat:overworld/vein/lapis_lazuli",
+    "firma_compat:overworld/vein/opal",
+    "firma_compat:overworld/vein/rich_native_gold",
+    "firma_compat:overworld/vein/ruby",
+    "firma_compat:overworld/vein/saltpeter",
+    "firma_compat:overworld/vein/sulfur",
+    "firma_compat:overworld/vein/sylvite",
+    "firma_compat:overworld/vein/surface_tetrahedrite",
+    "firma_compat:overworld/vein/surface_sphalerite",
+    "firma_compat:overworld/vein/surface_native_silver",
+    "firma_compat:overworld/vein/surface_native_copper",
+    "firma_compat:overworld/vein/surface_malachite",
+    "firma_compat:overworld/vein/surface_magnetite",
+    "firma_compat:overworld/vein/surface_limonite",
+    "firma_compat:overworld/vein/surface_bismuthinite",
+    "firma_compat:overworld/vein/surface_cassiterite",
+    "firma_compat:overworld/vein/surface_hematite"
   ]
 }

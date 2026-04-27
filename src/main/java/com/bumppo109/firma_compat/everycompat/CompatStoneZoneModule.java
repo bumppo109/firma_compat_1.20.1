@@ -369,6 +369,33 @@ public class CompatStoneZoneModule extends StoneZoneModule {
                 generateLooseConfiguredFeature(sink, looseBlock);
             }
 
+            //Tag - loose features
+            JsonObject looseTagJson = new JsonObject();
+            looseTagJson.addProperty("replace", false);
+
+            JsonArray looseValuesArray = new JsonArray();
+
+            for (StoneType stone : StoneTypeRegistry.INSTANCE) {
+                String loosePath = Utils.getID(LOOSE.blocks.get(stone)).getPath();
+                String looseNamespace = Utils.getID(LOOSE.blocks.get(stone)).getNamespace();
+
+                if(LOOSE.blocks.get(stone) != null){
+                    String featurePath = FirmaCompat.MODID + ":loose/" + loosePath;
+                    looseValuesArray.add(featurePath);
+                }
+            }
+
+            looseTagJson.add("values", looseValuesArray);
+
+            // Write the tag file
+            ResourceLocation looseTagPath = ResourceLocation.fromNamespaceAndPath(
+                    FirmaCompat.MODID,
+                    "tags/worldgen/placed_feature/stonezone_loose.json"
+            );
+
+            sink.addJson(looseTagPath, looseTagJson, ResType.GENERIC);
+            FirmaCompat.LOGGER.info("Generated placed feature tag: {}", looseTagPath);
+
             // Configured Vein Feature Files
             for (CompatVein vein : CompatVein.values()) {
                 String veinName = vein.name().toLowerCase(Locale.ROOT);

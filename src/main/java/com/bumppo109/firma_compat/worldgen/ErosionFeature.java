@@ -3,10 +3,6 @@ package com.bumppo109.firma_compat.worldgen;
 import com.mojang.serialization.Codec;
 import net.dries007.tfc.common.entities.misc.TFCFallingBlockEntity;
 import net.dries007.tfc.common.recipes.LandslideRecipe;
-import net.dries007.tfc.world.ChunkGeneratorExtension;
-import net.dries007.tfc.world.chunkdata.ChunkDataProvider;
-import net.dries007.tfc.world.chunkdata.RockData;
-import net.dries007.tfc.world.settings.RockLayerSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
@@ -30,15 +26,14 @@ public class ErosionFeature extends Feature<ErosionFeatureConfig> {
     @Override
     public boolean place(FeaturePlaceContext<ErosionFeatureConfig> context) {
         WorldGenLevel level = context.level();
-        BlockPos origin = context.origin();
-        ChunkAccess chunk = level.getChunk(origin);
+        ChunkAccess chunk = level.getChunk(context.origin());
         ChunkPos chunkPos = chunk.getPos();
         int chunkX = chunkPos.getMinBlockX();
         int chunkZ = chunkPos.getMinBlockZ();
 
         ErosionFeatureConfig config = context.config();
 
-        // Build replacement map: Raw Block → Hardened BlockState
+        // Build replacement map: Raw Block → Hardened BlockState (from JSON config)
         Map<Block, BlockState> replacementMap = new HashMap<>();
         for (ErosionFeatureConfig.RawToHardenedPair pair : config.getReplacements()) {
             Block raw = pair.getRawBlock();
@@ -51,20 +46,10 @@ public class ErosionFeature extends Feature<ErosionFeatureConfig> {
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
         int minY = context.chunkGenerator().getMinY();
 
-        // Try to get TFC data (safe fallback if not present)
-        RockData rockData = null;
-        RockLayerSettings rockSettings = null;
+        // Optional: Try to get aquifer if available (for water handling)
         Aquifer aquifer = null;
-
-        if (context.chunkGenerator() instanceof ChunkGeneratorExtension extension) {
-            try {
-                rockData = ChunkDataProvider.get(context.chunkGenerator()).get(chunk).getRockData();
-                rockSettings = extension.rockLayerSettings();
-                aquifer = extension.getOrCreateAquifer(chunk);
-            } catch (Exception e) {
-                // TFC data not available - continue without it
-            }
-        }
+        // If you want to keep basic aquifer support without full TFC extension:
+        // aquifer = ... (we can add later if needed)
 
         for (int x = 0; x < 16; ++x) {
             for (int z = 0; z < 16; ++z) {
@@ -72,7 +57,7 @@ public class ErosionFeature extends Feature<ErosionFeatureConfig> {
 
                 boolean prevBlockCanLandslide = false;
                 int lastSafeY = baseHeight;
-                Block prevBlockHardened = null;
+                BlockState prevHardenedState = null;   // Now stores full BlockState from config
 
                 mutablePos.set(chunkX + x, baseHeight, chunkZ + z);
 
@@ -81,15 +66,19 @@ public class ErosionFeature extends Feature<ErosionFeatureConfig> {
                     BlockState stateAt = chunk.getBlockState(mutablePos);
 
                     LandslideRecipe recipe = stateAt.isAir() ? null : LandslideRecipe.getRecipe(stateAt);
-                    boolean isFragile = stateAt.isAir() || TFCFallingBlockEntity.canFallThrough(level, mutablePos, stateAt);
+                    boolean stateAtIsFragile = stateAt.isAir() || TFCFallingBlockEntity.canFallThrough(level, mutablePos, stateAt);
 
-                    // === Landslide / erosion logic ===
+                    // === Original TFC Landslide Logic ===
                     if (prevBlockCanLandslide) {
-                        if (recipe == null) {
-                            if (isFragile) {
-                                // Place hardened block above fragile area
-                                BlockState toPlace = getHardenedState(stateAt, replacementMap, rockData, rockSettings, mutablePos);
-                                if (toPlace != null) {
+                        if (recipe == null) {                    // Found stable block after landslide zone
+                            if (stateAtIsFragile) {
+                                // Place hardened block in the gap
+                                BlockState toPlace = getReplacementOrOriginal(stateAt, replacementMap);
+                                if (lastSafeY > y + 2) {
+                                    mutablePos.setY(y + 1);
+                                    setBlock(level, chunk, mutablePos, toPlace);
+                                } else {
+                                    // Try to respect aquifer (water) if possible
                                     mutablePos.setY(y + 1);
                                     setBlock(level, chunk, mutablePos, toPlace);
                                 }
@@ -103,15 +92,16 @@ public class ErosionFeature extends Feature<ErosionFeatureConfig> {
                         prevBlockCanLandslide = true;
                     }
 
-                    // === Track previous hardened block ===
-                    if (isFragile) {
-                        if (prevBlockHardened != null) {
+                    // === Gap filling logic (original TFC behavior) ===
+                    if (stateAtIsFragile) {
+                        if (prevHardenedState != null) {
                             mutablePos.setY(y + 1);
-                            setBlock(level, chunk, mutablePos, prevBlockHardened.defaultBlockState());
+                            setBlock(level, chunk, mutablePos, prevHardenedState);
                         }
-                        prevBlockHardened = null;
+                        prevHardenedState = null;
                     } else {
-                        prevBlockHardened = getHardenedBlock(stateAt, replacementMap, rockSettings);
+                        // Use configured replacement if available, otherwise keep original
+                        prevHardenedState = getReplacementOrOriginal(stateAt, replacementMap);
                     }
                 }
             }
@@ -120,47 +110,15 @@ public class ErosionFeature extends Feature<ErosionFeatureConfig> {
         return true;
     }
 
-    /** Helper: Get hardened state, preferring config replacements over TFC defaults */
-    private Block getHardenedBlock(BlockState state, Map<Block, BlockState> replacementMap, RockLayerSettings rockSettings) {
-        Block rawBlock = state.getBlock();
-
-        // 1. Check custom replacements first
-        BlockState custom = replacementMap.get(rawBlock);
-        if (custom != null) {
-            return custom.getBlock();
-        }
-
-        // 2. Fallback to TFC hardened (if available)
-        if (rockSettings != null) {
-            return rockSettings.getHardened(rawBlock);
-        }
-
-        return rawBlock; // fallback to itself
-    }
-
-    /** Helper: Get hardened state for placement */
-    private BlockState getHardenedState(BlockState state, Map<Block, BlockState> replacementMap,
-                                        RockData rockData, RockLayerSettings rockSettings, BlockPos pos) {
-        Block raw = state.getBlock();
-        BlockState custom = replacementMap.get(raw);
-
-        if (custom != null) {
-            return custom;
-        }
-
-        if (rockData != null && rockSettings != null) {
-            // Try to get proper hardened version from TFC rock data
-            try {
-                return rockData.getRock(pos.getX(), pos.getY(), pos.getZ()).hardened().defaultBlockState();
-            } catch (Exception ignored) {}
-        }
-
-        return null;
+    /** Returns the hardened replacement if configured, otherwise returns the original state */
+    private BlockState getReplacementOrOriginal(BlockState current, Map<Block, BlockState> replacementMap) {
+        BlockState replacement = replacementMap.get(current.getBlock());
+        return replacement != null ? replacement : current;
     }
 
     private void setBlock(WorldGenLevel level, ChunkAccess chunk, BlockPos pos, BlockState state) {
-        BlockState prev = chunk.setBlockState(pos, state, false);
-        if (prev != null && prev.hasBlockEntity()) {
+        BlockState prevState = chunk.setBlockState(pos, state, false);
+        if (prevState != null && prevState.hasBlockEntity()) {
             chunk.removeBlockEntity(pos);
         }
         if (state.hasPostProcess(level, pos)) {

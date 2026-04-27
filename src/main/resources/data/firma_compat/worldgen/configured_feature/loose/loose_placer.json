@@ -1,6 +1,6 @@
 {
   "type": "tfc:multiple",
   "config": {
-    "features": "#firma_compat:loose_rock_features"
+    "features": "#firma_compat:loose_rock_patches"
   }
 }

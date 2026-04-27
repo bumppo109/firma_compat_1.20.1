@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
+    {
+      "id": "#firma_compat:stonezone_loose",
+      "required": false
+    },
     "firma_compat:loose/andesite",
     "firma_compat:loose/diorite",
     "firma_compat:loose/granite",

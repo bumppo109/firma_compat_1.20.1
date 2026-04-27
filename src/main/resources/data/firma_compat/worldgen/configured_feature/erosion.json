@@ -4,23 +4,47 @@
     "replacements": [
       {
         "raw": "minecraft:stone",
-        "hardened": "firma_compat:hardened_stone"
+        "hardened": "firma_compat:stone_hardened"
       },
       {
         "raw": "minecraft:andesite",
-        "hardened": "firma_compat:hardened_andesite"
-      },
-      {
-        "raw": "minecraft:diorite",
-        "hardened": "firma_compat:hardened_diorite"
+        "hardened": "firma_compat:andesite_hardened"
       },
       {
         "raw": "minecraft:granite",
-        "hardened": "firma_compat:hardened_granite"
+        "hardened": "firma_compat:granite_hardened"
       },
       {
-        "raw": "tfc:rock/raw/sandstone",
-        "hardened": "tfc:rock/hardened/sandstone"
+        "raw": "minecraft:diorite",
+        "hardened": "firma_compat:diorite_hardened"
+      },
+      {
+        "raw": "minecraft:tuff",
+        "hardened": "firma_compat:tuff_hardened"
+      },
+      {
+        "raw": "minecraft:calcite",
+        "hardened": "firma_compat:calcite_hardened"
+      },
+      {
+        "raw": "minecraft:dripstone_block",
+        "hardened": "firma_compat:dripstone_hardened"
+      },
+      {
+        "raw": "minecraft:basalt",
+        "hardened": "firma_compat:basalt_hardened"
+      },
+      {
+        "raw": "minecraft:blackstone",
+        "hardened": "firma_compat:blackstone_hardened"
+      },
+      {
+        "raw": "minecraft:netherrack",
+        "hardened": "firma_compat:netherrack_hardened"
+      },
+      {
+        "raw": "minecraft:end_stone",
+        "hardened": "firma_compat:end_stone_hardened"
       }
     ]
   }
