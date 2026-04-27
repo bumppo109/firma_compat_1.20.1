@@ -9,6 +9,7 @@ import com.bumppo109.firma_compat.item.ModCreativeModeTab;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.bumppo109.firma_compat.loot.ModLootModifiers;
 import com.bumppo109.firma_compat.worldgen.ModFeatures;
+import com.bumppo109.firma_compat.worldgen.climate.ModClimateModels;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,6 +38,7 @@ public class FirmaCompat
         ModEvents.init();
 
         ModCreativeModeTab.register(modEventBus);
+        ModClimateModels.registerClimateModels();
 
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);

@@ -4,6 +4,7 @@
   "package": "com.bumppo109.firma_compat.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BiomeAccessor",
     "BlockEntityTypeAccessor",
     "PiglinAiMixin"
   ],
