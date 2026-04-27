@@ -7,6 +7,14 @@
         "hardened": "firma_compat:stone_hardened"
       },
       {
+        "raw": "minecraft:dirt",
+        "hardened": "firma_compat:stone_hardened"
+      },
+      {
+        "raw": "minecraft:grass_block",
+        "hardened": "firma_compat:stone_hardened"
+      },
+      {
         "raw": "minecraft:andesite",
         "hardened": "firma_compat:andesite_hardened"
       },

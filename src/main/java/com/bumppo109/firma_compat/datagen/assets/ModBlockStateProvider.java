@@ -1,7 +1,12 @@
 package com.bumppo109.firma_compat.datagen.assets;
 
 import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.addons.firmalife.CompatFLBlocks;
 import com.bumppo109.firma_compat.block.*;
+import com.bumppo109.firma_compat.datagen.assets.firmalife.FirmalifeCustomLoaderBuilder;
+import com.eerussianguy.firmalife.common.blocks.FourWayDeviceBlock;
+import com.eerussianguy.firmalife.common.blocks.JarbnetBlock;
+import com.eerussianguy.firmalife.common.blocks.TwoByTwoBlock;
 import net.dries007.tfc.common.blocks.devices.DryingBricksBlock;
 import net.dries007.tfc.common.blocks.devices.SluiceBlock;
 import net.dries007.tfc.common.blocks.devices.BarrelBlock;
@@ -18,6 +23,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class ModBlockStateProvider extends BlockStateProvider {
@@ -29,6 +35,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         FirmaCompat.LOGGER.info("Starting blockstate and model generation for Firma Compat...");
+
 
         simpleBlockWithItem(ModBlocks.PRIMITIVE_ANVIL.get(),
                 models().withExistingParent("primitive_anvil", modLoc("block/template/rock_anvil"))
@@ -731,8 +738,4 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         simpleBlock(block, axleModel);
     }
-
-    // ========================================================================
-    // PRIVATE HELPERS - ROCK
-    // ========================================================================
 }

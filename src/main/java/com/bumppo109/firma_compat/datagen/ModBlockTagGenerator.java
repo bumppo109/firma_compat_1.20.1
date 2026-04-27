@@ -99,26 +99,5 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
                 .add(Blocks.NETHERRACK)
                 .add(Blocks.END_STONE)
         ;
-
-        tag(TFCTags.Blocks.CAN_LANDSLIDE)
-                .addTag(ModTags.Blocks.LOOSE_COBBLE)
-                .add(ModBlocks.CLAY_GRASS_BLOCK.get())
-                .add(ModBlocks.CLAY_PODZOL.get())
-                .add(ModBlocks.CLAY_DIRT.get())
-                .add(ModBlocks.KAOLIN_CLAY_GRASS_BLOCK.get())
-                .add(ModBlocks.KAOLIN_CLAY_PODZOL.get())
-                .add(ModBlocks.KAOLIN_CLAY_DIRT.get())
-                .add(ModBlocks.COMPAT_FARMLAND.get())
-                .add(ModBlocks.CASSITERITE_GRAVEL_DEPOSIT.get())
-                .add(ModBlocks.NATIVE_SILVER_GRAVEL_DEPOSIT.get())
-                .add(ModBlocks.NATIVE_GOLD_GRAVEL_DEPOSIT.get())
-                .add(ModBlocks.NATIVE_COPPER_GRAVEL_DEPOSIT.get())
-
-                .addTag(BlockTags.DIRT)
-                .add(Blocks.PACKED_MUD)
-                .add(Blocks.SAND)
-                .add(Blocks.RED_SAND)
-                .add(Blocks.GRAVEL)
-        ;
     }
 }

@@ -5,7 +5,6 @@ import com.bumppo109.firma_compat.datagen.assets.ModBlockStateProvider;
 import com.bumppo109.firma_compat.datagen.assets.ModItemModelProvider;
 import com.bumppo109.firma_compat.datagen.assets.ModLang;
 import com.bumppo109.firma_compat.datagen.recipes.ModRecipeProvider;
-import com.bumppo109.firma_compat.datagen.recipes.RemoveVanillaRecipeProvider;
 import com.bumppo109.firma_compat.datagen.tfcdata.ModTFCDataProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;

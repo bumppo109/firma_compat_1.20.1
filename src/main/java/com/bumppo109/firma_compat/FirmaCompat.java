@@ -1,6 +1,8 @@
 package com.bumppo109.firma_compat;
 
+import com.bumppo109.firma_compat.addons.firmalife.CompatFLBlocks;
 import com.bumppo109.firma_compat.block.ModBlocks;
+import com.bumppo109.firma_compat.config.FirmaCompatConfig;
 import com.bumppo109.firma_compat.event.ModEvents;
 import com.bumppo109.firma_compat.everycompat.CompatStoneZoneModule;
 import com.bumppo109.firma_compat.everycompat.EveryCompatHandler;
@@ -38,13 +40,18 @@ public class FirmaCompat
         ModEvents.init();
 
         ModCreativeModeTab.register(modEventBus);
-        ModClimateModels.registerClimateModels();
+        //ModClimateModels.registerClimateModels();
+        FirmaCompatConfig.register();
 
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModFluids.FLUIDS.register(modEventBus);
         ModLootModifiers.register(modEventBus);
         ModFeatures.register(modEventBus);
+
+        if(ModList.get().isLoaded("firmalife")){
+            CompatFLBlocks.BLOCKS.register(modEventBus);
+        }
 
         modEventBus.addListener(this::commonSetup);
 

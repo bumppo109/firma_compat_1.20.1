@@ -51,6 +51,8 @@ public class ModTags {
         public static final TagKey<Item> LUMBER = tag("lumber");
         public static final TagKey<Item> SUPPORT_BEAMS = tag("support_beams");
 
+        public static final TagKey<Item> MILKING_ITEMS = tag("milking_items");
+
         public static final TagKey<Item> HAMMERS = tag("hammers");
 
         private static TagKey<Item> tag(String name) {

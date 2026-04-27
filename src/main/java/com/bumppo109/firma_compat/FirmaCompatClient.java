@@ -1,11 +1,14 @@
 package com.bumppo109.firma_compat;
 
+import com.bumppo109.firma_compat.addons.firmalife.CompatFLBlocks;
+import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.fluid.ModFluids;
 import com.bumppo109.firma_compat.item.ModItems;
 import net.dries007.tfc.client.ClientEventHandler;
 import net.dries007.tfc.client.render.blockentity.PlacedItemBlockEntityRenderer;
+import net.dries007.tfc.common.blocks.rock.Ore;
 import net.dries007.tfc.common.fluids.TFCFluids;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -13,6 +16,7 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.dries007.tfc.client.model.entity.HorseChestLayer;
@@ -39,6 +43,22 @@ public class FirmaCompatClient
             Stream.of(TWIG, BARREL, SCRIBING_TABLE, SHELF, ENCASED_AXLE, CLUTCH, GEAR_BOX, SEWING_TABLE)
                     .forEach(type -> ItemBlockRenderTypes.setRenderLayer(map.get(type).get(), cutout));
         });
+
+        if(ModList.get().isLoaded("firmalife")){
+            for(CompatWood wood : CompatWood.VALUES){
+                ItemBlockRenderTypes.setRenderLayer(CompatFLBlocks.FOOD_SHELVES.get(wood).get(), cutout);
+                ItemBlockRenderTypes.setRenderLayer(CompatFLBlocks.HANGERS.get(wood).get(), cutout);
+                ItemBlockRenderTypes.setRenderLayer(CompatFLBlocks.JARBNETS.get(wood).get(), cutout);
+                ItemBlockRenderTypes.setRenderLayer(CompatFLBlocks.STOMPING_BARRELS.get(wood).get(), cutout);
+                ItemBlockRenderTypes.setRenderLayer(CompatFLBlocks.BARREL_PRESSES.get(wood).get(), cutout);
+                ItemBlockRenderTypes.setRenderLayer(CompatFLBlocks.WINE_SHELVES.get(wood).get(), cutout);
+            }
+            for(CompatRock rock : CompatRock.VALUES){
+                ItemBlockRenderTypes.setRenderLayer(CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.POOR).get(), cutout);
+                ItemBlockRenderTypes.setRenderLayer(CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.NORMAL).get(), cutout);
+                ItemBlockRenderTypes.setRenderLayer(CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.RICH).get(), cutout);
+            }
+        }
 
             // Things that must run on the main thread
         event.enqueueWork(() -> {

@@ -161,6 +161,9 @@ dependencies {
     fg.deobf("curse.maven:patchouli-306770:${patchouli_version}")
     implementation fg.deobf("curse.maven:patchouli-306770:${patchouli_version}")
 
+    //Firmalife
+    implementation fg.deobf("curse.maven:firmalife-453394:7602336")
+
     //Every Compat
     implementation fg.deobf("curse.maven:every-compat-628539:7860235")
 

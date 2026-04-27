@@ -4,6 +4,7 @@ import com.bumppo109.firma_compat.FirmaCompat;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.mixin.BlockEntityTypeAccessor;
+import com.eerussianguy.firmalife.common.blockentities.FLBlockEntities;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -157,6 +158,20 @@ public class ModEvents
 
         // Chests are usually handled separately because EveryCompat may name them differently
         addBlocksBySuffix(TFCBlockEntities.CHEST.get(), modid, "_chest");
+    }
+
+    private static void addDynamicFLBlocksByName()
+    {
+        String modid = FirmaCompat.MODID;
+
+        // Example patterns - adjust or expand as needed
+        addBlocksBySuffix(FLBlockEntities.FOOD_SHELF.get(),        modid, "_food_shelf");
+        addBlocksBySuffix(FLBlockEntities.HANGER.get(),        modid, "_hanger");
+        addBlocksBySuffix(FLBlockEntities.JARBNET.get(),        modid, "_jarbnet");
+        addBlocksBySuffix(FLBlockEntities.BIG_BARREL.get(),        modid, "_big_barrel");
+        addBlocksBySuffix(FLBlockEntities.WINE_SHELF.get(),        modid, "_wine_shelf");
+        addBlocksBySuffix(FLBlockEntities.STOMPING_BARREL.get(),        modid, "_stomping_barrel");
+        addBlocksBySuffix(FLBlockEntities.BARREL_PRESS.get(),        modid, "_barrel_press");
     }
 
     private static void addBlocksBySuffix(BlockEntityType<?> type, String namespace, String suffix)

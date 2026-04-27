@@ -87,13 +87,13 @@ public abstract class TFCDataBuilder implements DataProvider {
                                      String food,
                                      int hunger,
                                      float saturation,
-                                     float water,
                                      float decayModifier,
+                                     float protein,
                                      float grain,
                                      float fruit,
                                      float vegetables,
-                                     float protein,
-                                     float dairy
+                                     float dairy,
+                                     float water
     ) {
         String path = "minecraft";
         String id = food;

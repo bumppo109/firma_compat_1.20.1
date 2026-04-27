@@ -13,10 +13,8 @@ public final class ModClimateModels {
     public static final Supplier<ClimateModelType> SMOOTHED_BIOME_BASED =
             register("smoothed_biome_based", SmoothedBiomeClimateModel::new);
 
-    // You can add more here later (e.g. grass colormap version)
-
     public static void registerClimateModels() {
-        SMOOTHED_BIOME_BASED.get();   // force initialization
+        SMOOTHED_BIOME_BASED.get();
     }
 
     private static Supplier<ClimateModelType> register(String id, Supplier<ClimateModel> modelSupplier) {
