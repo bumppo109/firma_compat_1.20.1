@@ -1,14 +1,21 @@
 package com.bumppo109.firma_compat.datagen;
 
 import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.addons.firmalife.CompatFLBlocks;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRBlocks;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRStoneType;
 import com.bumppo109.firma_compat.block.Aqueducts;
 import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.item.ModItems;
+import com.bumppo109.firma_compat.util.ModTags;
+import com.eerussianguy.firmalife.common.blocks.BigBarrelBlock;
+import com.eerussianguy.firmalife.common.items.FLItems;
 import net.dries007.tfc.common.blocks.devices.BarrelBlock;
 import net.dries007.tfc.common.blocks.devices.DryingBricksBlock;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
+import net.dries007.tfc.common.blocks.rock.Ore;
 import net.dries007.tfc.common.items.TFCItems;
 import net.dries007.tfc.util.loot.IsIsolatedCondition;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -34,12 +41,14 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraftforge.fml.ModList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import static net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE;
 import static net.minecraft.world.level.storage.loot.LootPool.lootPool;
 import static net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem;
 import static net.minecraft.world.level.storage.loot.predicates.ExplosionCondition.survivesExplosion;
@@ -152,6 +161,87 @@ public class ModLootTableProvider extends LootTableProvider {
             addClayDrop(ModBlocks.KAOLIN_CLAY_GRASS_BLOCK.get(), TFCItems.KAOLIN_CLAY.get().asItem());
             addClayDrop(ModBlocks.KAOLIN_CLAY_DIRT.get(), TFCItems.KAOLIN_CLAY.get().asItem());
             addClayDrop(ModBlocks.KAOLIN_CLAY_PODZOL.get(), TFCItems.KAOLIN_CLAY.get().asItem());
+
+        //============= FIRMALIFE
+            if(ModList.get().isLoaded("firmalife")){
+                for (CompatWood wood : CompatWood.VALUES) {
+                    Block stompBarrel = CompatFLBlocks.STOMPING_BARRELS.get(wood).get();
+                    Block barrelPress = CompatFLBlocks.BARREL_PRESSES.get(wood).get();
+                    Block hanger = CompatFLBlocks.HANGERS.get(wood).get();
+                    Block foodShelf = CompatFLBlocks.FOOD_SHELVES.get(wood).get();
+                    Block wineShelf = CompatFLBlocks.WINE_SHELVES.get(wood).get();
+                    Block jarbnet = CompatFLBlocks.JARBNETS.get(wood).get();
+
+                    dropSelf(stompBarrel);
+                    dropSelf(barrelPress);
+                    dropSelf(hanger);
+                    dropSelf(foodShelf);
+                    dropSelf(wineShelf);
+                    dropSelf(jarbnet);
+                    bigBarrelLoot(wood);
+                }
+                for(CompatRock rock : CompatRock.VALUES){
+                    for(Ore.Grade grade : Ore.Grade.values()){
+                        Item chromiteItem = FLItems.CHROMIUM_ORES.get(grade).get();
+                        Block chromiteOreBlock = CompatFLBlocks.CHROMITE_ORES.get(rock).get(grade).get();
+
+                        addFLOreDrop(chromiteOreBlock, String.valueOf(chromiteItem));
+                    }
+                }
+            }
+
+        // =============== RnR
+            if(ModList.get().isLoaded("rnr")){
+                CompatRnRBlocks.ROCK_BLOCKS.forEach((rock, typeMap) -> {
+                    typeMap.forEach((road, blockSupplier) -> {
+                        dropSelf(blockSupplier.get());
+                    });
+                });
+                CompatRnRBlocks.ROCK_STAIRS.forEach((rock, typeMap) -> {
+                    typeMap.forEach((road, blockSupplier) -> {
+                        dropSelf(blockSupplier.get());
+                    });
+                });
+                CompatRnRBlocks.ROCK_SLABS.forEach((rock, typeMap) -> {
+                    typeMap.forEach((road, blockSupplier) -> {
+                        dropSelf(blockSupplier.get());
+                    });
+                });
+
+                dropSelf(CompatRnRBlocks.GRAVEL_ROAD.get());
+                dropSelf(CompatRnRBlocks.GRAVEL_ROAD_STAIRS.get());
+                dropSelf(CompatRnRBlocks.GRAVEL_ROAD_SLAB.get());
+                dropSelf(CompatRnRBlocks.MACADAM_ROAD.get());
+                dropSelf(CompatRnRBlocks.MACADAM_ROAD_STAIRS.get());
+                dropSelf(CompatRnRBlocks.MACADAM_ROAD_SLAB.get());
+
+                dropSelf(CompatRnRBlocks.OVER_HEIGHT_GRAVEL.get());
+                dropSelf(CompatRnRBlocks.TAMPED_DIRT.get());
+                dropSelf(CompatRnRBlocks.TAMPED_MUD.get());
+
+                for (CompatWood wood : CompatWood.VALUES){
+                    dropSelf(CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood).get());
+                    dropSelf(CompatRnRBlocks.WOOD_SHINGLE_ROOF_STAIRS.get(wood).get());
+                    dropSelf(CompatRnRBlocks.WOOD_SHINGLE_ROOF_SLABS.get(wood).get());
+                }
+            }
+        }
+
+        private void bigBarrelLoot(CompatWood wood) {
+            Block block = CompatFLBlocks.BIG_BARRELS.get(wood).get();
+            Item blockItem = block.asItem();
+
+            add(block, LootTable.lootTable()
+                    .withPool(lootPool()
+                            .setRolls(ConstantValue.exactly(1))
+                            .add(lootTableItem(blockItem)
+                                    .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                                            .setProperties(StatePropertiesPredicate.Builder.properties()
+                                                    .hasProperty(BigBarrelBlock.BARREL_PART, 0))
+                                    )
+                            )
+                            .when(survivesExplosion())
+                    ));
         }
 
         // ====================== HELPER METHODS ======================
@@ -181,6 +271,16 @@ public class ModLootTableProvider extends LootTableProvider {
 
         private void addSimpleOreDrop(Block oreBlock, String path) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath("tfc", path);
+            Item item = BuiltInRegistries.ITEM.get(id);
+            if (item == null || item == Items.AIR) {
+                FirmaCompat.LOGGER.error("Missing ore item: {}", id);
+                return;
+            }
+            add(oreBlock, createSingleItemTable(item));
+        }
+
+        private void addFLOreDrop(Block oreBlock, String path) {
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath("firmalife", path);
             Item item = BuiltInRegistries.ITEM.get(id);
             if (item == null || item == Items.AIR) {
                 FirmaCompat.LOGGER.error("Missing ore item: {}", id);
@@ -327,6 +427,59 @@ public class ModLootTableProvider extends LootTableProvider {
             ModBlocks.GRADED_ORES.forEach((rock, oreMap) -> oreMap.forEach((ore, gradeMap) ->
                     gradeMap.values().forEach(id -> { if (id != null) known.add(id.get()); })
             ));
+
+            //Firmalife
+            for (CompatWood wood : CompatWood.VALUES) {
+                known.add(CompatFLBlocks.FOOD_SHELVES.get(wood).get());
+                known.add(CompatFLBlocks.HANGERS.get(wood).get());
+                known.add(CompatFLBlocks.JARBNETS.get(wood).get());
+                known.add(CompatFLBlocks.WINE_SHELVES.get(wood).get());
+                known.add(CompatFLBlocks.BIG_BARRELS.get(wood).get());
+                known.add(CompatFLBlocks.STOMPING_BARRELS.get(wood).get());
+                known.add(CompatFLBlocks.BARREL_PRESSES.get(wood).get());
+            }
+            for(CompatRock rock : CompatRock.VALUES){
+                for(Ore.Grade grade : Ore.Grade.values()){
+                    Block chromiteOreBlock = CompatFLBlocks.CHROMITE_ORES.get(rock).get(grade).get();
+
+                    known.add(chromiteOreBlock);
+                }
+            }
+
+            //RnR
+            CompatRnRBlocks.ROCK_BLOCKS.forEach((rock, typeMap) -> {
+                typeMap.forEach((road, blockSupplier) -> {
+                    known.add(blockSupplier.get());
+                });
+            });
+            CompatRnRBlocks.ROCK_STAIRS.forEach((rock, typeMap) -> {
+                typeMap.forEach((road, blockSupplier) -> {
+                    known.add(blockSupplier.get());
+                });
+            });
+            CompatRnRBlocks.ROCK_SLABS.forEach((rock, typeMap) -> {
+                typeMap.forEach((road, blockSupplier) -> {
+                    known.add(blockSupplier.get());
+                });
+            });
+
+            known.add(CompatRnRBlocks.GRAVEL_ROAD.get());
+            known.add(CompatRnRBlocks.GRAVEL_ROAD_STAIRS.get());
+            known.add(CompatRnRBlocks.GRAVEL_ROAD_SLAB.get());
+            known.add(CompatRnRBlocks.MACADAM_ROAD.get());
+            known.add(CompatRnRBlocks.MACADAM_ROAD_STAIRS.get());
+            known.add(CompatRnRBlocks.MACADAM_ROAD_SLAB.get());
+
+            known.add(CompatRnRBlocks.OVER_HEIGHT_GRAVEL.get());
+            known.add(CompatRnRBlocks.TAMPED_DIRT.get());
+            known.add(CompatRnRBlocks.TAMPED_MUD.get());
+
+            for (CompatWood wood : CompatWood.VALUES){
+                known.add(CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood).get());
+                known.add(CompatRnRBlocks.WOOD_SHINGLE_ROOF_STAIRS.get(wood).get());
+                known.add(CompatRnRBlocks.WOOD_SHINGLE_ROOF_SLABS.get(wood).get());
+            }
+
 
             return known;
         }

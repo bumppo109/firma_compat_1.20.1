@@ -157,26 +157,6 @@ public enum CompatRock implements ModRegistryRock {
         }
     }
 
-    /**
-     * Returns the vanilla Minecraft block that this rock type is primarily based on.
-     */
-    public Supplier<Block> vanillaEquivalent() {
-        return switch (this) {
-            case GRANITE     -> () -> Blocks.GRANITE;
-            case DIORITE     -> () -> Blocks.DIORITE;
-            case ANDESITE    -> () -> Blocks.ANDESITE;
-            case STONE       -> () -> Blocks.STONE;
-            case BLACKSTONE  -> () -> Blocks.BLACKSTONE;
-            case DEEPSLATE   -> () -> Blocks.DEEPSLATE;
-            case BASALT      -> () -> Blocks.BASALT;
-            case CALCITE     -> () -> Blocks.CALCITE;
-            case TUFF        -> () -> Blocks.TUFF;
-            case DRIPSTONE   -> () -> Blocks.DRIPSTONE_BLOCK;
-            case NETHERRACK  -> () -> Blocks.NETHERRACK;
-            case END_STONE   -> () -> Blocks.END_STONE;
-        };
-    }
-
     public Supplier<Block> rawBlock() {
         return switch (this) {
             case ANDESITE -> () -> Blocks.ANDESITE;

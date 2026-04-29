@@ -1,6 +1,8 @@
 package com.bumppo109.firma_compat.datagen;
 
 import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRBlocks;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRItems;
 import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
@@ -67,5 +69,9 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                 .add(TFCBlocks.METALS.get(Metal.Default.RED_STEEL).get(Metal.BlockType.CHAIN).get().asItem())
                 .add(TFCBlocks.METALS.get(Metal.Default.BLUE_STEEL).get(Metal.BlockType.CHAIN).get().asItem())
         ;
+
+        for (CompatRock rock : CompatRock.VALUES) {
+            tag(ModTags.Items.FLAGSTONES).add(CompatRnRItems.FLAGSTONE.get(rock).get());
+        }
     }
 }

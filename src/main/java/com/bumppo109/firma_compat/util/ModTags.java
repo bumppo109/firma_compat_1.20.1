@@ -23,6 +23,16 @@ public class ModTags {
         public static final TagKey<Block> SUPPORT_BEAMS = tag("support_beams");
         public static final TagKey<Block> LOOSE_COBBLE = tag("loose_cobble");
 
+        public static final TagKey<Block> FLAGSTONE_ROAD_BLOCKS = tag("flagstone_road_blocks");
+        public static final TagKey<Block> FLAGSTONE_ROAD_STAIRS = tag("flagstone_road_stairs");
+        public static final TagKey<Block> FLAGSTONE_ROAD_SLABS = tag("flagstone_road_slabs");
+        public static final TagKey<Block> COBBLED_ROAD_BLOCKS = tag("cobbled_road_blocks");
+        public static final TagKey<Block> COBBLED_ROAD_STAIRS = tag("cobbled_road_stairs");
+        public static final TagKey<Block> COBBLED_ROAD_SLABS = tag("cobbled_road_slabs");
+        public static final TagKey<Block> SETT_ROAD_BLOCKS = tag("sett_road_blocks");
+        public static final TagKey<Block> SETT_ROAD_STAIRS = tag("sett_road_stairs");
+        public static final TagKey<Block> SETT_ROAD_SLABS = tag("sett_road_slabs");
+
 
 
         private static TagKey<Block> tag(String name) {
@@ -54,6 +64,8 @@ public class ModTags {
         public static final TagKey<Item> MILKING_ITEMS = tag("milking_items");
 
         public static final TagKey<Item> HAMMERS = tag("hammers");
+
+        public static final TagKey<Item> FLAGSTONES = tag("flagstones");
 
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, name));

@@ -1,6 +1,10 @@
 package com.bumppo109.firma_compat.everycompat;
 
 import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.everycompat.firmalife.FLStoneZoneModule;
+import com.bumppo109.firma_compat.everycompat.firmalife.FLWoodGoodModule;
+import com.bumppo109.firma_compat.everycompat.rnr.RnRStoneZoneModule;
+import com.bumppo109.firma_compat.everycompat.rnr.RnRWoodGoodModule;
 import net.mehvahdjukaar.every_compat.api.EveryCompatAPI;
 import net.minecraftforge.fml.ModList;
 
@@ -22,7 +26,6 @@ public class EveryCompatHandler {
             EveryCompatAPI.registerModule(metalModule);
         }
 
-        /*
         if(ModList.get().isLoaded("firmalife")){
             if(ModList.get().isLoaded("stonezone")){
                 FLStoneZoneModule flStoneModule = new FLStoneZoneModule();
@@ -33,18 +36,17 @@ public class EveryCompatHandler {
                 EveryCompatAPI.registerModule(flWoodModule);
             }
         }
+
         if(ModList.get().isLoaded("rnr")){
             if(ModList.get().isLoaded("stonezone")){
-                RNRStoneZoneModule rnrStoneModule = new RNRStoneZoneModule();
+                RnRStoneZoneModule rnrStoneModule = new RnRStoneZoneModule();
                 EveryCompatAPI.registerModule(rnrStoneModule);
             }
             if(ModList.get().isLoaded("everycomp")){
-                RNRWoodGoodModule rnrWoodGoodModule = new RNRWoodGoodModule();
+                RnRWoodGoodModule rnrWoodGoodModule = new RnRWoodGoodModule();
                 EveryCompatAPI.registerModule(rnrWoodGoodModule);
             }
         }
-
-         */
     }
 }
 

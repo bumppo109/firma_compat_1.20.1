@@ -46,6 +46,52 @@ public abstract class TFCRecipeBuilder implements DataProvider {
     }
 
     /**
+     * Generates a custom "rnr:block_mod" recipe JSON file.
+     *
+     * @param cache          The CachedOutput from your RecipeProvider
+     * @param suffix     optional recipe suffix
+     * @param inputItem      The input item (e.g. rnr:wood/shingle/acacia)
+     * @param inputBlock     The input block (e.g. rnr:roof_frame)
+     * @param outputBlock    The resulting output block (e.g. rnr:wood/shingles/acacia)
+     */
+    protected void blockModRecipe(CachedOutput cache,
+                                  @Nullable String suffix,
+                                  Item inputItem,
+                                  Block inputBlock,
+                                  Block outputBlock) {
+
+        String recipeName = BuiltInRegistries.BLOCK.getKey(outputBlock).getPath();
+
+        ResourceLocation inputItemRes = BuiltInRegistries.ITEM.getKey(inputItem);
+        ResourceLocation inputBlockRes = BuiltInRegistries.BLOCK.getKey(inputBlock);
+        ResourceLocation outputRes = BuiltInRegistries.BLOCK.getKey(outputBlock);
+
+        JsonObject json = new JsonObject();
+
+        json.addProperty("type", "rnr:block_mod");
+
+        // input_item object
+        JsonObject inputItemObj = new JsonObject();
+        inputItemObj.addProperty("item", inputItemRes.getNamespace() + ":" + inputItemRes.getPath());
+        json.add("input_item", inputItemObj);
+
+        // input_block as string
+        json.addProperty("input_block", inputBlockRes.getNamespace() + ":" + inputBlockRes.getPath());
+
+        // output_block as string
+        json.addProperty("output_block", outputRes.getNamespace() + ":" + outputRes.getPath());
+
+        if(suffix == null){
+            recipeName = recipeName;
+        } else {
+            recipeName = recipeName + "_" + suffix;
+        }
+
+        // Save the recipe
+        saveRecipe(cache, "block_mod/" + recipeName, json);
+    }
+
+    /**
      * Creates a TFC heating recipe that turns raw food into cooked food
      * Example: beef → cooked_beef at 200°C
      */

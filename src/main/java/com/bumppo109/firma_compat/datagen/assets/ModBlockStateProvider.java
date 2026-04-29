@@ -2,8 +2,11 @@ package com.bumppo109.firma_compat.datagen.assets;
 
 import com.bumppo109.firma_compat.FirmaCompat;
 import com.bumppo109.firma_compat.addons.firmalife.CompatFLBlocks;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRBlocks;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRStoneType;
 import com.bumppo109.firma_compat.block.*;
 import com.bumppo109.firma_compat.datagen.assets.firmalife.FirmalifeCustomLoaderBuilder;
+import com.eerussianguy.firmalife.common.blocks.BigBarrelBlock;
 import com.eerussianguy.firmalife.common.blocks.FourWayDeviceBlock;
 import com.eerussianguy.firmalife.common.blocks.JarbnetBlock;
 import com.eerussianguy.firmalife.common.blocks.TwoByTwoBlock;
@@ -11,11 +14,14 @@ import net.dries007.tfc.common.blocks.devices.DryingBricksBlock;
 import net.dries007.tfc.common.blocks.devices.SluiceBlock;
 import net.dries007.tfc.common.blocks.devices.BarrelBlock;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
+import net.dries007.tfc.common.blocks.rock.Ore;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.StairsShape;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -23,8 +29,12 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import static net.minecraft.world.level.block.state.properties.StairsShape.INNER_LEFT;
+import static net.minecraft.world.level.block.state.properties.StairsShape.OUTER_LEFT;
 
 public class ModBlockStateProvider extends BlockStateProvider {
 
@@ -36,6 +46,71 @@ public class ModBlockStateProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
         FirmaCompat.LOGGER.info("Starting blockstate and model generation for Firma Compat...");
 
+        if(ModList.get().isLoaded("firmalife")) {
+            for (CompatWood wood : CompatWood.VALUES) {
+                flBigBarrel(wood);
+                flBarrelPress(wood);
+                flHanger(wood);
+                flFoodShelf(wood);
+                flStompingBarrel(wood);
+                flWineShelf(wood);
+                flJarbnet(wood);
+            }
+            for (CompatRock rock : CompatRock.VALUES) {
+                for(Ore.Grade grade : Ore.Grade.values()){
+                    Block oreBlock = CompatFLBlocks.CHROMITE_ORES.get(rock).get(grade).get();
+                    String gradeName = grade.name().toLowerCase();
+
+                    ResourceLocation overlayTexture = switch(gradeName) {
+                        case "poor" -> modLoc("block/template/ore_overlay/poor_chromite");
+                        case "normal" -> modLoc("block/template/ore_overlay/normal_chromite");
+                        case "rich" -> modLoc("block/template/ore_overlay/rich_chromite");
+                        default -> mcLoc("block/acacia_planks");
+                    };
+
+                    overlayCubeAll(oreBlock, overlayTexture, rock.rawTexture());
+                }
+            }
+        }
+
+        if(ModList.get().isLoaded("rnr")){
+            rnrRoadBlock();
+            rnrRoadStairs();
+            rnrRoadSlab();
+            rnrGravelRoadBlocks();
+
+            ResourceLocation tampedDirt = BuiltInRegistries.BLOCK.getKey(CompatRnRBlocks.TAMPED_DIRT.get());
+            ResourceLocation tampedMud = BuiltInRegistries.BLOCK.getKey(CompatRnRBlocks.TAMPED_MUD.get());
+            ResourceLocation overheightGravel = BuiltInRegistries.BLOCK.getKey(CompatRnRBlocks.OVER_HEIGHT_GRAVEL.get());
+
+            ResourceLocation dirtTexture = ResourceLocation.withDefaultNamespace("block/dirt");
+            ResourceLocation mudTexture = ResourceLocation.withDefaultNamespace("block/mud");
+            ResourceLocation gravelTexture = ResourceLocation.withDefaultNamespace("block/gravel");
+
+            ModelFile tampedDirtModel = models().withExistingParent(tampedDirt.getPath(), modLoc("block/template/rnr/tamped_block"))
+                    .texture("all", dirtTexture);
+            ModelFile tampedMudModel = models().withExistingParent(tampedMud.getPath(), modLoc("block/template/rnr/tamped_block"))
+                    .texture("all", mudTexture);
+            ModelFile overfillGravelModel = models().withExistingParent(overheightGravel.getPath(), modLoc("block/template/rnr/overfilled_block"))
+                    .texture("top", gravelTexture)
+                    .texture("gravel", gravelTexture);
+
+            simpleBlockWithItem(CompatRnRBlocks.TAMPED_DIRT.get(), tampedDirtModel);
+            simpleBlockWithItem(CompatRnRBlocks.TAMPED_MUD.get(), tampedMudModel);
+            simpleBlockWithItem(CompatRnRBlocks.OVER_HEIGHT_GRAVEL.get(), overfillGravelModel);
+
+            for(CompatWood wood : CompatWood.VALUES){
+                Block shingleBlock = CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood).get();
+                StairBlock shingleStair = (StairBlock) CompatRnRBlocks.WOOD_SHINGLE_ROOF_STAIRS.get(wood).get();
+                SlabBlock shingleSlab = (SlabBlock) CompatRnRBlocks.WOOD_SHINGLE_ROOF_SLABS.get(wood).get();
+
+                ResourceLocation woodShingleTexture = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + wood.getSerializedName() + "_shingles");
+
+                simpleBlock(shingleBlock);
+                stairsBlock(shingleStair, woodShingleTexture);
+                slabBlock(shingleSlab, woodShingleTexture, woodShingleTexture);
+            }
+        }
 
         simpleBlockWithItem(ModBlocks.PRIMITIVE_ANVIL.get(),
                 models().withExistingParent("primitive_anvil", modLoc("block/template/rock_anvil"))
@@ -125,6 +200,565 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         FirmaCompat.LOGGER.info("Finished blockstate and model generation.");
     }
+
+    // ================ RNR ============================
+
+    private void rnrGravelRoadBlocks() {
+        ResourceLocation gravelRoad = BuiltInRegistries.BLOCK.getKey(CompatRnRBlocks.GRAVEL_ROAD.get());
+        ResourceLocation gravelRoadStairs = BuiltInRegistries.BLOCK.getKey(CompatRnRBlocks.GRAVEL_ROAD_STAIRS.get());
+        ResourceLocation gravelRoadSlab = BuiltInRegistries.BLOCK.getKey(CompatRnRBlocks.GRAVEL_ROAD_SLAB.get());
+
+        ResourceLocation macadamRoad = BuiltInRegistries.BLOCK.getKey(CompatRnRBlocks.MACADAM_ROAD.get());
+        ResourceLocation macadamRoadStairs = BuiltInRegistries.BLOCK.getKey(CompatRnRBlocks.MACADAM_ROAD_STAIRS.get());
+        ResourceLocation macadamRoadSlab = BuiltInRegistries.BLOCK.getKey(CompatRnRBlocks.MACADAM_ROAD_SLAB.get());
+        ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("minecraft","block/gravel");
+
+        ModelFile gravelBlockModel = models().withExistingParent(gravelRoad.getPath(), modLoc("block/template/rnr/path_block"))
+                .texture("top", texture)
+                .texture("gravel", "minecraft:block/gravel");
+        ModelFile macadamBlockModel = models().withExistingParent(macadamRoad.getPath(), modLoc("block/template/rnr/path_block"))
+                .texture("top", texture)
+                .texture("gravel", "minecraft:block/gravel");
+
+        ModelFile gravelStairModel = models().withExistingParent(gravelRoadStairs.getPath(), modLoc("block/template/rnr/path_stairs"))
+                .texture("top", texture)
+                .texture("bottom", texture)
+                .texture("side", texture);
+        ModelFile gravelStairInnerModel = models().withExistingParent(gravelRoadStairs.getPath() + "_inner", modLoc("block/template/rnr/path_inner_stairs"))
+                .texture("top", texture)
+                .texture("bottom", texture)
+                .texture("side", texture);
+        ModelFile gravelStairOuterModel = models().withExistingParent(gravelRoadStairs.getPath() + "_outer", modLoc("block/template/rnr/path_outer_stairs"))
+                .texture("top", texture)
+                .texture("bottom", texture)
+                .texture("side", texture);
+        ModelFile macadamStairModel = models().withExistingParent(macadamRoadStairs.getPath(), modLoc("block/template/rnr/path_stairs"))
+                .texture("top", texture)
+                .texture("bottom", texture)
+                .texture("side", texture);
+        ModelFile macadamStairInnerModel = models().withExistingParent(macadamRoadStairs.getPath() + "_inner", modLoc("block/template/rnr/path_inner_stairs"))
+                .texture("top", texture)
+                .texture("bottom", texture)
+                .texture("side", texture);
+        ModelFile macadamStairOuterModel = models().withExistingParent(macadamRoadStairs.getPath() + "_outer", modLoc("block/template/rnr/path_outer_stairs"))
+                .texture("top", texture)
+                .texture("bottom", texture)
+                .texture("side", texture);
+
+        ModelFile gravelSlabModel = models().withExistingParent(gravelRoadSlab.getPath(), modLoc("block/template/rnr/path_slab"))
+                .texture("top", texture)
+                .texture("gravel", "minecraft:block/gravel");
+        ModelFile macadamSlabModel = models().withExistingParent(macadamRoadSlab.getPath(), modLoc("block/template/rnr/path_slab"))
+                .texture("top", texture)
+                .texture("gravel", "minecraft:block/gravel");
+
+        simpleBlockWithItem(CompatRnRBlocks.GRAVEL_ROAD.get(), gravelBlockModel);
+        rnrPathStairBlockStateBuilder(CompatRnRBlocks.GRAVEL_ROAD_STAIRS.get(), gravelStairModel, gravelStairInnerModel, gravelStairOuterModel);
+        simpleBlockWithItem(CompatRnRBlocks.GRAVEL_ROAD_SLAB.get(), gravelSlabModel);
+        simpleBlockItem(CompatRnRBlocks.GRAVEL_ROAD_STAIRS.get(), gravelStairModel);
+
+        simpleBlockWithItem(CompatRnRBlocks.MACADAM_ROAD.get(), macadamBlockModel);
+        rnrPathStairBlockStateBuilder(CompatRnRBlocks.MACADAM_ROAD_STAIRS.get(), macadamStairModel, macadamStairInnerModel, macadamStairOuterModel);
+        simpleBlockWithItem(CompatRnRBlocks.MACADAM_ROAD_SLAB.get(), macadamSlabModel);
+        simpleBlockItem(CompatRnRBlocks.MACADAM_ROAD_SLAB.get(), macadamStairModel);
+    }
+
+    private void rnrRoadBlock() {
+        CompatRnRBlocks.ROCK_BLOCKS.forEach((rock, typeMap) -> {
+            typeMap.forEach((road, blockSupplier) -> {
+                ResourceLocation blockRes = BuiltInRegistries.BLOCK.getKey(blockSupplier.get());
+                ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(blockRes.getNamespace(), "block/" + blockRes.getPath());
+
+                ResourceLocation cobbledRes = null;
+
+                if(road.equals(CompatRnRStoneType.COBBLED_ROAD)){
+                    switch (rock){
+                        case STONE -> cobbledRes = ResourceLocation.withDefaultNamespace("block/cobblestone");
+                        case DEEPSLATE -> cobbledRes = ResourceLocation.withDefaultNamespace("block/cobbled_deepslate");
+                        default -> cobbledRes = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + rock.getSerializedName() + "_loose_cobblestone");
+                    }
+                    texture = cobbledRes;
+                }
+
+                assert cobbledRes != null;
+                ModelFile pathBlockModel = models().withExistingParent(blockRes.getPath(), modLoc("block/template/rnr/path_block"))
+                        .texture("top", texture)
+                        .texture("gravel", "minecraft:block/gravel");
+
+                simpleBlockWithItem(blockSupplier.get(), pathBlockModel);
+            });
+        });
+    }
+
+    private void rnrRoadStairs() {
+        CompatRnRBlocks.ROCK_STAIRS.forEach((rock, typeMap) -> {
+            typeMap.forEach((road, blockSupplier) -> {
+                ResourceLocation blockRes = BuiltInRegistries.BLOCK.getKey(blockSupplier.get());
+                ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(blockRes.getNamespace(), "block/" + blockRes.getPath().substring(0, blockRes.getPath().length() - "_stairs".length()));
+
+                ResourceLocation cobbledRes = null;
+
+                if(road.equals(CompatRnRStoneType.COBBLED_ROAD)){
+                    switch (rock){
+                        case STONE -> cobbledRes = ResourceLocation.withDefaultNamespace("block/cobblestone");
+                        case DEEPSLATE -> cobbledRes = ResourceLocation.withDefaultNamespace("block/cobbled_deepslate");
+                        default -> cobbledRes = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + rock.getSerializedName() + "_loose_cobblestone");
+                    }
+                    texture = cobbledRes;
+                }
+
+                ModelFile stairModel = models().withExistingParent(blockRes.getPath(), modLoc("block/template/rnr/path_stairs"))
+                        .texture("top", texture)
+                        .texture("bottom", texture)
+                        .texture("side", texture);
+                ModelFile stairInnerModel = models().withExistingParent(blockRes.getPath() + "_inner", modLoc("block/template/rnr/path_inner_stairs"))
+                        .texture("top", texture)
+                        .texture("bottom", texture)
+                        .texture("side", texture);
+                ModelFile stairOuterModel = models().withExistingParent(blockRes.getPath() + "_outer", modLoc("block/template/rnr/path_outer_stairs"))
+                        .texture("top", texture)
+                        .texture("bottom", texture)
+                        .texture("side", texture);
+
+                rnrPathStairBlockStateBuilder(blockSupplier.get(), stairModel, stairInnerModel, stairOuterModel);
+                simpleBlockItem(blockSupplier.get(), stairModel);
+            });
+        });
+    }
+
+    private void rnrRoadSlab() {
+        CompatRnRBlocks.ROCK_SLABS.forEach((rock, typeMap) -> {
+            typeMap.forEach((road, blockSupplier) -> {
+                ResourceLocation blockRes = BuiltInRegistries.BLOCK.getKey(blockSupplier.get());
+                ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(blockRes.getNamespace(), "block/" + blockRes.getPath().substring(0, blockRes.getPath().length() - "_slab".length()));
+
+                ResourceLocation cobbledRes = null;
+
+                if(road.equals(CompatRnRStoneType.COBBLED_ROAD)){
+                    switch (rock){
+                        case STONE -> cobbledRes = ResourceLocation.withDefaultNamespace("block/cobblestone");
+                        case DEEPSLATE -> cobbledRes = ResourceLocation.withDefaultNamespace("block/cobbled_deepslate");
+                        default -> cobbledRes = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + rock.getSerializedName() + "_loose_cobblestone");
+                    }
+                    texture = cobbledRes;
+                }
+
+                ModelFile pathBlockModel = models().withExistingParent(blockRes.getPath(), modLoc("block/template/rnr/path_slab"))
+                        .texture("top", texture)
+                        .texture("gravel", "minecraft:block/gravel");
+
+                simpleBlockWithItem(blockSupplier.get(), pathBlockModel);
+            });
+        });
+    }
+
+    public void rnrPathStairBlockStateBuilder(Block flagstoneStairs, ModelFile stairs, ModelFile inner, ModelFile outer) {
+
+        getVariantBuilder(flagstoneStairs)
+                .forAllStates(state -> {
+                    Direction facing = state.getValue(HorizontalDirectionalBlock.FACING);     // your custom DirectionProperty
+                    StairsShape shape   = state.getValue(BlockStateProperties.STAIRS_SHAPE);        // your custom EnumProperty<String> or custom enum
+
+                    ModelFile model;
+                    int yRotation = 0;
+                    boolean uvLock = true;
+
+                    // Choose base model based on shape
+                    switch (shape) {
+                        case OUTER_RIGHT, OUTER_LEFT ->
+                                model = outer;
+                        case INNER_RIGHT, INNER_LEFT ->
+                                model = inner;
+                        default ->
+                                model = stairs;
+                    }
+
+                    // Rotation logic (exactly matching your JSON)
+                    switch (facing) {
+                        case EAST:
+                            if (shape.equals(OUTER_LEFT) || shape.equals(INNER_LEFT)) yRotation = 270;
+                            break;
+                        case WEST:
+                            yRotation = shape.equals(OUTER_LEFT) || shape.equals(INNER_LEFT) ? 90 : 180;
+                            break;
+                        case SOUTH:
+                            if (shape.equals(OUTER_LEFT) || shape.equals(INNER_LEFT)) yRotation = 0;
+                            else yRotation = 90;
+                            break;
+                        case NORTH:
+                            if (shape.equals(OUTER_LEFT) || shape.equals(INNER_LEFT)) yRotation = 180;
+                            else yRotation = 270;
+                            break;
+                    }
+
+                    return ConfiguredModel.builder()
+                            .modelFile(model)
+                            .rotationY(yRotation)
+                            .uvLock(uvLock)
+                            .build();
+                });
+    }
+
+    // ================ FIRMALIFE =======================
+
+    private void flBarrelPress(CompatWood wood) {
+        Block block = CompatFLBlocks.BARREL_PRESSES.get(wood).get();
+        ResourceLocation blockRes = BuiltInRegistries.BLOCK.getKey(block);
+
+        ModelFile model = models().withExistingParent(blockRes.getPath(), modLoc("block/template/firmalife/barrel_press"))
+                .texture("0", wood.strippedLogTexture());
+
+        simpleBlockWithItem(block, model);
+    }
+
+    private void flFoodShelf(CompatWood wood) {
+        Block block = CompatFLBlocks.FOOD_SHELVES.get(wood).get();
+        ResourceLocation blockRes = BuiltInRegistries.BLOCK.getKey(block);
+
+        ModelFile foodShelfModel = models()
+                .withExistingParent((blockRes.getPath()), modLoc("block/template/firmalife/food_shelf_base"))
+                .texture("wood", wood.planksTexture());
+        ModelFile foodShelfDynamicModel = models().getBuilder(blockRes.getPath() + "_dynamic")
+                .customLoader((parent, helper) -> new FirmalifeCustomLoaderBuilder<>("food_shelf", parent, helper)
+                        .base(ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + blockRes.getPath()))).end();
+
+
+        getVariantBuilder(block)
+                .partialState().with(HorizontalDirectionalBlock.FACING, Direction.EAST)
+                .modelForState().modelFile(foodShelfDynamicModel).rotationY(270).addModel()
+                .partialState().with(HorizontalDirectionalBlock.FACING, Direction.NORTH)
+                .modelForState().modelFile(foodShelfDynamicModel).rotationY(180).addModel()
+                .partialState().with(HorizontalDirectionalBlock.FACING, Direction.SOUTH)
+                .modelForState().modelFile(foodShelfDynamicModel).rotationY(0).addModel()
+                .partialState().with(HorizontalDirectionalBlock.FACING, Direction.WEST)
+                .modelForState().modelFile(foodShelfDynamicModel).rotationY(90).addModel();
+
+        simpleBlockItem(block, foodShelfModel);
+    }
+
+    private void flHanger(CompatWood wood) {
+        Block block = CompatFLBlocks.HANGERS.get(wood).get();
+        ResourceLocation blockRes = BuiltInRegistries.BLOCK.getKey(block);
+
+        models()
+                .withExistingParent((blockRes.getPath()), modLoc("block/template/firmalife/hanger_base"))
+                .texture("wood", wood.planksTexture())
+                .texture("string", "minecraft:block/white_wool");
+        ModelFile hangerDynamicModel = models().getBuilder(blockRes.getPath() + "_dynamic")
+                .customLoader((parent, helper) -> new FirmalifeCustomLoaderBuilder<>("hanger", parent, helper)
+                        .base(ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + blockRes.getPath()))).end();
+
+        simpleBlockWithItem(block, hangerDynamicModel);
+    }
+
+    private void flJarbnet(CompatWood wood) {
+        Block block = CompatFLBlocks.JARBNETS.get(wood).get();
+        ResourceLocation blockRes = BuiltInRegistries.BLOCK.getKey(block);
+
+        ModelFile jarbnetModel = models()
+                .withExistingParent((blockRes.getPath()), modLoc("block/template/firmalife/jarbnet"))
+                .texture("planks", wood.planksTexture())
+                .texture("sheet", wood.strippedLogTexture())
+                .texture("log", wood.logSideTexture());
+        ModelFile jarbnetDynamicModel = models().getBuilder(blockRes.getPath() + "_dynamic")
+                .customLoader((parent, helper) -> new FirmalifeCustomLoaderBuilder<>("jarbnet", parent, helper)
+                        .base(ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + blockRes.getPath()))).end();
+
+        models()
+                .withExistingParent((blockRes.getPath() + "_shut"), modLoc("block/template/firmalife/jarbnet_shut"))
+                .texture("planks", wood.planksTexture())
+                .texture("sheet", wood.strippedLogTexture())
+                .texture("log", wood.logSideTexture());
+        ModelFile jarbnetShutDynamicModel = models().getBuilder(blockRes.getPath() + "_shut_dynamic")
+                .customLoader((parent, helper) -> new FirmalifeCustomLoaderBuilder<>("jarbnet", parent, helper)
+                        .base(modLoc(blockRes.getPath() + "_shut"))).end();
+
+        getVariantBuilder(block)
+                //Open true
+                .partialState().with(FourWayDeviceBlock.FACING, Direction.EAST).with(JarbnetBlock.OPEN, true)
+                .modelForState().modelFile(jarbnetDynamicModel).rotationY(90).addModel()
+                .partialState().with(FourWayDeviceBlock.FACING, Direction.NORTH).with(JarbnetBlock.OPEN, true)
+                .modelForState().modelFile(jarbnetDynamicModel).addModel()
+                .partialState().with(FourWayDeviceBlock.FACING, Direction.SOUTH).with(JarbnetBlock.OPEN, true)
+                .modelForState().modelFile(jarbnetDynamicModel).rotationY(180).addModel()
+                .partialState().with(FourWayDeviceBlock.FACING, Direction.WEST).with(JarbnetBlock.OPEN, true)
+                .modelForState().modelFile(jarbnetDynamicModel).rotationY(270).addModel()
+                //Open false
+                .partialState().with(FourWayDeviceBlock.FACING, Direction.EAST).with(JarbnetBlock.OPEN, false)
+                .modelForState().modelFile(jarbnetShutDynamicModel).rotationY(90).addModel()
+                .partialState().with(FourWayDeviceBlock.FACING, Direction.NORTH).with(JarbnetBlock.OPEN, false)
+                .modelForState().modelFile(jarbnetShutDynamicModel).addModel()
+                .partialState().with(FourWayDeviceBlock.FACING, Direction.SOUTH).with(JarbnetBlock.OPEN, false)
+                .modelForState().modelFile(jarbnetShutDynamicModel).rotationY(180).addModel()
+                .partialState().with(FourWayDeviceBlock.FACING, Direction.WEST).with(JarbnetBlock.OPEN, false)
+                .modelForState().modelFile(jarbnetShutDynamicModel).rotationY(270).addModel();
+
+        simpleBlockItem(block, jarbnetModel);
+    }
+
+    private void flWineShelf(CompatWood wood) {
+        Block block = CompatFLBlocks.WINE_SHELVES.get(wood).get();
+        ResourceLocation blockRes = BuiltInRegistries.BLOCK.getKey(block);
+
+        ModelFile wineShelfModel = models()
+                .withExistingParent((blockRes.getPath()), modLoc("block/template/firmalife/wine_shelf"))
+                .texture("0", wood.planksTexture())
+                .texture("2", wood.strippedLogTexture())
+                .texture("3", wood.strippedLogTexture());
+        ModelFile wineShelfDynamicModel = models().getBuilder(blockRes.getPath() + "_dynamic")
+                .customLoader((parent, helper) -> new FirmalifeCustomLoaderBuilder<>("wine_shelf", parent, helper)
+                        .base(ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + blockRes.getPath()))).end();
+
+        getVariantBuilder(block)
+                .partialState().with(FourWayDeviceBlock.FACING, Direction.EAST)
+                .modelForState().modelFile(wineShelfDynamicModel).rotationY(90).addModel()
+                .partialState().with(FourWayDeviceBlock.FACING, Direction.NORTH)
+                .modelForState().modelFile(wineShelfDynamicModel).addModel()
+                .partialState().with(FourWayDeviceBlock.FACING, Direction.SOUTH)
+                .modelForState().modelFile(wineShelfDynamicModel).rotationY(180).addModel()
+                .partialState().with(FourWayDeviceBlock.FACING, Direction.WEST)
+                .modelForState().modelFile(wineShelfDynamicModel).rotationY(270).addModel();
+
+        simpleBlockItem(block, wineShelfModel);
+    }
+
+    private void flStompingBarrel(CompatWood wood) {
+        Block block = CompatFLBlocks.STOMPING_BARRELS.get(wood).get();
+        ResourceLocation blockRes = BuiltInRegistries.BLOCK.getKey(block);
+
+        ModelFile stompingBarrelModel = models()
+                .withExistingParent((blockRes.getPath()), modLoc("block/template/firmalife/stomping_barrel"))
+                .texture("0", wood.strippedLogTexture());
+
+        simpleBlockWithItem(block, stompingBarrelModel);
+    }
+
+    private void flBigBarrel(CompatWood wood) {
+        Block block = CompatFLBlocks.BIG_BARRELS.get(wood).get();
+        ResourceLocation blockRes = BuiltInRegistries.BLOCK.getKey(block);
+
+        ModelFile bigBarrelInventory = models()
+                .withExistingParent((blockRes.getPath() + "_item"), modLoc("block/template/firmalife/big_barrel_item"))
+                .texture("0", "block/big_barrel/" + wood.getSerializedName() + "_3_side")
+                .texture("1", "block/big_barrel/" + wood.getSerializedName() + "_0")
+                .texture("2", "block/big_barrel/" + wood.getSerializedName() + "_0_side")
+                .texture("3", "block/big_barrel/" + wood.getSerializedName() + "_1")
+                .texture("4", "block/big_barrel/" + wood.getSerializedName() + "_1_side")
+                .texture("5", "block/big_barrel/" + wood.getSerializedName() + "_2")
+                .texture("6", "block/big_barrel/" + wood.getSerializedName() + "_2_side")
+                .texture("7", "block/big_barrel/" + wood.getSerializedName() + "_3")
+                .texture("8", "block/big_barrel/" + wood.getSerializedName() + "_3_top")
+                .texture("9", "block/big_barrel/" + wood.getSerializedName() + "_0_top")
+                .texture("10", "block/big_barrel/" + wood.getSerializedName() + "_1_top")
+                .texture("11", "block/big_barrel/" + wood.getSerializedName() + "_2_top")
+                .texture("12", wood.logSideTexture());
+
+        ModelFile barrel_model_0 = models()
+                .withExistingParent((blockRes.getPath() + "_0"), modLoc("block/template/firmalife/big_barrel_0"))
+                .texture("0", "block/big_barrel/" + wood.getSerializedName() + "_3_side")
+                .texture("1", "block/big_barrel/" + wood.getSerializedName() + "_0")
+                .texture("2", "block/big_barrel/" + wood.getSerializedName() + "_0_side")
+                .texture("3", "block/big_barrel/" + wood.getSerializedName() + "_1")
+                .texture("4", "block/big_barrel/" + wood.getSerializedName() + "_1_side")
+                .texture("5", "block/big_barrel/" + wood.getSerializedName() + "_2")
+                .texture("6", "block/big_barrel/" + wood.getSerializedName() + "_2_side")
+                .texture("7", "block/big_barrel/" + wood.getSerializedName() + "_3")
+                .texture("8", "block/big_barrel/" + wood.getSerializedName() + "_3_top")
+                .texture("9", "block/big_barrel/" + wood.getSerializedName() + "_0_top")
+                .texture("10", "block/big_barrel/" + wood.getSerializedName() + "_1_top")
+                .texture("11", "block/big_barrel/" + wood.getSerializedName() + "_2_top")
+                .texture("12", wood.logSideTexture());
+
+        ModelFile barrel_model_1 = models()
+                .withExistingParent((blockRes.getPath() + "_1"), modLoc("block/template/firmalife/big_barrel_1"))
+                .texture("0", "block/big_barrel/" + wood.getSerializedName() + "_3_side")
+                .texture("1", "block/big_barrel/" + wood.getSerializedName() + "_0")
+                .texture("2", "block/big_barrel/" + wood.getSerializedName() + "_0_side")
+                .texture("3", "block/big_barrel/" + wood.getSerializedName() + "_1")
+                .texture("4", "block/big_barrel/" + wood.getSerializedName() + "_1_side")
+                .texture("5", "block/big_barrel/" + wood.getSerializedName() + "_2")
+                .texture("6", "block/big_barrel/" + wood.getSerializedName() + "_2_side")
+                .texture("7", "block/big_barrel/" + wood.getSerializedName() + "_3")
+                .texture("8", "block/big_barrel/" + wood.getSerializedName() + "_3_top")
+                .texture("9", "block/big_barrel/" + wood.getSerializedName() + "_0_top")
+                .texture("10", "block/big_barrel/" + wood.getSerializedName() + "_1_top")
+                .texture("11", "block/big_barrel/" + wood.getSerializedName() + "_2_top")
+                .texture("12", wood.logSideTexture());
+
+        ModelFile barrel_model_2 = models()
+                .withExistingParent((blockRes.getPath() + "_2"), modLoc("block/template/firmalife/big_barrel_2"))
+                .texture("0", "block/big_barrel/" + wood.getSerializedName() + "_3_side")
+                .texture("1", "block/big_barrel/" + wood.getSerializedName() + "_0")
+                .texture("2", "block/big_barrel/" + wood.getSerializedName() + "_0_side")
+                .texture("3", "block/big_barrel/" + wood.getSerializedName() + "_1")
+                .texture("4", "block/big_barrel/" + wood.getSerializedName() + "_1_side")
+                .texture("5", "block/big_barrel/" + wood.getSerializedName() + "_2")
+                .texture("6", "block/big_barrel/" + wood.getSerializedName() + "_2_side")
+                .texture("7", "block/big_barrel/" + wood.getSerializedName() + "_3")
+                .texture("8", "block/big_barrel/" + wood.getSerializedName() + "_3_top")
+                .texture("9", "block/big_barrel/" + wood.getSerializedName() + "_0_top")
+                .texture("10", "block/big_barrel/" + wood.getSerializedName() + "_1_top")
+                .texture("11", "block/big_barrel/" + wood.getSerializedName() + "_2_top")
+                .texture("12", wood.logSideTexture());
+
+        ModelFile barrel_model_3 = models()
+                .withExistingParent((blockRes.getPath() + "_3"), modLoc("block/template/firmalife/big_barrel_3"))
+                .texture("0", "block/big_barrel/" + wood.getSerializedName() + "_3_side")
+                .texture("1", "block/big_barrel/" + wood.getSerializedName() + "_0")
+                .texture("2", "block/big_barrel/" + wood.getSerializedName() + "_0_side")
+                .texture("3", "block/big_barrel/" + wood.getSerializedName() + "_1")
+                .texture("4", "block/big_barrel/" + wood.getSerializedName() + "_1_side")
+                .texture("5", "block/big_barrel/" + wood.getSerializedName() + "_2")
+                .texture("6", "block/big_barrel/" + wood.getSerializedName() + "_2_side")
+                .texture("7", "block/big_barrel/" + wood.getSerializedName() + "_3")
+                .texture("8", "block/big_barrel/" + wood.getSerializedName() + "_3_top")
+                .texture("9", "block/big_barrel/" + wood.getSerializedName() + "_0_top")
+                .texture("10", "block/big_barrel/" + wood.getSerializedName() + "_1_top")
+                .texture("11", "block/big_barrel/" + wood.getSerializedName() + "_2_top")
+                .texture("12", wood.logSideTexture());
+
+        ModelFile barrel_model_4 = models()
+                .withExistingParent((blockRes.getPath() + "_4"), modLoc("block/template/firmalife/big_barrel_4"))
+                .texture("0", "block/big_barrel/" + wood.getSerializedName() + "_3_side")
+                .texture("1", "block/big_barrel/" + wood.getSerializedName() + "_0")
+                .texture("2", "block/big_barrel/" + wood.getSerializedName() + "_0_side")
+                .texture("3", "block/big_barrel/" + wood.getSerializedName() + "_1")
+                .texture("4", "block/big_barrel/" + wood.getSerializedName() + "_1_side")
+                .texture("5", "block/big_barrel/" + wood.getSerializedName() + "_2")
+                .texture("6", "block/big_barrel/" + wood.getSerializedName() + "_2_side")
+                .texture("7", "block/big_barrel/" + wood.getSerializedName() + "_3")
+                .texture("8", "block/big_barrel/" + wood.getSerializedName() + "_3_top")
+                .texture("9", "block/big_barrel/" + wood.getSerializedName() + "_0_top")
+                .texture("10", "block/big_barrel/" + wood.getSerializedName() + "_1_top")
+                .texture("11", "block/big_barrel/" + wood.getSerializedName() + "_2_top")
+                .texture("12", wood.logSideTexture());
+
+        ModelFile barrel_model_5 = models()
+                .withExistingParent((blockRes.getPath() + "_5"), modLoc("block/template/firmalife/big_barrel_5"))
+                .texture("0", "block/big_barrel/" + wood.getSerializedName() + "_3_side")
+                .texture("1", "block/big_barrel/" + wood.getSerializedName() + "_0")
+                .texture("2", "block/big_barrel/" + wood.getSerializedName() + "_0_side")
+                .texture("3", "block/big_barrel/" + wood.getSerializedName() + "_1")
+                .texture("4", "block/big_barrel/" + wood.getSerializedName() + "_1_side")
+                .texture("5", "block/big_barrel/" + wood.getSerializedName() + "_2")
+                .texture("6", "block/big_barrel/" + wood.getSerializedName() + "_2_side")
+                .texture("7", "block/big_barrel/" + wood.getSerializedName() + "_3")
+                .texture("8", "block/big_barrel/" + wood.getSerializedName() + "_3_top")
+                .texture("9", "block/big_barrel/" + wood.getSerializedName() + "_0_top")
+                .texture("10", "block/big_barrel/" + wood.getSerializedName() + "_1_top")
+                .texture("11", "block/big_barrel/" + wood.getSerializedName() + "_2_top")
+                .texture("12", wood.logSideTexture());
+
+        ModelFile barrel_model_6 = models()
+                .withExistingParent((blockRes.getPath() + "_6"), modLoc("block/template/firmalife/big_barrel_6"))
+                .texture("0", "block/big_barrel/" + wood.getSerializedName() + "_3_side")
+                .texture("1", "block/big_barrel/" + wood.getSerializedName() + "_0")
+                .texture("2", "block/big_barrel/" + wood.getSerializedName() + "_0_side")
+                .texture("3", "block/big_barrel/" + wood.getSerializedName() + "_1")
+                .texture("4", "block/big_barrel/" + wood.getSerializedName() + "_1_side")
+                .texture("5", "block/big_barrel/" + wood.getSerializedName() + "_2")
+                .texture("6", "block/big_barrel/" + wood.getSerializedName() + "_2_side")
+                .texture("7", "block/big_barrel/" + wood.getSerializedName() + "_3")
+                .texture("8", "block/big_barrel/" + wood.getSerializedName() + "_3_top")
+                .texture("9", "block/big_barrel/" + wood.getSerializedName() + "_0_top")
+                .texture("10", "block/big_barrel/" + wood.getSerializedName() + "_1_top")
+                .texture("11", "block/big_barrel/" + wood.getSerializedName() + "_2_top")
+                .texture("12", wood.logSideTexture());
+
+        ModelFile barrel_model_7 = models()
+                .withExistingParent((blockRes.getPath() + "_7"), modLoc("block/template/firmalife/big_barrel_7"))
+                .texture("0", "block/big_barrel/" + wood.getSerializedName() + "_3_side")
+                .texture("1", "block/big_barrel/" + wood.getSerializedName() + "_0")
+                .texture("2", "block/big_barrel/" + wood.getSerializedName() + "_0_side")
+                .texture("3", "block/big_barrel/" + wood.getSerializedName() + "_1")
+                .texture("4", "block/big_barrel/" + wood.getSerializedName() + "_1_side")
+                .texture("5", "block/big_barrel/" + wood.getSerializedName() + "_2")
+                .texture("6", "block/big_barrel/" + wood.getSerializedName() + "_2_side")
+                .texture("7", "block/big_barrel/" + wood.getSerializedName() + "_3")
+                .texture("8", "block/big_barrel/" + wood.getSerializedName() + "_3_top")
+                .texture("9", "block/big_barrel/" + wood.getSerializedName() + "_0_top")
+                .texture("10", "block/big_barrel/" + wood.getSerializedName() + "_1_top")
+                .texture("11", "block/big_barrel/" + wood.getSerializedName() + "_2_top")
+                .texture("12", wood.logSideTexture());
+
+        getVariantBuilder(block)
+                // ==================== FACING = NORTH (no rotation) ====================
+                .partialState().with(BigBarrelBlock.BARREL_PART, 0).with(BigBarrelBlock.FACING, Direction.NORTH)
+                .modelForState().modelFile(barrel_model_0).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 1).with(BigBarrelBlock.FACING, Direction.NORTH)
+                .modelForState().modelFile(barrel_model_1).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 2).with(BigBarrelBlock.FACING, Direction.NORTH)
+                .modelForState().modelFile(barrel_model_2).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 3).with(BigBarrelBlock.FACING, Direction.NORTH)
+                .modelForState().modelFile(barrel_model_3).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 4).with(BigBarrelBlock.FACING, Direction.NORTH)
+                .modelForState().modelFile(barrel_model_4).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 5).with(BigBarrelBlock.FACING, Direction.NORTH)
+                .modelForState().modelFile(barrel_model_5).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 6).with(BigBarrelBlock.FACING, Direction.NORTH)
+                .modelForState().modelFile(barrel_model_6).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 7).with(BigBarrelBlock.FACING, Direction.NORTH)
+                .modelForState().modelFile(barrel_model_7).addModel()
+
+                // ==================== FACING = EAST (rotation Y = 90) ====================
+                .partialState().with(BigBarrelBlock.BARREL_PART, 0).with(BigBarrelBlock.FACING, Direction.EAST)
+                .modelForState().modelFile(barrel_model_0).rotationY(90).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 1).with(BigBarrelBlock.FACING, Direction.EAST)
+                .modelForState().modelFile(barrel_model_1).rotationY(90).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 2).with(BigBarrelBlock.FACING, Direction.EAST)
+                .modelForState().modelFile(barrel_model_2).rotationY(90).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 3).with(BigBarrelBlock.FACING, Direction.EAST)
+                .modelForState().modelFile(barrel_model_3).rotationY(90).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 4).with(BigBarrelBlock.FACING, Direction.EAST)
+                .modelForState().modelFile(barrel_model_4).rotationY(90).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 5).with(BigBarrelBlock.FACING, Direction.EAST)
+                .modelForState().modelFile(barrel_model_5).rotationY(90).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 6).with(BigBarrelBlock.FACING, Direction.EAST)
+                .modelForState().modelFile(barrel_model_6).rotationY(90).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 7).with(BigBarrelBlock.FACING, Direction.EAST)
+                .modelForState().modelFile(barrel_model_7).rotationY(90).addModel()
+
+                // ==================== FACING = SOUTH (rotation Y = 180) ====================
+                .partialState().with(BigBarrelBlock.BARREL_PART, 0).with(BigBarrelBlock.FACING, Direction.SOUTH)
+                .modelForState().modelFile(barrel_model_0).rotationY(180).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 1).with(BigBarrelBlock.FACING, Direction.SOUTH)
+                .modelForState().modelFile(barrel_model_1).rotationY(180).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 2).with(BigBarrelBlock.FACING, Direction.SOUTH)
+                .modelForState().modelFile(barrel_model_2).rotationY(180).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 3).with(BigBarrelBlock.FACING, Direction.SOUTH)
+                .modelForState().modelFile(barrel_model_3).rotationY(180).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 4).with(BigBarrelBlock.FACING, Direction.SOUTH)
+                .modelForState().modelFile(barrel_model_4).rotationY(180).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 5).with(BigBarrelBlock.FACING, Direction.SOUTH)
+                .modelForState().modelFile(barrel_model_5).rotationY(180).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 6).with(BigBarrelBlock.FACING, Direction.SOUTH)
+                .modelForState().modelFile(barrel_model_6).rotationY(180).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 7).with(BigBarrelBlock.FACING, Direction.SOUTH)
+                .modelForState().modelFile(barrel_model_7).rotationY(180).addModel()
+
+                // ==================== FACING = WEST (rotation Y = 270) ====================
+                .partialState().with(BigBarrelBlock.BARREL_PART, 0).with(BigBarrelBlock.FACING, Direction.WEST)
+                .modelForState().modelFile(barrel_model_0).rotationY(270).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 1).with(BigBarrelBlock.FACING, Direction.WEST)
+                .modelForState().modelFile(barrel_model_1).rotationY(270).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 2).with(BigBarrelBlock.FACING, Direction.WEST)
+                .modelForState().modelFile(barrel_model_2).rotationY(270).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 3).with(BigBarrelBlock.FACING, Direction.WEST)
+                .modelForState().modelFile(barrel_model_3).rotationY(270).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 4).with(BigBarrelBlock.FACING, Direction.WEST)
+                .modelForState().modelFile(barrel_model_4).rotationY(270).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 5).with(BigBarrelBlock.FACING, Direction.WEST)
+                .modelForState().modelFile(barrel_model_5).rotationY(270).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 6).with(BigBarrelBlock.FACING, Direction.WEST)
+                .modelForState().modelFile(barrel_model_6).rotationY(270).addModel()
+                .partialState().with(BigBarrelBlock.BARREL_PART, 7).with(BigBarrelBlock.FACING, Direction.WEST)
+                .modelForState().modelFile(barrel_model_7).rotationY(270).addModel();
+
+        simpleBlockItem(block, bigBarrelInventory);
+    }
+
+
+
 
     // ========================================================================
     // ROCK BLOCKS

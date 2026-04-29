@@ -1,8 +1,12 @@
 package com.bumppo109.firma_compat.datagen.assets;
 
 import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.addons.firmalife.CompatFLBlocks;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRBlocks;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRItems;
 import com.bumppo109.firma_compat.block.*;
 import com.bumppo109.firma_compat.item.ModItems;
+import net.dries007.tfc.common.blocks.rock.Ore;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -44,13 +48,61 @@ public class ModLang extends LanguageProvider {
         add("block_type.firma_compat.windmill", "%s Windmill");
         add("block_type.firma_compat.water_wheel", "%s Water Wheel");
 
-        add("block_type.firma_compat.keg", "%s Keg");
+        add("block_type.firma_compat.big_barrel", "%s Keg");
         add("block_type.firma_compat.food_shelf", "%s Food Shelf");
         add("block_type.firma_compat.wine_shelf", "%s Wine Shelf");
         add("block_type.firma_compat.hanger", "%s Hanger");
         add("block_type.firma_compat.jarbnet", "%s Jarbnet");
         add("block_type.firma_compat.stomping_barrel", "%s Stomping Barrel");
         add("block_type.firma_compat.barrel_press", "%s Barrel Press");
+
+        add("block_type.firma_compat.shingles", "%s Shingles");
+        add("block_type.firma_compat.shingles_stairs", "%s Shingles Stairs");
+        add("block_type.firma_compat.shingles_slab", "%s Shingles Slab");
+
+        //Firmalife & RnR
+        for(CompatWood wood : CompatWood.VALUES) {
+            //Firmalife
+            add(CompatFLBlocks.FOOD_SHELVES.get(wood).get().getDescriptionId(), getBlockDisplayName(CompatFLBlocks.FOOD_SHELVES.get(wood).get()));
+            add(CompatFLBlocks.WINE_SHELVES.get(wood).get().getDescriptionId(), getBlockDisplayName(CompatFLBlocks.WINE_SHELVES.get(wood).get()));
+            add(CompatFLBlocks.JARBNETS.get(wood).get().getDescriptionId(), getBlockDisplayName(CompatFLBlocks.JARBNETS.get(wood).get()));
+            add(CompatFLBlocks.HANGERS.get(wood).get().getDescriptionId(), getBlockDisplayName(CompatFLBlocks.HANGERS.get(wood).get()));
+            add(CompatFLBlocks.BARREL_PRESSES.get(wood).get().getDescriptionId(), getBlockDisplayName(CompatFLBlocks.BARREL_PRESSES.get(wood).get()));
+            add(CompatFLBlocks.STOMPING_BARRELS.get(wood).get().getDescriptionId(), getBlockDisplayName(CompatFLBlocks.STOMPING_BARRELS.get(wood).get()));
+            add(CompatFLBlocks.BIG_BARRELS.get(wood).get().getDescriptionId(), getBlockDisplayName(CompatFLBlocks.BIG_BARRELS.get(wood).get()));
+            //RnR
+            add(CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood).get().getDescriptionId(), getBlockDisplayName(CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood).get()));
+            add(CompatRnRBlocks.WOOD_SHINGLE_ROOF_STAIRS.get(wood).get().getDescriptionId(), getBlockDisplayName(CompatRnRBlocks.WOOD_SHINGLE_ROOF_STAIRS.get(wood).get()));
+            add(CompatRnRBlocks.WOOD_SHINGLE_ROOF_SLABS.get(wood).get().getDescriptionId(), getBlockDisplayName(CompatRnRBlocks.WOOD_SHINGLE_ROOF_SLABS.get(wood).get()));
+
+            add(CompatRnRItems.WOOD_SHINGLE.get(wood).get().getDescriptionId(), getItemDisplayName(CompatRnRItems.WOOD_SHINGLE.get(wood).get()));
+        }
+        for(CompatRock rock : CompatRock.VALUES) {
+            add(CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.POOR).get().getDescriptionId(), getBlockDisplayName(CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.POOR).get()));
+            add(CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.NORMAL).get().getDescriptionId(), getBlockDisplayName(CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.NORMAL).get()));
+            add(CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.RICH).get().getDescriptionId(), getBlockDisplayName(CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.RICH).get()));
+            add(CompatRnRItems.FLAGSTONE.get(rock).get().getDescriptionId(), getItemDisplayName(CompatRnRItems.FLAGSTONE.get(rock).get()));
+        }
+        add(CompatRnRItems.GRAVEL_FILL.get(), getItemDisplayName(CompatRnRItems.GRAVEL_FILL.get()));
+        add(CompatRnRBlocks.TAMPED_MUD.get(), getBlockDisplayName(CompatRnRBlocks.TAMPED_MUD.get()));
+        add(CompatRnRBlocks.TAMPED_DIRT.get(), getBlockDisplayName(CompatRnRBlocks.TAMPED_DIRT.get()));
+        add(CompatRnRBlocks.OVER_HEIGHT_GRAVEL.get(), getBlockDisplayName(CompatRnRBlocks.OVER_HEIGHT_GRAVEL.get()));
+
+        CompatRnRBlocks.ROCK_BLOCKS.forEach((rock, typeMap) -> {
+            typeMap.forEach((road, blockSupplier) -> {
+                add(blockSupplier.get().getDescriptionId(), getBlockDisplayName(blockSupplier.get()));
+            });
+        });
+        CompatRnRBlocks.ROCK_STAIRS.forEach((rock, typeMap) -> {
+            typeMap.forEach((road, blockSupplier) -> {
+                add(blockSupplier.get().getDescriptionId(), getBlockDisplayName(blockSupplier.get()));
+            });
+        });
+        CompatRnRBlocks.ROCK_SLABS.forEach((rock, typeMap) -> {
+            typeMap.forEach((road, blockSupplier) -> {
+                add(blockSupplier.get().getDescriptionId(), getBlockDisplayName(blockSupplier.get()));
+            });
+        });
 
         // Wood Related
         Block chestBlock = ModBlocks.COMPAT_CHEST.get();
@@ -101,6 +153,10 @@ public class ModLang extends LanguageProvider {
         //Rock
         for (CompatRock rock : CompatRock.VALUES) {
             //ROCK_BLOCKS
+            add(rock.getSlab(CompatRock.BlockType.BRICK).get().getDescriptionId(), getBlockDisplayName(rock.getSlab(CompatRock.BlockType.BRICK).get()));
+            add(rock.getStair(CompatRock.BlockType.BRICK).get().getDescriptionId(), getBlockDisplayName(rock.getStair(CompatRock.BlockType.BRICK).get()));
+            add(rock.getWall(CompatRock.BlockType.BRICK).get().getDescriptionId(), getBlockDisplayName(rock.getWall(CompatRock.BlockType.BRICK).get()));
+
             for (CompatRock.BlockType blockType : CompatRock.BlockType.values()) {
                 Block block = ModBlocks.ROCK_BLOCKS.get(rock).get(blockType).get();
                 Item brick = ModItems.BRICK.get(rock).get();

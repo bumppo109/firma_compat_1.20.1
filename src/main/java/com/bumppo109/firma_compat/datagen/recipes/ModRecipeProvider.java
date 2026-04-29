@@ -1,13 +1,25 @@
 package com.bumppo109.firma_compat.datagen.recipes;
 
 import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.addons.firmalife.CompatFLBlocks;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRBlocks;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRItems;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRStoneType;
 import com.bumppo109.firma_compat.block.*;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.therighthon.rnr.common.block.RNRBlocks;
+import com.therighthon.rnr.common.item.RNRItems;
 import net.dries007.tfc.common.blocks.TFCBlocks;
+import net.dries007.tfc.common.blocks.rock.Ore;
 import net.dries007.tfc.util.Metal;
+import net.mehvahdjukaar.every_compat.api.SimpleEntrySet;
+import net.mehvahdjukaar.moonlight.api.resources.ResType;
+import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.stone_zone.api.set.stone.StoneType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
@@ -17,6 +29,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -680,7 +693,226 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 simpleResult(Items.WARPED_FUNGUS_ON_A_STICK, 1),
                 null);
 
+        //============= RnR
+        if(ModList.get().isLoaded("rnr")){
+            for (CompatWood wood : CompatWood.VALUES) {
+                damageToolShapeless(cache, null, wood.log().asItem(), "tfc:chisels", CompatRnRItems.WOOD_SHINGLE.get(wood).get(), 4);
+
+                blockModRecipe(cache, null, CompatRnRItems.WOOD_SHINGLE.get(wood).get(), RNRBlocks.ROOF_FRAME.get(), CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood).get());
+                blockModRecipe(cache, null, CompatRnRItems.WOOD_SHINGLE.get(wood).get(), RNRBlocks.ROOF_FRAME_STAIRS.get(), CompatRnRBlocks.WOOD_SHINGLE_ROOF_STAIRS.get(wood).get());
+                blockModRecipe(cache, null, CompatRnRItems.WOOD_SHINGLE.get(wood).get(), RNRBlocks.ROOF_FRAME_SLAB.get(), CompatRnRBlocks.WOOD_SHINGLE_ROOF_SLABS.get(wood).get());
+
+                chisel(cache, CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood).get().asItem(), CompatRnRBlocks.WOOD_SHINGLE_ROOF_SLABS.get(wood).get().asItem(), ChiselMode.SLAB);
+                chisel(cache, CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood).get().asItem(), CompatRnRBlocks.WOOD_SHINGLE_ROOF_STAIRS.get(wood).get().asItem(), ChiselMode.STAIR);
+
+                vanillaShaped(cache, CompatRnRBlocks.WOOD_SHINGLE_ROOF_STAIRS.get(wood).get().asItem(),
+                        new String[]{"  X", " XX", "XXX"},
+                        Map.of('X', ingredient(CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood).get().asItem())),
+                        simpleResult(CompatRnRBlocks.WOOD_SHINGLE_ROOF_STAIRS.get(wood).get().asItem(), 8),
+                        null);
+                vanillaShaped(cache, CompatRnRBlocks.WOOD_SHINGLE_ROOF_SLABS.get(wood).get().asItem(),
+                        new String[]{"XXX"},
+                        Map.of('X', ingredient(CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood).get().asItem())),
+                        simpleResult(CompatRnRBlocks.WOOD_SHINGLE_ROOF_SLABS.get(wood).get().asItem(), 6),
+                        null);
+            }
+            for (CompatRock rock : CompatRock.VALUES) {
+                damageToolShapeless(cache, null, rock.rawBlock().get(), "tfc:chisels", CompatRnRItems.FLAGSTONE.get(rock).get(), 4);
+            }
+            CompatRnRBlocks.ROCK_BLOCKS.forEach((rock, typeMap) -> {
+                typeMap.forEach((road, blockSupplier) -> {
+                    Item inputItem = null;
+                    if(road.equals(CompatRnRStoneType.FLAGSTONES)){
+                        inputItem = CompatRnRItems.FLAGSTONE.get(rock).get().asItem();
+                    }else if(road.equals(CompatRnRStoneType.COBBLED_ROAD)){
+                        inputItem = ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE).get().asItem();
+                    }else if(road.equals(CompatRnRStoneType.SETT_ROAD)){
+                        inputItem = ModItems.BRICK.get(rock).get();
+                    }
+                    if(inputItem != null){
+                        blockModRecipe(cache, null, inputItem, RNRBlocks.BASE_COURSE.get(), blockSupplier.get());
+                    }
+                    selfLandslide(cache, blockSupplier.get());
+                });
+            });
+            CompatRnRBlocks.ROCK_STAIRS.forEach((rock, typeMap) -> {
+                typeMap.forEach((road, blockSupplier) -> {
+                    mattock(cache, CompatRnRBlocks.ROCK_BLOCKS.get(rock).get(road).get(), blockSupplier.get(), ChiselMode.STAIR, null);
+
+                    landslide(cache, blockSupplier.get(), CompatRnRBlocks.ROCK_SLABS.get(rock).get(road).get(), "from_stairs");
+                });
+            });
+            CompatRnRBlocks.ROCK_SLABS.forEach((rock, typeMap) -> {
+                typeMap.forEach((road, blockSupplier) -> {
+                    mattock(cache, CompatRnRBlocks.ROCK_BLOCKS.get(rock).get(road).get(), blockSupplier.get(), ChiselMode.SLAB, null);
+
+                    selfLandslide(cache, blockSupplier.get());
+                });
+            });
+            mattock(cache, Blocks.MUD, CompatRnRBlocks.TAMPED_MUD.get(), ChiselMode.SMOOTH, null);
+            mattock(cache, Blocks.DIRT, CompatRnRBlocks.TAMPED_DIRT.get(), ChiselMode.SMOOTH, "from_dirt");
+            mattock(cache, Blocks.GRASS_BLOCK, CompatRnRBlocks.TAMPED_DIRT.get(), ChiselMode.SMOOTH, "from_grass_block");
+            mattock(cache, Blocks.PODZOL, CompatRnRBlocks.TAMPED_DIRT.get(), ChiselMode.SMOOTH, "from_podzol");
+            mattock(cache, Blocks.MYCELIUM, CompatRnRBlocks.TAMPED_DIRT.get(), ChiselMode.SMOOTH, "from_mycelium");
+
+            blockModRecipe(cache, "from_tamped_dirt", RNRItems.CRUSHED_BASE_COURSE.get(), CompatRnRBlocks.TAMPED_DIRT.get(), RNRBlocks.BASE_COURSE.get());
+            blockModRecipe(cache, "from_tamped_mud", RNRItems.CRUSHED_BASE_COURSE.get(), CompatRnRBlocks.TAMPED_MUD.get(), RNRBlocks.BASE_COURSE.get());
+            blockModRecipe(cache, null, CompatRnRItems.GRAVEL_FILL.get(), RNRBlocks.BASE_COURSE.get(), CompatRnRBlocks.GRAVEL_ROAD.get());
+            blockModRecipe(cache, null, CompatRnRItems.GRAVEL_FILL.get(), CompatRnRBlocks.GRAVEL_ROAD.get(), CompatRnRBlocks.OVER_HEIGHT_GRAVEL.get());
+            mattock(cache, CompatRnRBlocks.OVER_HEIGHT_GRAVEL.get(), CompatRnRBlocks.MACADAM_ROAD.get(), ChiselMode.SMOOTH, null);
+
+            mattock(cache, CompatRnRBlocks.MACADAM_ROAD.get(), CompatRnRBlocks.MACADAM_ROAD_STAIRS.get(), ChiselMode.STAIR, null);
+            mattock(cache, CompatRnRBlocks.MACADAM_ROAD.get(), CompatRnRBlocks.MACADAM_ROAD_SLAB.get(), ChiselMode.SLAB, null);
+
+            mattock(cache, CompatRnRBlocks.GRAVEL_ROAD.get(), CompatRnRBlocks.GRAVEL_ROAD_STAIRS.get(), ChiselMode.STAIR, null);
+            mattock(cache, CompatRnRBlocks.GRAVEL_ROAD.get(), CompatRnRBlocks.GRAVEL_ROAD_SLAB.get(), ChiselMode.SLAB, null);
+        }
+
+        //============== FIRMALIFE
+        if(ModList.get().isLoaded("firmalife")){
+            for (CompatWood wood : CompatWood.VALUES){
+                barrelPressRecipe(cache, wood);
+                stompingBarrelRecipe(cache, wood);
+                bigBarrelRecipe(cache, wood);
+                wineShelfRecipe(cache, wood);
+                foodShelfRecipe(cache, wood);
+                jarbnetRecipe(cache, wood);
+                hangerRecipe(cache, wood);
+            }
+            for (CompatRock rock : CompatRock.VALUES) {
+                Block poorOre = CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.POOR).get();
+                Block normalOre = CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.NORMAL).get();
+                Block richOre = CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.RICH).get();
+
+                collapse(cache, null, poorOre, ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE_COBBLE).get());
+                collapse(cache, null, normalOre, poorOre);
+                collapse(cache, null, richOre, normalOre);
+            }
+        }
+
         return CompletableFuture.completedFuture(null);
+    }
+
+    // ================== RNR
+    protected void mattock(CachedOutput cache, Block input, Block output, ChiselMode mode, @Nullable String suffix) {
+        ResourceLocation outputRes = BuiltInRegistries.BLOCK.getKey(output);
+        ResourceLocation inputRes = BuiltInRegistries.BLOCK.getKey(input);
+
+        mattockRecipe(cache, outputRes.getPath(), inputRes.getNamespace() + ":" + inputRes.getPath(), outputRes.getNamespace() + ":" + outputRes.getPath(), mode, null, null, suffix);
+    }
+
+    protected void mattockRecipe(CachedOutput cache, String name,
+                          String ingredient,           // Changed: now simple string
+                          String result,               // Changed: now simple string
+                          ChiselMode mode,
+                          @Nullable JsonElement itemIngredient,
+                          @Nullable JsonObject extraDrop,
+                          @Nullable String recipeSuffix) {
+
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "rnr:mattock");
+
+        json.addProperty("ingredient", ingredient);   // ← Now a string, not object
+        json.addProperty("result", result);           // ← Now a string
+        json.addProperty("mode", mode.getSerializedName());
+
+        if (itemIngredient != null) {
+            json.add("item_ingredient", itemIngredient);
+        }
+        if (extraDrop != null) {
+            json.add("extra_drop", extraDrop);
+        }
+
+        if(recipeSuffix == null){
+            name = name;
+        } else {
+            name = name + "_" + recipeSuffix;
+        }
+
+        saveRecipe(cache, "mattock/" + mode.getSerializedName() + "/" + name, json);
+    }
+
+
+    // ================== FIRMALIFE
+    protected void barrelPressRecipe(CachedOutput cache, CompatWood wood) {
+        Block block = CompatFLBlocks.BARREL_PRESSES.get(wood).get();
+
+        vanillaShaped(cache, block.asItem(),
+                new String[]{"AB ", "CD "},
+                Map.of( 'A', tagIngredient("forge:rods/wrought_iron"),
+                        'B', ingredient(CompatFLBlocks.STOMPING_BARRELS.get(wood).get().asItem()),
+                        'C', tagIngredient("forge:sheets/wrought_iron"),
+                        'D', ingredient("tfc:brass_mechanisms")),
+                simpleResult(block.asItem(), 1),
+                null);
+    }
+
+    protected void hangerRecipe(CachedOutput cache, CompatWood wood) {
+        Block block = CompatFLBlocks.HANGERS.get(wood).get();
+
+        vanillaShaped(cache, block.asItem(),
+                new String[]{"AAA", " B ", " B "},
+                Map.of( 'A', ingredient(wood.planks().asItem()),
+                        'B', tagIngredient("forge:string")),
+                simpleResult(block.asItem(), 1),
+                null);
+    }
+
+    protected void jarbnetRecipe(CachedOutput cache, CompatWood wood) {
+        Block block = CompatFLBlocks.JARBNETS.get(wood).get();
+
+        vanillaShaped(cache, block.asItem(),
+                new String[]{"X  ", "BAA", "X  "},
+                Map.of( 'A', ingredient(ModItems.LUMBER.get(wood).get()),
+                        'B', tagIngredient("forge:rods/brass"),
+                        'X', ingredient(wood.log().asItem())),
+                simpleResult(block.asItem(), 2),
+                null);
+    }
+
+    protected void bigBarrelRecipe(CachedOutput cache, CompatWood wood) {
+        Block block = CompatFLBlocks.BIG_BARRELS.get(wood).get();
+
+        vanillaShaped(cache, block.asItem(),
+                new String[]{"XAX", "ABA", "XAX"},
+                Map.of( 'A', ingredient("firmalife:barrel_stave"),
+                        'B', ingredient("tfc:glue"),
+                        'X', ingredient(wood.log().asItem())),
+                simpleResult(block.asItem(), 1),
+                null);
+    }
+
+    protected void foodShelfRecipe(CachedOutput cache, CompatWood wood) {
+        Block block = CompatFLBlocks.FOOD_SHELVES.get(wood).get();
+
+        vanillaShaped(cache, block.asItem(),
+                new String[]{"AAA", "BBB", "AAA"},
+                Map.of( 'A', ingredient(wood.planks().asItem()),
+                        'B', ingredient(ModItems.LUMBER.get(wood).get())),
+                simpleResult(block.asItem(), 1),
+                null);
+    }
+
+    protected void stompingBarrelRecipe(CachedOutput cache, CompatWood wood) {
+        Block block = CompatFLBlocks.STOMPING_BARRELS.get(wood).get();
+
+        vanillaShaped(cache, block.asItem(),
+                new String[]{"ABA", "AAA", "BBB"},
+                Map.of( 'A', ingredient(ModItems.LUMBER.get(wood).get()),
+                        'B', ingredient("tfc:glue")),
+                simpleResult(block.asItem(), 1),
+                null);
+    }
+
+    protected void wineShelfRecipe(CachedOutput cache, CompatWood wood) {
+        Block block = CompatFLBlocks.WINE_SHELVES.get(wood).get();
+
+        vanillaShaped(cache, block.asItem(),
+                new String[]{"ABA", "ABA", "ABA"},
+                Map.of( 'A', ingredient(wood.log().asItem()),
+                        'B', ingredient("firmalife:treated_lumber")),
+                simpleResult(block.asItem(), 1),
+                null);
     }
 
     protected String itemId(ItemLike itemLike) {
@@ -810,6 +1042,24 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
 
         // Generate the recipe
         collapseOrLandslide(cache, "collapse", baseName, recipeSuffix, ingredients, resultId);
+    }
+
+    protected void collapse(CachedOutput cache, @Nullable String recipeSuffix, Block input, Block output) {
+        ResourceLocation inputRes = BuiltInRegistries.BLOCK.getKey(input);
+        String outputPath = "";
+
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "tfc:collapse");
+        json.add("ingredient", ingredient(input.asItem()));
+        json.add("result", ingredient(output.asItem()));
+
+        if(recipeSuffix != null){
+            outputPath = inputRes + "_" + recipeSuffix;
+        } else {
+            outputPath = inputRes.toString();
+        }
+
+        saveRecipe(cache, "collapse/" + outputPath, json);
     }
 
     protected void landslide(CachedOutput cache, Block inputBlock, Block resultBlock, @Nullable String recipeSuffix) {

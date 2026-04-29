@@ -1,6 +1,8 @@
 package com.bumppo109.firma_compat.datagen.assets;
 
 import com.bumppo109.firma_compat.FirmaCompat;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRBlocks;
+import com.bumppo109.firma_compat.addons.rnr.CompatRnRItems;
 import com.bumppo109.firma_compat.block.CompatMetal;
 import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
@@ -10,6 +12,8 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
@@ -126,6 +130,17 @@ public class ModItemModelProvider extends ItemModelProvider {
                     basicItem(reg.get());
                 });
             }
+        }
+
+        for(CompatWood wood : CompatWood.VALUES){
+            evenSimplerBlockItem(CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood));
+            evenSimplerBlockItem(CompatRnRBlocks.WOOD_SHINGLE_ROOF_STAIRS.get(wood));
+            evenSimplerBlockItem(CompatRnRBlocks.WOOD_SHINGLE_ROOF_SLABS.get(wood));
+
+            basicItem(CompatRnRItems.WOOD_SHINGLE.get(wood).get());
+        }
+        for(CompatRock rock : CompatRock.VALUES){
+            basicItem(CompatRnRItems.FLAGSTONE.get(rock).get());
         }
     }
 
