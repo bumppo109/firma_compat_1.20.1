@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.items.TFCItems;
+import net.mehvahdjukaar.every_compat.EveryCompat;
 import net.mehvahdjukaar.every_compat.api.PaletteStrategies;
 import net.mehvahdjukaar.every_compat.api.RenderLayer;
 import net.mehvahdjukaar.every_compat.api.SimpleEntrySet;
@@ -15,12 +16,14 @@ import net.mehvahdjukaar.every_compat.api.SimpleModule;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
+import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.mehvahdjukaar.moonlight.api.set.BlockType;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -33,6 +36,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.PushReaction;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.function.Consumer;
 
@@ -59,7 +63,6 @@ public final class FLWoodGoodModule extends SimpleModule {
                 )
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
                 .addTag(modRes("compat_big_barrels"), Registries.ITEM, Registries.BLOCK)
-                .addRecipe(modRes("crafting/oak_big_barrel"))
                 .copyParentDrop()
                 .addTexture(modRes("block/big_barrel/oak_0"), PaletteStrategies.MAIN_CHILD)
                 .addTexture(modRes("block/big_barrel/oak_0_side"), PaletteStrategies.MAIN_CHILD)
@@ -102,7 +105,6 @@ public final class FLWoodGoodModule extends SimpleModule {
                 .requiresChildren("planks")
                 .addTag(modRes("compat_hangers"), Registries.ITEM, Registries.BLOCK)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                .addRecipe(modRes("crafting/oak_hanger"))
                 .dropSelf()
                 .setRenderType(RenderLayer.CUTOUT)
                 .setTabKey(tab)
@@ -131,7 +133,6 @@ public final class FLWoodGoodModule extends SimpleModule {
                 .requiresChildren("planks")
                 .addTag(modRes("compat_wine_shelves"), Registries.ITEM, Registries.BLOCK)
                 .addTag(BlockTags.MINEABLE_WITH_AXE, Registries.BLOCK)
-                .addRecipe(modRes("crafting/oak_wine_shelf"))
                 .dropSelf()
                 .setRenderType(RenderLayer.CUTOUT)
                 .setTabKey(tab)
@@ -177,7 +178,29 @@ public final class FLWoodGoodModule extends SimpleModule {
     public void addDynamicClientResources(Consumer<ResourceGenTask> executor) {
         super.addDynamicClientResources(executor);
 
-        executor.accept((manager, sink) -> {});
+        executor.accept((manager, sink) -> {
+            HANGER.blocks.forEach((woodType, block) -> {
+                if (woodType == null) return;
+                ResourceLocation hanger = BuiltInRegistries.BLOCK.getKey(HANGER.blocks.get(woodType));
+                ResourceLocation outputLoc = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + hanger.getPath());
+
+                ResourceLocation planks = BuiltInRegistries.BLOCK.getKey(woodType.planks);
+                ResourceLocation planksTexture = ResourceLocation.fromNamespaceAndPath(woodType.getNamespace(), "block/" + planks.getPath());
+
+                JsonObject model = new JsonObject();
+
+                model.addProperty("parent", "firma_compat:block/template/firmalife/hanger_base");
+
+                JsonObject textures = new JsonObject();
+                textures.addProperty("string", "minecraft:block/white_wool");
+                textures.addProperty("wood", planksTexture.toString());
+
+                model.add("textures", textures);
+
+                sink.addJson(outputLoc, model, ResType.MODELS);
+
+            });
+        });
     }
 
     @Override
@@ -190,6 +213,15 @@ public final class FLWoodGoodModule extends SimpleModule {
             for(WoodType wood : WoodTypeRegistry.INSTANCE){
                 if(FOOD_SHELF.blocks.get(wood) != null){
                     generateFoodShelfRecipe(sink, wood, null);
+                }
+                if(WINE_SHELF.blocks.get(wood) != null){
+                    generateWineShelfRecipe(sink, wood, null);
+                }
+                if(HANGER.blocks.get(wood) != null){
+                    generateHangerRecipe(sink, wood, null);
+                }
+                if(BIG_BARREL.blocks.get(wood) != null){
+                    generateBigBarrelRecipe(sink, wood, null);
                 }
                 if(JARBNET.blocks.get(wood) != null){
                     generateJarbnetRecipe(sink, wood, null);
@@ -209,13 +241,9 @@ public final class FLWoodGoodModule extends SimpleModule {
             WoodType wood,
             @Nullable String suffix
     ) {
-        String lumberItem = wood.getTypeName().toLowerCase(Locale.ROOT) + "_lumber";
-        String lumberNamespace = wood.getNamespace();
+        ResourceLocation lumberItem = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, FirmaCompat.MODID + "/" + wood.getNamespace() + "/" + wood.getTypeName() + "_lumber");
         Item outputItem = FOOD_SHELF.getItemOf(wood);
         Item planksItem = wood.getItemOfThis("planks");
-
-        String lumberItemPath = FirmaCompat.MODID + "/" + lumberNamespace + "/" + lumberItem;
-
 
         assert outputItem != null;
         String outputItemPath = Utils.getID(outputItem).getPath();
@@ -229,7 +257,7 @@ public final class FLWoodGoodModule extends SimpleModule {
         JsonObject key = new JsonObject();
 
         JsonObject lumberKey = new JsonObject();
-        lumberKey.addProperty("item", FirmaCompat.MODID + ":" + lumberItemPath);
+        lumberKey.addProperty("item", lumberItem.toString());
         key.add("L", lumberKey);
 
         JsonObject planksKey = new JsonObject();
@@ -248,7 +276,176 @@ public final class FLWoodGoodModule extends SimpleModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
+        recipe.add("result", result);
+
+        // Recipe path
+        String recipePath = "crafting/" + outputItemPath;
+
+        if (suffix != null && !suffix.isEmpty()) {
+            recipePath += ("_" + suffix);
+        }
+
+        ResourceLocation recipeId = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, recipePath);
+
+        sink.addJson(recipeId, recipe, ResType.RECIPES);
+    }
+
+    public void generateHangerRecipe(
+            ResourceSink sink,
+            WoodType wood,
+            @Nullable String suffix
+    ) {
+        Item outputItem = HANGER.getItemOf(wood);
+        Item planksItem = wood.getItemOfThis("planks");
+
+        assert outputItem != null;
+        String outputItemPath = Utils.getID(outputItem).getPath();
+        String outputItemNamespace = Utils.getID(outputItem).getNamespace();
+
+        JsonObject recipe = new JsonObject();
+        recipe.addProperty("type", "minecraft:crafting_shaped");
+        recipe.addProperty("category", "misc");
+
+        // Key definitions
+        JsonObject key = new JsonObject();
+
+        JsonObject lumberKey = new JsonObject();
+        lumberKey.addProperty("tag", "forge:string");
+        key.add("L", lumberKey);
+
+        JsonObject planksKey = new JsonObject();
+        assert planksItem != null;
+        planksKey.addProperty("item", wood.getNamespace() + ":" + planksItem);
+        key.add("P", planksKey);
+
+        recipe.add("key", key);
+
+        JsonArray pattern = new JsonArray();
+        pattern.add("PPP");
+        pattern.add(" L ");
+        pattern.add(" L ");
+        recipe.add("pattern", pattern);
+
+        // Result: 1 door (vanilla wood type)
+        JsonObject result = new JsonObject();
+        result.addProperty("count", 1);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
+        recipe.add("result", result);
+
+        // Recipe path
+        String recipePath = "crafting/" + outputItemPath;
+
+        if (suffix != null && !suffix.isEmpty()) {
+            recipePath += ("_" + suffix);
+        }
+
+        ResourceLocation recipeId = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, recipePath);
+
+        sink.addJson(recipeId, recipe, ResType.RECIPES);
+    }
+
+    public void generateBigBarrelRecipe(
+            ResourceSink sink,
+            WoodType wood,
+            @Nullable String suffix
+    ) {
+        String staveItem = "firmalife:barrel_stave";
+        String glueItem = "tfc:glue";
+        Item outputItem = BIG_BARREL.getItemOf(wood);
+        Item planksItem = wood.getItemOfThis("log");
+
+        assert outputItem != null;
+        String outputItemPath = Utils.getID(outputItem).getPath();
+        String outputItemNamespace = Utils.getID(outputItem).getNamespace();
+
+        JsonObject recipe = new JsonObject();
+        recipe.addProperty("type", "minecraft:crafting_shaped");
+        recipe.addProperty("category", "misc");
+
+        // Key definitions
+        JsonObject key = new JsonObject();
+
+        JsonObject lumberKey = new JsonObject();
+        lumberKey.addProperty("item", staveItem);
+        key.add("L", lumberKey);
+
+        JsonObject glueKey = new JsonObject();
+        glueKey.addProperty("item", glueItem);
+        key.add("G", glueKey);
+
+        JsonObject planksKey = new JsonObject();
+        assert planksItem != null;
+        planksKey.addProperty("item", wood.getNamespace() + ":" + planksItem);
+        key.add("P", planksKey);
+
+        recipe.add("key", key);
+
+        JsonArray pattern = new JsonArray();
+        pattern.add("PLP");
+        pattern.add("LGL");
+        pattern.add("PLP");
+        recipe.add("pattern", pattern);
+
+        // Result: 1 door (vanilla wood type)
+        JsonObject result = new JsonObject();
+        result.addProperty("count", 1);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
+        recipe.add("result", result);
+
+        // Recipe path
+        String recipePath = "crafting/" + outputItemPath;
+
+        if (suffix != null && !suffix.isEmpty()) {
+            recipePath += ("_" + suffix);
+        }
+
+        ResourceLocation recipeId = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, recipePath);
+
+        sink.addJson(recipeId, recipe, ResType.RECIPES);
+    }
+
+    public void generateWineShelfRecipe(
+            ResourceSink sink,
+            WoodType wood,
+            @Nullable String suffix
+    ) {
+        String lumberItem = "firmalife:treated_lumber";
+        Item outputItem = WINE_SHELF.getItemOf(wood);
+        Item logItem = wood.getItemOfThis("log");
+
+        assert outputItem != null;
+        String outputItemPath = Utils.getID(outputItem).getPath();
+        String outputItemNamespace = Utils.getID(outputItem).getNamespace();
+
+        JsonObject recipe = new JsonObject();
+        recipe.addProperty("type", "minecraft:crafting_shaped");
+        recipe.addProperty("category", "misc");
+
+        // Key definitions
+        JsonObject key = new JsonObject();
+
+        JsonObject lumberKey = new JsonObject();
+        lumberKey.addProperty("item", lumberItem);
+        key.add("L", lumberKey);
+
+        JsonObject planksKey = new JsonObject();
+        assert logItem != null;
+        planksKey.addProperty("item", wood.getNamespace() + ":" + logItem);
+        key.add("P", planksKey);
+
+        recipe.add("key", key);
+
+        JsonArray pattern = new JsonArray();
+        pattern.add("PLP");
+        pattern.add("PLP");
+        pattern.add("PLP");
+        recipe.add("pattern", pattern);
+
+        // Result: 1 door (vanilla wood type)
+        JsonObject result = new JsonObject();
+        result.addProperty("count", 1);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -268,13 +465,9 @@ public final class FLWoodGoodModule extends SimpleModule {
             WoodType wood,
             @Nullable String suffix
     ) {
-        String lumberItem = wood.getTypeName().toLowerCase(Locale.ROOT) + "_lumber";
-        String lumberNamespace = wood.getNamespace();
+        ResourceLocation lumberItem = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, FirmaCompat.MODID + "/" + wood.getNamespace() + "/" + wood.getTypeName() + "_lumber");
         Item outputItem = JARBNET.getItemOf(wood);
         Item logItem = wood.getItemOfThis("log");
-
-        String lumberItemPath = FirmaCompat.MODID + "/" + lumberNamespace + "/" + lumberItem;
-
 
         assert outputItem != null;
         String outputItemPath = Utils.getID(outputItem).getPath();
@@ -288,7 +481,7 @@ public final class FLWoodGoodModule extends SimpleModule {
         JsonObject key = new JsonObject();
 
         JsonObject lumberKey = new JsonObject();
-        lumberKey.addProperty("item", FirmaCompat.MODID + ":" + lumberItemPath);
+        lumberKey.addProperty("item", lumberItem.toString());
         key.add("L", lumberKey);
 
         JsonObject logKey = new JsonObject();
@@ -311,7 +504,7 @@ public final class FLWoodGoodModule extends SimpleModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -331,11 +524,8 @@ public final class FLWoodGoodModule extends SimpleModule {
             WoodType wood,
             @Nullable String suffix
     ) {
-        String lumberItem = wood.getTypeName().toLowerCase(Locale.ROOT) + "_lumber";
-        String lumberNamespace = wood.getNamespace();
+        ResourceLocation lumberItem = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, FirmaCompat.MODID + "/" + wood.getNamespace() + "/" + wood.getTypeName() + "_lumber");
         Item outputItem = STOMPING_BARREL.getItemOf(wood);
-
-        String lumberItemPath = FirmaCompat.MODID + "/" + lumberNamespace + "/" + lumberItem;
 
 
         assert outputItem != null;
@@ -350,7 +540,7 @@ public final class FLWoodGoodModule extends SimpleModule {
         JsonObject key = new JsonObject();
 
         JsonObject lumberKey = new JsonObject();
-        lumberKey.addProperty("item", FirmaCompat.MODID + ":" + lumberItemPath);
+        lumberKey.addProperty("item", lumberItem.toString());
         key.add("L", lumberKey);
 
         JsonObject brassRodKey = new JsonObject();
@@ -368,7 +558,7 @@ public final class FLWoodGoodModule extends SimpleModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path
@@ -432,7 +622,7 @@ public final class FLWoodGoodModule extends SimpleModule {
         // Result: 1 door (vanilla wood type)
         JsonObject result = new JsonObject();
         result.addProperty("count", 1);
-        result.addProperty("id",  outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item",  outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe path

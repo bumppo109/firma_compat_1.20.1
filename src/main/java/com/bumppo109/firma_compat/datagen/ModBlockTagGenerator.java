@@ -184,6 +184,13 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
                 }
             });
         });
+        tag(ModTags.Blocks.GRAVEL_ROAD_BLOCKS).add(CompatRnRBlocks.GRAVEL_ROAD.get());
+        tag(ModTags.Blocks.GRAVEL_ROAD_STAIRS).add(CompatRnRBlocks.GRAVEL_ROAD_STAIRS.get());
+        tag(ModTags.Blocks.GRAVEL_ROAD_SLABS).add(CompatRnRBlocks.GRAVEL_ROAD_SLAB.get());
+        tag(ModTags.Blocks.MACADAM_ROAD_BLOCKS).add(CompatRnRBlocks.MACADAM_ROAD.get());
+        tag(ModTags.Blocks.MACADAM_ROAD_STAIRS).add(CompatRnRBlocks.MACADAM_ROAD_STAIRS.get());
+        tag(ModTags.Blocks.MACADAM_ROAD_SLABS).add(CompatRnRBlocks.MACADAM_ROAD_SLAB.get());
+
         tag(BlockTags.MINEABLE_WITH_SHOVEL)
                 .add(CompatRnRBlocks.GRAVEL_ROAD.get())
                 .add(CompatRnRBlocks.GRAVEL_ROAD_SLAB.get())

@@ -106,14 +106,14 @@ public final class RnRWoodGoodModule extends SimpleModule {
         executor.accept((manager, sink) -> {
             for(WoodType wood : WoodTypeRegistry.INSTANCE){
                 if(SHINGLE.items.get(wood) != null){
-                    generateToolItemRecipe(sink, wood.log.asItem(), "c:tools/chisel", SHINGLE.items.get(wood), 12, null);
+                    generateToolItemRecipe(sink, wood.log.asItem(), "tfc:chisels", SHINGLE.items.get(wood), 4, null);
 
                     generateBlockModShingleRecipe(sink, wood, SHINGLES);
                     generateBlockModShingleRecipe(sink, wood, SHINGLES_STAIRS);
                     generateBlockModShingleRecipe(sink, wood, SHINGLES_SLAB);
 
-                    generateChiselStairRecipes(sink, wood, SHINGLES, SHINGLES_STAIRS, "tfc:stair");
-                    generateChiselStairRecipes(sink, wood, SHINGLES, SHINGLES_SLAB, "tfc:slab");
+                    generateChiselStairRecipes(sink, wood, SHINGLES, SHINGLES_STAIRS, "stair");
+                    generateChiselStairRecipes(sink, wood, SHINGLES, SHINGLES_SLAB, "slab");
                 }
 
             }
@@ -249,7 +249,7 @@ public final class RnRWoodGoodModule extends SimpleModule {
         JsonObject result = new JsonObject();
         result.addProperty("count", count);
 
-        result.addProperty("id", outputItemNamespace + ":" + outputItemPath);
+        result.addProperty("item", outputItemNamespace + ":" + outputItemPath);
         recipe.add("result", result);
 
         // Recipe ID

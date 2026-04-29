@@ -33,6 +33,13 @@ public class ModTags {
         public static final TagKey<Block> SETT_ROAD_STAIRS = tag("sett_road_stairs");
         public static final TagKey<Block> SETT_ROAD_SLABS = tag("sett_road_slabs");
 
+        public static final TagKey<Block> GRAVEL_ROAD_BLOCKS = tag("gravel_road_blocks");
+        public static final TagKey<Block> GRAVEL_ROAD_STAIRS = tag("gravel_road_stairs");
+        public static final TagKey<Block> GRAVEL_ROAD_SLABS = tag("gravel_road_slabs");
+        public static final TagKey<Block> MACADAM_ROAD_BLOCKS = tag("macadam_road_blocks");
+        public static final TagKey<Block> MACADAM_ROAD_STAIRS = tag("macadam_road_stairs");
+        public static final TagKey<Block> MACADAM_ROAD_SLABS = tag("macadam_road_slabs");
+
 
 
         private static TagKey<Block> tag(String name) {

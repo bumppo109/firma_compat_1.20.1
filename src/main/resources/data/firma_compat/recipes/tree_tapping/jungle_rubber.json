@@ -1,0 +1,10 @@
+{
+  "type": "afc:tree_tapping",
+  "input_block": "minecraft:jungle_log",
+  "result_fluid": {
+    "fluid": "afc:latex",
+    "amount": 1
+  },
+  "minimum_temperature": 32,
+  "requires_natural_log": false
+}

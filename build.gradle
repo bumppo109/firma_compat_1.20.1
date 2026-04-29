@@ -167,6 +167,9 @@ dependencies {
     //Roads and Roofs
     implementation fg.deobf("curse.maven:roads-and-roofs-tfc-1048212:7339318")
 
+    //ArborFirmaCraft
+    implementation fg.deobf("curse.maven:arborfirmacraft-877545:7200580")
+
     //Every Compat
     implementation fg.deobf("curse.maven:every-compat-628539:7860235")
 

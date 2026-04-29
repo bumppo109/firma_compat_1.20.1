@@ -754,6 +754,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
             mattock(cache, Blocks.GRASS_BLOCK, CompatRnRBlocks.TAMPED_DIRT.get(), ChiselMode.SMOOTH, "from_grass_block");
             mattock(cache, Blocks.PODZOL, CompatRnRBlocks.TAMPED_DIRT.get(), ChiselMode.SMOOTH, "from_podzol");
             mattock(cache, Blocks.MYCELIUM, CompatRnRBlocks.TAMPED_DIRT.get(), ChiselMode.SMOOTH, "from_mycelium");
+            mattock(cache, Blocks.COARSE_DIRT, CompatRnRBlocks.TAMPED_DIRT.get(), ChiselMode.SMOOTH, "from_coarse_dirt");
 
             blockModRecipe(cache, "from_tamped_dirt", RNRItems.CRUSHED_BASE_COURSE.get(), CompatRnRBlocks.TAMPED_DIRT.get(), RNRBlocks.BASE_COURSE.get());
             blockModRecipe(cache, "from_tamped_mud", RNRItems.CRUSHED_BASE_COURSE.get(), CompatRnRBlocks.TAMPED_MUD.get(), RNRBlocks.BASE_COURSE.get());
