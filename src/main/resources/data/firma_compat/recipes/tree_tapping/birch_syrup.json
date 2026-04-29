@@ -6,7 +6,7 @@
     "amount": 5
   },
   "minimum_temperature": -5,
-  "maximum_temperature": 20,
+  "maximum_temperature": 30,
   "spring_only": true,
   "requires_natural_log": false
 }

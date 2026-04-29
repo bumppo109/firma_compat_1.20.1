@@ -23,6 +23,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static com.bumppo109.firma_compat.block.CompatWood.shouldRegisterBlockType;
 import static net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE;
 
 public class ModCreativeModeTab {
@@ -54,7 +55,9 @@ public class ModCreativeModeTab {
                             if (woodBlocks != null) {
                                 woodBlocks.forEach((type, reg) -> {
                                     if (type.needsItem() && reg != null) {
-                                        accept(output, reg);
+                                        if (shouldRegisterBlockType(type)) {
+                                            accept(output, reg);
+                                        }
                                     }
                                 });
                             }
