@@ -43,6 +43,12 @@ public class ModBlocks {
             DeferredRegister.create(Registries.BLOCK, FirmaCompat.MODID);
 
     //Wood
+    public static final Map<CompatWood, Map<Wood.BlockType, RegistryObject<Block>>> WOODS = Helpers.mapOfKeys(CompatWood.class, wood ->
+            Helpers.mapOfKeys(Wood.BlockType.class, type ->
+                    register(getWoodBlockName(wood, type), type.create(wood), type.createBlockItem(wood, new Item.Properties()))
+            )
+    );
+    /*
     public static final Map<CompatWood, Map<Wood.BlockType, RegistryObject<Block>>> WOODS = new HashMap<>();
 
     static {
@@ -53,7 +59,7 @@ public class ModBlocks {
                 // Only register the block types you want
                 if (shouldRegisterBlockType(type)) {
                     RegistryObject<Block> block = register(
-                            type.nameFor(wood),
+                            getWoodBlockName(wood, type),
                             type.create(wood),
                             type.createBlockItem(wood, new Item.Properties())
                     );
@@ -64,6 +70,7 @@ public class ModBlocks {
             WOODS.put(wood, woodMap);
         }
     }
+     */
 
     /* TODO - hanging signs
     private static <B extends SignBlock> Map<CompatWood, Map<Metal.Default, RegistryObject<B>>> registerHangingSigns(String variant, BiFunction<ExtendedProperties, WoodType, B> factory)
@@ -216,6 +223,13 @@ public class ModBlocks {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.PODZOL)));
 
     // Helper methods
+    private static String getWoodBlockName(CompatWood wood, Wood.BlockType type) {
+        String woodName = wood.getSerializedName();
+        String typeName = type.name().toLowerCase(Locale.ROOT);
+
+        return woodName + "_" + typeName;
+    }
+
     private static String getRockBlockRegistryName(CompatRock rock, CompatRock.BlockType type) {
         if (rock == CompatRock.BLACKSTONE && type == CompatRock.BlockType.BRICK) {
             return "polished_blackstone_bricks";   // special case you requested

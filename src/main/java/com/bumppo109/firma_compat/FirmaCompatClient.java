@@ -41,7 +41,9 @@ public class FirmaCompatClient
 
         ModBlocks.WOODS.values().forEach(map -> {
             Stream.of(TWIG, BARREL, SCRIBING_TABLE, JAR_SHELF, ENCASED_AXLE, CLUTCH, GEAR_BOX, SEWING_TABLE)
-                    .forEach(type -> ItemBlockRenderTypes.setRenderLayer(map.get(type).get(), cutout));
+                    .map(map::get)
+                    .filter(ro -> ro != null && ro.isPresent())
+                    .forEach(ro -> ItemBlockRenderTypes.setRenderLayer(ro.get(), cutout));
         });
 
         if(ModList.get().isLoaded("firmalife")){

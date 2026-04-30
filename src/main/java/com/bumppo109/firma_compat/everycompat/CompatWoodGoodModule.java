@@ -74,7 +74,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
     public final SimpleEntrySet<WoodType, Block> BARREL;
     public final SimpleEntrySet<WoodType, Block> SCRIBING_TABLE;
     public final SimpleEntrySet<WoodType, Block> SEWING_TABLE;
-    public final SimpleEntrySet<WoodType, Block> SHELF;
+    public final SimpleEntrySet<WoodType, Block> JAR_SHELF;
     public SimpleEntrySet<WoodType, Block> AXLE;
     public final SimpleEntrySet<WoodType, Block> BLADED_AXLE;
     public final SimpleEntrySet<WoodType, Block> ENCASED_AXLE;
@@ -253,8 +253,8 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 .build();
         this.addEntry(SEWING_TABLE);
 
-        SHELF = SimpleEntrySet.builder(WoodType.class, "shelf",
-                        getModBlock("oak_shelf"), () -> VanillaWoodTypes.OAK,
+        JAR_SHELF = SimpleEntrySet.builder(WoodType.class, "jar_shelf",
+                        getModBlock("oak_jar_shelf"), () -> VanillaWoodTypes.OAK,
                         w -> new
                                 JarShelfBlock(ExtendedProperties.of().noOcclusion().strength(2.5f).flammableLikePlanks().blockEntity(TFCBlockEntities.JARS))
                 )
@@ -264,7 +264,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 .setTabKey(tab)
                 .excludeBlockTypes("tfc:.*").excludeBlockTypes("afc:.*").excludeBlockTypes("domum_ornamentum:.*")
                 .build();
-        this.addEntry(SHELF);
+        this.addEntry(JAR_SHELF);
 
         AXLE = SimpleEntrySet.builder(WoodType.class, "axle",
                         () -> getModBlock("oak_axle").get(),
@@ -1065,7 +1065,7 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
     ) {
         Item lumberItem = LUMBER.items.get(wood);
         Item planksItem = wood.planks.asItem();
-        Item outputItem = SHELF.items.get(wood);
+        Item outputItem = JAR_SHELF.items.get(wood);
 
         String lumberItemPath = Utils.getID(Objects.requireNonNull(lumberItem)).getPath();
         String lumberNamespace = Utils.getID(Objects.requireNonNull(lumberItem)).getNamespace();

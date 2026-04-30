@@ -1,6 +1,6 @@
 package com.bumppo109.firma_compat;
 
-import com.bumppo109.firma_compat.addons.firmaciv.CompatFirmaCivHandler;
+import com.bumppo109.firma_compat.addons.firmaciv.CompatWatercraftMaterial;
 import com.bumppo109.firma_compat.addons.firmalife.CompatFLBlocks;
 import com.bumppo109.firma_compat.addons.rnr.CompatRnRBlocks;
 import com.bumppo109.firma_compat.addons.rnr.CompatRnRItems;
@@ -14,6 +14,9 @@ import com.bumppo109.firma_compat.item.ModItems;
 import com.bumppo109.firma_compat.loot.ModLootModifiers;
 import com.bumppo109.firma_compat.worldgen.ModFeatures;
 import com.mojang.logging.LogUtils;
+import com.nebby1999.firmacivplus.AFCWatercraftMaterial;
+import com.nebby1999.firmacivplus.FirmaCivPlusModsResolver;
+import com.nebby1999.firmacivplus.WatercraftMaterial;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -56,11 +59,6 @@ public class FirmaCompat
             CompatRnRItems.ITEMS.register(modEventBus);
         }
 
-        // === FIRMACIV+ INTEGRATION ===
-        if (ModList.get().isLoaded("firmacivplus")) {
-            CompatFirmaCivHandler.init(modEventBus);   // This should register blocks
-        }
-
         // Event listeners
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(FirmaCompatClient::clientSetup);
@@ -77,11 +75,7 @@ public class FirmaCompat
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-        event.enqueueWork(() -> {
-            if (ModList.get().isLoaded("firmacivplus")) {
-                CompatFirmaCivHandler.commonSetup();
-            }
-        });
+
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event)
