@@ -33,8 +33,12 @@ public class ModCreativeModeTab {
     public static final RegistryObject<CreativeModeTab> FIRMA_COMPAT_TAB = CREATIVE_MODE_TABS.register("firma_compat_tab",
             () -> CreativeModeTab.builder()
                     .icon(() -> new ItemStack(Items.OAK_PLANKS)) // ← Change this to one of your items/blocks later
-                    .title(Component.translatable("creativetab.firma_compat_tab"))
+                    .title(Component.translatable("creative_tab.firma_compat_tab"))
                     .displayItems((parameters, output) -> {   // ← parameters + output (1.20.1 style)
+
+                        accept(output, ModBlocks.COMPAT_CHEST);
+                        accept(output, ModBlocks.COMPAT_TRAPPED_CHEST);
+
                         accept(output, ModBlocks.CLAY_DIRT);
                         accept(output, ModBlocks.CLAY_PODZOL);
                         accept(output, ModBlocks.CLAY_GRASS_BLOCK);

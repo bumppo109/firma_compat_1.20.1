@@ -142,6 +142,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         for(CompatRock rock : CompatRock.VALUES){
             basicItem(CompatRnRItems.FLAGSTONE.get(rock).get());
         }
+        basicItem(CompatRnRItems.GRAVEL_FILL.get());
     }
 
     public void evenSimplerBlockItem(Supplier<? extends Block> block) {

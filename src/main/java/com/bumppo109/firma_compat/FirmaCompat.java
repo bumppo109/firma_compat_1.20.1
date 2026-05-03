@@ -13,11 +13,15 @@ import com.bumppo109.firma_compat.item.ModCreativeModeTab;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.bumppo109.firma_compat.loot.ModLootModifiers;
 import com.bumppo109.firma_compat.worldgen.ModFeatures;
+import com.bumppo109.firma_compat.worldgen.climate.ClimateNormalizer;
 import com.bumppo109.firma_compat.worldgen.climate.ModClimateModels;
 import com.mojang.logging.LogUtils;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,6 +40,8 @@ public class FirmaCompat
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 
+    public static final ClimateNormalizer CLIMATE_NORMALIZER = new ClimateNormalizer();
+
     public FirmaCompat(FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
@@ -49,6 +55,7 @@ public class FirmaCompat
         ModFluids.FLUIDS.register(modEventBus);
         ModLootModifiers.register(modEventBus);
         ModFeatures.register(modEventBus);
+        ModClimateModels.registerClimateModels();
 
         if(ModList.get().isLoaded("firmalife")){
             CompatFLBlocks.BLOCKS.register(modEventBus);
@@ -83,7 +90,18 @@ public class FirmaCompat
     }
 
     @SubscribeEvent
+    public void onServerAboutToStart(ServerAboutToStartEvent event) {
+        if (ModList.get().isLoaded("eclipticseasons")) {
+            // Safe place - registry is available
+            LOGGER.info("Starting Climate normalization");
+            FirmaCompat.CLIMATE_NORMALIZER.calibrate(event.getServer().registryAccess());
+            LOGGER.info("Finished Climate normalization");
+        }
+    }
+
+    @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
 
     }
+
 }

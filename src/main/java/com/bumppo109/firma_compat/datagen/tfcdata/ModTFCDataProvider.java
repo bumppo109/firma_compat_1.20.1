@@ -67,6 +67,9 @@ public class ModTFCDataProvider extends TFCDataBuilder {
         itemHeat(cache, Items.GOLD_BLOCK, 1.667, 636, 848);
         itemHeat(cache, Items.GOLD_NUGGET, 0.833, 648, 864);
         itemHeat(cache, Items.IRON_NUGGET, 0.955, 921, 1228);
+        itemHeat(cache, Items.IRON_TRAPDOOR, 5.714, 921, 1228);
+        itemHeat(cache, Items.IRON_BARS, 0.714, 921, 1228);
+        itemHeat(cache, Items.IRON_BLOCK, 2.857, 921, 1228);
 
         itemHeat(cache, Items.COPPER_BLOCK, 2.857, 648, 864);
         itemHeat(cache, Items.EXPOSED_COPPER, 2.857, 648, 864);
@@ -116,8 +119,15 @@ public class ModTFCDataProvider extends TFCDataBuilder {
         foodHeat(cache, Items.CHORUS_FRUIT);
 
         for (CompatFood food : CompatFood.values()) {
-            generateMinecraftFoodData(cache, food.getSerializedName(), food.getHunger(), food.getSaturation(), food.getWater(), food.getDecayModifier(),
-                    food.getGrain(), food.getFruit(), food.getVegetable(), food.getProtein(), food.getDairy());
+            generateMinecraftFoodData(cache, food.getSerializedName(), food.getHunger(),
+                    food.getSaturation(),
+                    food.getDecayModifier(),
+                    food.getProtein(),
+                    food.getGrain(),
+                    food.getFruit(),
+                    food.getVegetable(),
+                    food.getDairy(),
+                    food.getWater());
         }
 
         for (CompatMeal meal : CompatMeal.values()) {

@@ -10,11 +10,11 @@ import java.util.function.Supplier;
 
 public final class ModClimateModels {
 
-    public static final Supplier<ClimateModelType> SMOOTHED_BIOME_BASED =
-            register("smoothed_biome_based", SmoothedBiomeClimateModel::new);
+    public static final Supplier<ClimateModelType> ECLIPTIC_BASED =
+            register("ecliptic_based", EclipticSeasonsClimateModel::new);
 
     public static void registerClimateModels() {
-        SMOOTHED_BIOME_BASED.get();
+        ECLIPTIC_BASED.get();
     }
 
     private static Supplier<ClimateModelType> register(String id, Supplier<ClimateModel> modelSupplier) {

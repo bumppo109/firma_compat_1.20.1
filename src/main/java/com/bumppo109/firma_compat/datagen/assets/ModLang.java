@@ -21,7 +21,7 @@ public class ModLang extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        add("firma_compat.creative_tab.firma_compat", "Firma Compat");
+        add("firma_compat.creative_tab.firma_compat_tab", "Firma Compat");
 
         add("fluid.firma_compat.metal.netherite", "Molten Netherite");
         add("fluid.firma_compat.metal.poor_netherite", "Molten Poor Netherite");

@@ -260,7 +260,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlockWithItem(CompatRnRBlocks.MACADAM_ROAD.get(), macadamBlockModel);
         rnrPathStairBlockStateBuilder(CompatRnRBlocks.MACADAM_ROAD_STAIRS.get(), macadamStairModel, macadamStairInnerModel, macadamStairOuterModel);
         simpleBlockWithItem(CompatRnRBlocks.MACADAM_ROAD_SLAB.get(), macadamSlabModel);
-        simpleBlockItem(CompatRnRBlocks.MACADAM_ROAD_SLAB.get(), macadamStairModel);
+        simpleBlockItem(CompatRnRBlocks.MACADAM_ROAD_STAIRS.get(), macadamStairModel);
     }
 
     private void rnrRoadBlock() {

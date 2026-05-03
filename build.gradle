@@ -190,6 +190,12 @@ dependencies {
 
     //Terrablender
     implementation fg.deobf("curse.maven:terrablender-563928:6290448")
+
+    //Ecliptic Seasons
+        //0.13.0-beta-5-0-1
+        //implementation fg.deobf("curse.maven:ecliptic-seasons-1118306:8008889")
+        //0.12.18.10 (for DH 2.4.5b)
+        implementation fg.deobf("curse.maven:ecliptic-seasons-1118306:7944973")
 }
 
 mixin {

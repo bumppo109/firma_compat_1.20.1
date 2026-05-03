@@ -113,6 +113,10 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
                 .add(Blocks.END_STONE)
         ;
 
+        tag(Tags.Blocks.CHESTS_WOODEN)
+                .add(ModBlocks.COMPAT_CHEST.get())
+                .add(ModBlocks.COMPAT_TRAPPED_CHEST.get());
+
         //Firmalife
         for (CompatWood wood : CompatWood.VALUES){
             tag(BlockTags.MINEABLE_WITH_AXE)

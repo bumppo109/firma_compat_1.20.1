@@ -596,12 +596,22 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 3,
                 TRAPDOOR_RULES,
                 false);
+        generateAnvilRecipe(cache,
+                "forge:sheets/wrought_iron",
+                Items.IRON_BARS, 8,
+                3,
+                BARS_RULES,
+                false);
 
         generateMeltingRecipe(cache, Metal.Default.GOLD, Items.GOLD_BLOCK, 100, 1060);
         generateMeltingRecipe(cache, Metal.Default.GOLD, Items.GOLD_NUGGET, 10, 1060);
 
         generateMeltingRecipe(cache, Metal.Default.CAST_IRON, Items.IRON_NUGGET, 10, 1535);
         generateMeltingRecipe(cache, Metal.Default.CAST_IRON, Items.CHAIN, 6, 1535);
+
+        generateMeltingRecipe(cache, Metal.Default.WROUGHT_IRON, Items.IRON_TRAPDOOR, 200, 1535);
+        generateMeltingRecipe(cache, Metal.Default.WROUGHT_IRON, Items.IRON_BARS, 25, 1535);
+        generateMeltingRecipe(cache, Metal.Default.WROUGHT_IRON, Items.IRON_BLOCK, 100, 1535);
 
         generateMeltingRecipe(cache, Metal.Default.COPPER, Items.COPPER_BLOCK, 100, 1080);
         generateMeltingRecipe(cache, Metal.Default.COPPER, Items.EXPOSED_COPPER, 100, 1080);
@@ -639,6 +649,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_WEATHERED_CUT_COPPER_SLAB, 50, 1080);
         generateMeltingRecipe(cache, Metal.Default.COPPER, Items.WAXED_OXIDIZED_CUT_COPPER_SLAB, 50, 1080);
 
+        generateFoodHeatingRecipe(cache, Items.KELP, Items.DRIED_KELP);
         generateFoodHeatingRecipe(cache, Items.SALMON, Items.COOKED_SALMON);
         generateFoodHeatingRecipe(cache, Items.COD, Items.COOKED_COD);
         generateFoodHeatingRecipe(cache, Items.BEEF, Items.COOKED_BEEF);
@@ -981,6 +992,10 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
 
     private static final String[] CHAIN_RULES = {
             "hit_any","hit_any","draw_last",
+    };
+
+    private static final String[] BARS_RULES = {
+            "punch_third_last", "punch_second_last", "upset_last",
     };
 
     /**
