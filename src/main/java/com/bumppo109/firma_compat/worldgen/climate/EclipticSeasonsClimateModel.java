@@ -32,18 +32,14 @@ public class EclipticSeasonsClimateModel implements TimeInvariantClimateModel {
     @Override
     public float getTemperature(LevelReader levelReader, BlockPos pos) {
         if (!(levelReader instanceof Level level)) {
-            // Fallback for WorldGen / LevelReader-only contexts
             return getVanillaLikeTemperature(levelReader, pos);
         }
 
         Biome biome = level.getBiome(pos).value();
         float rawTemp = biome.getBaseTemperature();
 
-        // Use the global normalizer
-        float normalized = FirmaCompat.CLIMATE_NORMALIZER.normalize(rawTemp);
-
         try {
-            return Climate.toActualTemperature(normalized);
+            return FirmaCompat.CLIMATE_NORMALIZER.normalize(rawTemp, level);
         } catch (Exception e) {
             return getVanillaLikeTemperature(levelReader, pos);
         }
@@ -79,9 +75,8 @@ public class EclipticSeasonsClimateModel implements TimeInvariantClimateModel {
      */
     private float getVanillaLikeTemperature(LevelReader levelReader, BlockPos pos) {
         Biome biome = levelReader.getBiome(pos).value();
-        float vanillaTemp = biome.getBaseTemperature(); // or getTemperature(pos)
+        float vanillaTemp = biome.getBaseTemperature();
 
-        // Rough seasonal adjustment even without full Level
-        return vanillaTemp * 1.2f; // or whatever baseline you prefer
+        return (vanillaTemp - 0.15f) / 0.0217f;
     }
 }

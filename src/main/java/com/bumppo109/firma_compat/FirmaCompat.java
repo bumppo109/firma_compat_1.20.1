@@ -16,6 +16,7 @@ import com.bumppo109.firma_compat.worldgen.ModFeatures;
 import com.bumppo109.firma_compat.worldgen.climate.ClimateNormalizer;
 import com.bumppo109.firma_compat.worldgen.climate.ModClimateModels;
 import com.mojang.logging.LogUtils;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraftforge.api.distmarker.Dist;
@@ -92,10 +93,7 @@ public class FirmaCompat
     @SubscribeEvent
     public void onServerAboutToStart(ServerAboutToStartEvent event) {
         if (ModList.get().isLoaded("eclipticseasons")) {
-            // Safe place - registry is available
-            LOGGER.info("Starting Climate normalization");
-            FirmaCompat.CLIMATE_NORMALIZER.calibrate(event.getServer().registryAccess());
-            LOGGER.info("Finished Climate normalization");
+            FirmaCompat.CLIMATE_NORMALIZER.calibrateAll(event.getServer().registryAccess());
         }
     }
 
