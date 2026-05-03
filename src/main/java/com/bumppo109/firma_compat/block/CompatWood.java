@@ -1,61 +1,22 @@
 package com.bumppo109.firma_compat.block;
 
+import com.therighthon.afc.AFC;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.Set;
 import java.util.function.Supplier;
-import net.dries007.tfc.common.blockentities.BarrelBlockEntity;
-import net.dries007.tfc.common.blockentities.LoomBlockEntity;
-import net.dries007.tfc.common.blockentities.SluiceBlockEntity;
-import net.dries007.tfc.common.blockentities.TFCBlockEntities;
-import net.dries007.tfc.common.blockentities.rotation.WaterWheelBlockEntity;
-import net.dries007.tfc.common.blockentities.rotation.WindmillBlockEntity;
-import net.dries007.tfc.common.blocks.ExtendedBlock;
-import net.dries007.tfc.common.blocks.ExtendedProperties;
-import net.dries007.tfc.common.blocks.GroundcoverBlock;
-import net.dries007.tfc.common.blocks.JarShelfBlock;
-import net.dries007.tfc.common.blocks.TFCBlocks;
-import net.dries007.tfc.common.blocks.devices.BarrelBlock;
-import net.dries007.tfc.common.blocks.devices.SluiceBlock;
-import net.dries007.tfc.common.blocks.rotation.AxleBlock;
-import net.dries007.tfc.common.blocks.rotation.BladedAxleBlock;
-import net.dries007.tfc.common.blocks.rotation.ClutchBlock;
-import net.dries007.tfc.common.blocks.rotation.EncasedAxleBlock;
-import net.dries007.tfc.common.blocks.rotation.GearBoxBlock;
-import net.dries007.tfc.common.blocks.rotation.WaterWheelBlock;
-import net.dries007.tfc.common.blocks.rotation.WindmillBlock;
-import net.dries007.tfc.common.blocks.wood.*;
-import net.dries007.tfc.common.items.BarrelBlockItem;
-import net.dries007.tfc.common.items.ChestBlockItem;
-import net.dries007.tfc.config.TFCConfig;
+import net.dries007.tfc.common.blocks.wood.Wood;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.registry.RegistryWood;
 import net.dries007.tfc.world.feature.tree.TFCTreeGrower;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.PressurePlateBlock.Sensitivity;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.entity.SignBlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraftforge.common.ForgeConfigSpec;
-import org.apache.commons.lang3.function.TriFunction;
-import org.jetbrains.annotations.Nullable;
 
-public enum CompatWood implements ModRegistryWood {
-
+public enum CompatWood implements RegistryWood {
     ACACIA(false, MapColor.COLOR_ORANGE, MapColor.STONE,11, 210),
     BIRCH(false, MapColor.SAND, MapColor.QUARTZ,7, 145),
     CHERRY(false, MapColor.TERRACOTTA_WHITE, MapColor.TERRACOTTA_PINK,8, 170),
@@ -78,14 +39,14 @@ public enum CompatWood implements ModRegistryWood {
     private final WoodType woodType;
     private final int autumnIndex;
 
-    private CompatWood(boolean conifer, MapColor woodColor, MapColor barkColor, int daysToGrow, int autumnIndex) {
+    private CompatWood(boolean evergreen, MapColor woodColor, MapColor barkColor, int daysToGrow, int autumnIndex) {
         this.serializedName = this.name().toLowerCase(Locale.ROOT);
-        this.conifer = conifer;
+        this.conifer = evergreen;
         this.woodColor = woodColor;
         this.barkColor = barkColor;
-        this.tree = new TFCTreeGrower(Helpers.identifier("tree/" + this.serializedName), Helpers.identifier("tree/" + this.serializedName + "_large"));
-        this.daysToGrow = daysToGrow;
         this.autumnIndex = autumnIndex;
+        this.tree = new TFCTreeGrower(AFC.treeIdentifier("tree/" + this.serializedName), AFC.treeIdentifier("tree/" + this.serializedName + "_large"));
+        this.daysToGrow = daysToGrow;
         this.blockSet = new BlockSetType(this.serializedName);
         this.woodType = new WoodType(Helpers.identifier(this.serializedName).toString(), this.blockSet);
     }
@@ -98,14 +59,6 @@ public enum CompatWood implements ModRegistryWood {
         return this.conifer;
     }
 
-    public BlockSetType getBlockSet() {
-        return this.blockSet;
-    }
-
-    public WoodType getVanillaWoodType() {
-        return this.woodType;
-    }
-
     public MapColor woodColor() {
         return this.woodColor;
     }
@@ -114,12 +67,24 @@ public enum CompatWood implements ModRegistryWood {
         return this.barkColor;
     }
 
+    public Supplier<Block> getBlock(Wood.BlockType type) {
+        return (Supplier)((Map)ModBlocks.WOODS.get(this)).get(type);
+    }
+
+    public BlockSetType getBlockSet() {
+        return this.blockSet;
+    }
+
+    public WoodType getVanillaWoodType() {
+        return this.woodType;
+    }
+
     public TFCTreeGrower tree() {
         return this.tree;
     }
 
     public int daysToGrow() {
-        return (Integer)((ForgeConfigSpec.IntValue)TFCConfig.SERVER.saplingGrowthDays.get(this)).get();
+        return this.defaultDaysToGrow();
     }
 
     public int autumnIndex() {
@@ -130,16 +95,41 @@ public enum CompatWood implements ModRegistryWood {
         return this.daysToGrow;
     }
 
-    public Supplier<Block> getBlock(BlockType type) {
-        return (Supplier)((Map)ModBlocks.WOODS.get(this)).get(type);
-    }
-
     public static void registerBlockSetTypes() {
         for(CompatWood wood : VALUES) {
             BlockSetType.register(wood.blockSet);
             WoodType.register(wood.woodType);
         }
 
+    }
+
+    /**
+     * Return true for BlockTypes you WANT to register.
+     * Return false to skip them.
+     */
+    private static final Set<Wood.BlockType> ALLOWED_BLOCK_TYPES = Set.of(
+            Wood.BlockType.LOOM,
+            Wood.BlockType.LOG_FENCE,
+            Wood.BlockType.TOOL_RACK,
+            Wood.BlockType.TWIG,
+            Wood.BlockType.VERTICAL_SUPPORT,
+            Wood.BlockType.HORIZONTAL_SUPPORT,
+            Wood.BlockType.SLUICE,
+            Wood.BlockType.BARREL,
+            Wood.BlockType.SCRIBING_TABLE,
+            Wood.BlockType.SEWING_TABLE,
+            Wood.BlockType.JAR_SHELF,
+            Wood.BlockType.AXLE,
+            Wood.BlockType.BLADED_AXLE,
+            Wood.BlockType.ENCASED_AXLE,
+            Wood.BlockType.CLUTCH,
+            Wood.BlockType.GEAR_BOX,
+            Wood.BlockType.WINDMILL,
+            Wood.BlockType.WATER_WHEEL
+    );
+
+    public static boolean shouldRegisterBlockType(Wood.BlockType type) {
+        return ALLOWED_BLOCK_TYPES.contains(type);
     }
 
     public Block planks() {
@@ -368,102 +358,17 @@ public enum CompatWood implements ModRegistryWood {
 
     public ResourceLocation strippedLogTexture() {
         return switch (this) {  // 'this' is the current enum instance
-            case ACACIA   -> ResourceLocation.withDefaultNamespace("block/stripped_acacia_log");
-            case BIRCH    -> ResourceLocation.withDefaultNamespace("block/stripped_birch_log");
-            case CHERRY   -> ResourceLocation.withDefaultNamespace("block/stripped_cherry_log");
+            case ACACIA -> ResourceLocation.withDefaultNamespace("block/stripped_acacia_log");
+            case BIRCH -> ResourceLocation.withDefaultNamespace("block/stripped_birch_log");
+            case CHERRY -> ResourceLocation.withDefaultNamespace("block/stripped_cherry_log");
             case DARK_OAK -> ResourceLocation.withDefaultNamespace("block/stripped_dark_oak_log");
-            case JUNGLE   -> ResourceLocation.withDefaultNamespace("block/stripped_jungle_log");
+            case JUNGLE -> ResourceLocation.withDefaultNamespace("block/stripped_jungle_log");
             case MANGROVE -> ResourceLocation.withDefaultNamespace("block/stripped_mangrove_log");
-            case OAK      -> ResourceLocation.withDefaultNamespace("block/stripped_oak_log");
-            case SPRUCE   -> ResourceLocation.withDefaultNamespace("block/stripped_spruce_log");
-            case CRIMSON  -> ResourceLocation.withDefaultNamespace("block/stripped_crimson_stem");
-            case WARPED   -> ResourceLocation.withDefaultNamespace("block/stripped_warped_stem");
+            case OAK -> ResourceLocation.withDefaultNamespace("block/stripped_oak_log");
+            case SPRUCE -> ResourceLocation.withDefaultNamespace("block/stripped_spruce_log");
+            case CRIMSON -> ResourceLocation.withDefaultNamespace("block/stripped_crimson_stem");
+            case WARPED -> ResourceLocation.withDefaultNamespace("block/stripped_warped_stem");
             // No default needed — enum switch is exhaustive
         };
-    }
-
-    public static enum BlockType {
-        LOG_FENCE(true, (wood) -> new TFCFenceBlock(properties(wood).strength(2.0F, 3.0F).flammableLikeLogs())),
-        TOOL_RACK(true, (wood) -> new ToolRackBlock(properties(wood).strength(2.0F).noOcclusion().blockEntity(TFCBlockEntities.TOOL_RACK))),
-        TWIG(false, (wood) -> GroundcoverBlock.twig(ExtendedProperties.of().strength(0.05F, 0.0F).sound(SoundType.WOOD).noCollission().flammableLikeWool())),
-        VERTICAL_SUPPORT(false, (wood) -> new VerticalSupportBlock(properties(wood).strength(1.0F).noOcclusion().flammableLikeLogs())),
-        HORIZONTAL_SUPPORT(false, (wood) -> new HorizontalSupportBlock(properties(wood).strength(1.0F).noOcclusion().flammableLikeLogs())),
-        LOOM(true, (self, wood) -> new TFCLoomBlock(properties(wood).strength(2.5F).noOcclusion().flammableLikePlanks().blockEntity(TFCBlockEntities.LOOM).ticks(LoomBlockEntity::tick), self.planksTexture(wood))),
-        SLUICE(false, (wood) -> new SluiceBlock(properties(wood).strength(3.0F).noOcclusion().flammableLikeLogs().blockEntity(TFCBlockEntities.SLUICE).serverTicks(SluiceBlockEntity::serverTick))),
-        BARREL(false, (self, wood) -> new BarrelBlock(properties(wood).strength(2.5F).flammableLikePlanks().noOcclusion().blockEntity(TFCBlockEntities.BARREL).serverTicks(BarrelBlockEntity::serverTick)), BarrelBlockItem::new),
-        SCRIBING_TABLE(false, (wood) -> new ScribingTableBlock(properties(wood).noOcclusion().strength(2.5F).flammable(20, 30))),
-        SEWING_TABLE(false, (wood) -> new SewingTableBlock(properties(wood).noOcclusion().strength(2.5F).flammable(20, 30))),
-        SHELF(false, (wood) -> new JarShelfBlock(properties(wood).noOcclusion().strength(2.5F).flammableLikePlanks().blockEntity(TFCBlockEntities.JARS))),
-        AXLE(false, (self, wood) -> new AxleBlock(properties(wood).noOcclusion().strength(2.5F).flammableLikeLogs().pushReaction(PushReaction.DESTROY).blockEntity(TFCBlockEntities.AXLE), getBlock(wood, self.windmill()), self.planksTexture(wood))),
-        BLADED_AXLE(false, (self, wood) -> new BladedAxleBlock(properties(wood).noOcclusion().strength(2.5F).flammableLikeLogs().pushReaction(PushReaction.DESTROY).blockEntity(TFCBlockEntities.BLADED_AXLE), getBlock(wood, self.axle()))),
-        ENCASED_AXLE(false, (self, wood) -> new EncasedAxleBlock(properties(wood).strength(2.5F).flammableLikeLogs().pushReaction(PushReaction.DESTROY).blockEntity(TFCBlockEntities.ENCASED_AXLE))),
-        CLUTCH(false, (self, wood) -> new ClutchBlock(properties(wood).strength(2.5F).flammableLikeLogs().pushReaction(PushReaction.DESTROY).blockEntity(TFCBlockEntities.CLUTCH), getBlock(wood, self.axle()))),
-        GEAR_BOX(false, (self, wood) -> new GearBoxBlock(properties(wood).strength(2.0F).noOcclusion().blockEntity(TFCBlockEntities.GEAR_BOX), getBlock(wood, self.axle()))),
-        WINDMILL(false, (self, wood) -> new WindmillBlock(properties(wood).strength(9.0F).noOcclusion().blockEntity(TFCBlockEntities.WINDMILL).ticks(WindmillBlockEntity::serverTick, WindmillBlockEntity::clientTick), getBlock(wood, self.axle()))),
-        WATER_WHEEL(false, (self, wood) -> new WaterWheelBlock(properties(wood).strength(9.0F).noOcclusion().blockEntity(TFCBlockEntities.WATER_WHEEL).ticks(WaterWheelBlockEntity::serverTick, WaterWheelBlockEntity::clientTick), getBlock(wood, self.axle()), wood.getSerializedName()));
-
-        private final boolean isPlanksVariant;
-        private final BiFunction<BlockType, ModRegistryWood, Block> blockFactory;
-        private final TriFunction<Block, Item.Properties, ModRegistryWood, ? extends BlockItem> blockItemFactory;
-
-        private static ExtendedProperties properties(ModRegistryWood wood) {
-            return ExtendedProperties.of(wood.woodColor()).sound(SoundType.WOOD).instrument(NoteBlockInstrument.BASS);
-        }
-
-        private static <B extends Block> Supplier<? extends B> getBlock(ModRegistryWood wood, BlockType type) {
-            return (Supplier<? extends B>) wood.getBlock(type);
-        }
-
-        private BlockType(boolean isPlanksVariant, Function<ModRegistryWood, Block> blockFactory) {
-            this(isPlanksVariant, (BiFunction)((self, wood) -> (Block)blockFactory.apply((ModRegistryWood) wood)));
-        }
-
-        private BlockType(boolean isPlanksVariant, BiFunction<BlockType, ModRegistryWood, Block> blockFactory) {
-            this(isPlanksVariant, blockFactory, BlockItem::new);
-        }
-
-        private BlockType(boolean isPlanksVariant, BiFunction<BlockType, ModRegistryWood, Block> blockFactory, BiFunction<Block, Item.Properties, ? extends BlockItem> blockItemFactory) {
-            this.blockFactory = blockFactory;
-            this.isPlanksVariant = isPlanksVariant;
-            this.blockItemFactory = (block, properties, self) -> (BlockItem)blockItemFactory.apply(block, properties);
-        }
-
-        private BlockType(boolean isPlanksVariant, BiFunction<BlockType, ModRegistryWood, Block> blockFactory, TriFunction<Block, Item.Properties, ModRegistryWood, ? extends BlockItem> blockItemFactory) {
-            this.blockFactory = blockFactory;
-            this.isPlanksVariant = isPlanksVariant;
-            this.blockItemFactory = blockItemFactory;
-        }
-
-        public @Nullable Function<Block, BlockItem> createBlockItem(ModRegistryWood wood, Item.Properties properties) {
-            return this.needsItem() ? (block) -> (BlockItem)this.blockItemFactory.apply(block, properties, wood) : null;
-        }
-
-        public String nameFor(ModRegistryWood wood) {
-            return (wood.getSerializedName() + "_" + this.name()).toLowerCase(Locale.ROOT);
-        }
-
-        public boolean needsItem() {
-            return this != VERTICAL_SUPPORT && this != HORIZONTAL_SUPPORT && this != WINDMILL;
-        }
-
-        private ResourceLocation planksTexture(ModRegistryWood wood) {
-            return Helpers.identifier("block/wood/planks/" + wood.getSerializedName());
-        }
-
-        private BlockType twig() {
-            return TWIG;
-        }
-
-        private BlockType axle() {
-            return AXLE;
-        }
-
-        private BlockType windmill() {
-            return WINDMILL;
-        }
-
-        public Supplier<Block> create(ModRegistryWood wood) {
-            return () -> (Block)this.blockFactory.apply(this, wood);
-        }
     }
 }

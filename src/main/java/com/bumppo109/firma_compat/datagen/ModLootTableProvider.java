@@ -16,6 +16,7 @@ import net.dries007.tfc.common.blocks.devices.BarrelBlock;
 import net.dries007.tfc.common.blocks.devices.DryingBricksBlock;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.dries007.tfc.common.blocks.rock.Ore;
+import net.dries007.tfc.common.blocks.wood.Wood;
 import net.dries007.tfc.common.items.TFCItems;
 import net.dries007.tfc.util.loot.IsIsolatedCondition;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -86,20 +87,20 @@ public class ModLootTableProvider extends LootTableProvider {
                 var woodMap = ModBlocks.WOODS.get(wood);
                 if (woodMap == null) continue;
 
-                for (CompatWood.BlockType type : CompatWood.BlockType.values()) {
+                for (Wood.BlockType type : Wood.BlockType.values()) {
                     if (!woodMap.containsKey(type)) continue;
 
                     Block block = woodMap.get(type).get();
 
-                    if (type == CompatWood.BlockType.WINDMILL) {
-                        Block axle = woodMap.containsKey(CompatWood.BlockType.AXLE)
-                                ? woodMap.get(CompatWood.BlockType.AXLE).get()
+                    if (type == Wood.BlockType.WINDMILL) {
+                        Block axle = woodMap.containsKey(Wood.BlockType.AXLE)
+                                ? woodMap.get(Wood.BlockType.AXLE).get()
                                 : block;
 
                         add(block, createSingleItemTable(axle));
-                    } else if (type == CompatWood.BlockType.BARREL) {
+                    } else if (type == Wood.BlockType.BARREL) {
                         createBarrelLoot(block, wood);
-                    } else if (type == CompatWood.BlockType.VERTICAL_SUPPORT || type == CompatWood.BlockType.HORIZONTAL_SUPPORT) {
+                    } else if (type == Wood.BlockType.VERTICAL_SUPPORT || type == Wood.BlockType.HORIZONTAL_SUPPORT) {
                         dropOther(block, ModItems.SUPPORTS.get(wood).get().asItem());
                     } else if (type.needsItem()) {
                         dropSelf(block);
@@ -247,7 +248,7 @@ public class ModLootTableProvider extends LootTableProvider {
         // ====================== HELPER METHODS ======================
 
         private void createBarrelLoot(Block block, CompatWood wood) {
-            Item barrelItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.BARREL).get().asItem();
+            Item barrelItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.BARREL).get().asItem();
 
             var sealed = LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
                     .setProperties(StatePropertiesPredicate.Builder.properties()
@@ -373,14 +374,14 @@ public class ModLootTableProvider extends LootTableProvider {
                 var woodMap = ModBlocks.WOODS.get(wood);
                 if (woodMap == null) continue;
 
-                for (CompatWood.BlockType type : CompatWood.BlockType.values()) {
+                for (Wood.BlockType type : Wood.BlockType.values()) {
                     var supplier = woodMap.get(type);
                     if (supplier == null) continue;
 
                     Block block = supplier.get();
 
                     /* Filter
-                    if (type == CompatWood.BlockType.VERTICAL_SUPPORT) {
+                    if (type == Wood.BlockType.VERTICAL_SUPPORT) {
                         continue;   // Skip - this block intentionally has no loot table
                     }
                      */

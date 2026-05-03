@@ -170,6 +170,16 @@ dependencies {
     //ArborFirmaCraft
     implementation fg.deobf("curse.maven:arborfirmacraft-877545:7200580")
 
+    //Firma Civ
+    implementation fg.deobf("curse.maven:firmaciv-714158:5737719")
+    //Nifty Ships
+    implementation fg.deobf("curse.maven:alekiships-1068445:5963449")
+    //Aleki's Simple Roof
+    implementation fg.deobf("curse.maven:alekis-ridiculously-simple-roofs-1010046:5869457")
+
+    //FirmaCiv+
+    implementation fg.deobf("curse.maven:firmacivplus-1243743:6491888")
+
     //Every Compat
     implementation fg.deobf("curse.maven:every-compat-628539:7860235")
 

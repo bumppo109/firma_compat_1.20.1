@@ -6,6 +6,7 @@ import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.fluid.ModFluids;
+import net.dries007.tfc.common.blocks.wood.Wood;
 import net.dries007.tfc.common.entities.TFCEntities;
 import net.dries007.tfc.common.items.JarItem;
 import net.dries007.tfc.common.items.TFCMinecartItem;
@@ -55,7 +56,7 @@ public class ModItems {
     public static final Map<CompatWood, RegistryObject<Item>> LUMBER = Helpers.mapOfKeys(CompatWood.class, wood -> register(wood.name() + "_lumber"));
 
     public static final Map<CompatWood, RegistryObject<Item>> SUPPORTS = Helpers.mapOfKeys(CompatWood.class, wood ->
-            register(wood.name() + "_support", () -> new StandingAndWallBlockItem(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.VERTICAL_SUPPORT).get(), ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.HORIZONTAL_SUPPORT).get(), new Item.Properties(), Direction.DOWN))
+            register(wood.name() + "_support", () -> new StandingAndWallBlockItem(ModBlocks.WOODS.get(wood).get(Wood.BlockType.VERTICAL_SUPPORT).get(), ModBlocks.WOODS.get(wood).get(Wood.BlockType.HORIZONTAL_SUPPORT).get(), new Item.Properties(), Direction.DOWN))
     );
 
     public static final RegistryObject<Item> BAMBOO_LUMBER = register("bamboo_lumber");
