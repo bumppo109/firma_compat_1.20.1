@@ -56,6 +56,7 @@ public class FirmaCompat
         ModFluids.FLUIDS.register(modEventBus);
         ModLootModifiers.register(modEventBus);
         ModFeatures.register(modEventBus);
+        ModClimateModels.registerVanillaModel();
 
         if(ModList.get().isLoaded("eclipticseasons") && ModList.get().isLoaded("legendarysurvivaloverhaul")){
             ModClimateModels.registerEclipticLsoModel();

@@ -27,7 +27,7 @@ public class EclipticSeasonsClimateModel implements TimeInvariantClimateModel {
         Biome biome = levelReader.getBiome(pos).value();
         if (!(levelReader instanceof Level level)) {
             // Worldgen fallback
-            return FirmaCompat.CLIMATE_NORMALIZER.getNormalized(biome, Level.OVERWORLD);
+            return Climate.toActualTemperature(biome.getBaseTemperature());
         }
 
         return EclipticUtil.getTemperatureFloat(level, biome, pos);

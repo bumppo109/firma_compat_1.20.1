@@ -14,6 +14,13 @@ public class ClimateEventHandler {
     public static void onSelectClimateModel(SelectClimateModelEvent event) {
         if (event.getModel() instanceof BiomeBasedClimateModel) {
 
+            event.setModel(VanillaClimateModel.INSTANCE);
+
+            /* TODO - need to finalize LSO climate model
+            if (ModList.get().isLoaded("eclipticseasons")) {
+                event.setModel(EclipticSeasonsClimateModel.INSTANCE);
+            }
+
             if(ModList.get().isLoaded("eclipticseasons") && ModList.get().isLoaded("legendarysurvivaloverhaul")){
                 event.setModel(EclipticSeasonsClimateModel.INSTANCE);
             } else if (ModList.get().isLoaded("eclipticseasons")) {
@@ -21,6 +28,8 @@ public class ClimateEventHandler {
             } else if (ModList.get().isLoaded("legendarysurvivaloverhaul")) {
                 event.setModel(LSOClimateModel.INSTANCE);
             }
+
+             */
             FirmaCompat.LOGGER.info("Applied Compat Climate Model for dimension: {}",
                     event.level() != null ? event.level().dimension().location() : "unknown");
         }

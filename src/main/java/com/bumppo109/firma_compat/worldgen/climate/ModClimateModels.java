@@ -13,12 +13,18 @@ public final class ModClimateModels {
     public static final Supplier<ClimateModelType> ECLIPTIC_BASED =
             register("ecliptic_based", EclipticSeasonsClimateModel::new);
 
+    public static final Supplier<ClimateModelType> VANILLA_BASED =
+            register("vanilla_based", VanillaClimateModel::new);
+
     public static final Supplier<ClimateModelType> LSO_BASED =
             register("lso_based", LSOClimateModel::new);
 
     public static final Supplier<ClimateModelType> ECLIPTIC_LSO_BASED =
             register("ecliptic_lso_based", EclipticLSOClimateModel::new);
 
+    public static void registerVanillaModel() {
+        VANILLA_BASED.get();
+    }
     public static void registerEclipticModel() {
         ECLIPTIC_BASED.get();
     }
