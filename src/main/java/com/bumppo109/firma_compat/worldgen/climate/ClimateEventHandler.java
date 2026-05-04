@@ -12,16 +12,16 @@ public class ClimateEventHandler {
 
     @SubscribeEvent
     public static void onSelectClimateModel(SelectClimateModelEvent event) {
-        // Only override if Ecliptic Seasons is present
-        if (!ModList.get().isLoaded("eclipticseasons")) {
-            return;
-        }
-
-        // Replace BiomeBasedClimateModel with our Ecliptic one
         if (event.getModel() instanceof BiomeBasedClimateModel) {
-            event.setModel(EclipticSeasonsClimateModel.INSTANCE);
 
-            FirmaCompat.LOGGER.info("Applied Ecliptic Seasons Climate Model for dimension: {}",
+            if(ModList.get().isLoaded("eclipticseasons") && ModList.get().isLoaded("legendarysurvivaloverhaul")){
+                event.setModel(EclipticSeasonsClimateModel.INSTANCE);
+            } else if (ModList.get().isLoaded("eclipticseasons")) {
+                event.setModel(EclipticSeasonsClimateModel.INSTANCE);
+            } else if (ModList.get().isLoaded("legendarysurvivaloverhaul")) {
+                event.setModel(LSOClimateModel.INSTANCE);
+            }
+            FirmaCompat.LOGGER.info("Applied Compat Climate Model for dimension: {}",
                     event.level() != null ? event.level().dimension().location() : "unknown");
         }
     }

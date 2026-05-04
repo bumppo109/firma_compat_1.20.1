@@ -56,7 +56,15 @@ public class FirmaCompat
         ModFluids.FLUIDS.register(modEventBus);
         ModLootModifiers.register(modEventBus);
         ModFeatures.register(modEventBus);
-        ModClimateModels.registerClimateModels();
+
+        if(ModList.get().isLoaded("eclipticseasons") && ModList.get().isLoaded("legendarysurvivaloverhaul")){
+            ModClimateModels.registerEclipticLsoModel();
+        } else if (ModList.get().isLoaded("eclipticseasons")) {
+            ModClimateModels.registerEclipticModel();
+        } else if (ModList.get().isLoaded("legendarysurvivaloverhaul")) {
+            ModClimateModels.registerLsoModel();
+        }
+
 
         if(ModList.get().isLoaded("firmalife")){
             CompatFLBlocks.BLOCKS.register(modEventBus);
@@ -92,9 +100,9 @@ public class FirmaCompat
 
     @SubscribeEvent
     public void onServerAboutToStart(ServerAboutToStartEvent event) {
-        if (ModList.get().isLoaded("eclipticseasons")) {
-            FirmaCompat.CLIMATE_NORMALIZER.calibrateAll(event.getServer().registryAccess());
-        }
+        LOGGER.info("Starting Climate Normalizer");
+        FirmaCompat.CLIMATE_NORMALIZER.calibrateAll(event.getServer().registryAccess());
+        LOGGER.info("Finished Climate Normalizer");
     }
 
     @SubscribeEvent

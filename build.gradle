@@ -201,6 +201,9 @@ dependencies {
     //Terrablender
     implementation fg.deobf("curse.maven:terrablender-563928:6290448")
 
+    //Legendary Survival Overhaul
+    implementation fg.deobf("curse.maven:legendary-survival-overhaul-840254:7603852")
+
     //Ecliptic Seasons
         //0.13.0-beta-5-0-1
         //implementation fg.deobf("curse.maven:ecliptic-seasons-1118306:8008889")

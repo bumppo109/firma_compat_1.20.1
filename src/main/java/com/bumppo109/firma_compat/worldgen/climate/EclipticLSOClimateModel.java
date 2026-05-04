@@ -1,9 +1,9 @@
 package com.bumppo109.firma_compat.worldgen.climate;
 
 import com.bumppo109.firma_compat.FirmaCompat;
-import com.teamtea.eclipticseasons.api.util.EclipticUtil;
 import com.teamtea.eclipticseasons.api.constant.solar.SolarTerm;
-import com.teamtea.eclipticseasons.common.core.biome.BiomeClimateManager;
+import com.teamtea.eclipticseasons.api.util.EclipticUtil;
+import net.dries007.tfc.util.climate.Climate;
 import net.dries007.tfc.util.climate.ClimateModelType;
 import net.dries007.tfc.util.climate.TimeInvariantClimateModel;
 import net.minecraft.core.BlockPos;
@@ -11,43 +11,38 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
+import sfiomn.legendarysurvivaloverhaul.registry.TemperatureModifierRegistry;
 
-public class EclipticSeasonsClimateModel implements TimeInvariantClimateModel {
+public class EclipticLSOClimateModel implements TimeInvariantClimateModel {
 
-    public static final EclipticSeasonsClimateModel INSTANCE = new EclipticSeasonsClimateModel();
+    public static EclipticLSOClimateModel INSTANCE = new EclipticLSOClimateModel();
 
     @Override
     public ClimateModelType type() {
-        return ModClimateModels.ECLIPTIC_BASED.get();
+        return ModClimateModels.ECLIPTIC_LSO_BASED.get();
     }
 
     @Override
-    public float getTemperature(LevelReader levelReader, BlockPos pos) {
+    public float getTemperature(LevelReader levelReader, BlockPos blockPos) {
+        Biome biome = levelReader.getBiome(blockPos).value();
+
         if (!(levelReader instanceof Level level)) {
             // Worldgen fallback
-            Biome biome = levelReader.getBiome(pos).value();
-            return FirmaCompat.CLIMATE_NORMALIZER.getNormalized(biome, Level.OVERWORLD);
+            return Climate.toActualTemperature(biome.getBaseTemperature());
         }
+        float biomeInfluence = TemperatureModifierRegistry.BIOME.get().getWorldInfluence(null, level, blockPos);
+        float altitudeInfluence = TemperatureModifierRegistry.ALTITUDE.get().getWorldInfluence(null, level, blockPos);
+        float dimensionInfluence = TemperatureModifierRegistry.DIMENSION.get().getWorldInfluence(null, level, blockPos);
+        float timeInfluence = TemperatureModifierRegistry.TIME.get().getWorldInfluence(null, level, blockPos);
 
-        try {
-            Biome biome = level.getBiome(pos).value();
-            SolarTerm term = EclipticUtil.getNowSolarTerm(level);
+        float eclipticInfluence = TemperatureModifierRegistry.ECLIPTIC_SEASONS.get().getWorldInfluence(null, level, blockPos);
 
-            float normalizedBase = FirmaCompat.CLIMATE_NORMALIZER.getNormalized(biome, level);
-            float seasonalOffset = EclipticSeasonalAdjuster.getSeasonalOffset(term);
-
-            return normalizedBase + seasonalOffset;
-
-        } catch (Exception e) {
-            FirmaCompat.LOGGER.error("Failed to get temperature at {}: {}", pos, e.getMessage());
-            return 15.0f; // safe default
-        }
+        return dimensionInfluence + biomeInfluence + altitudeInfluence + timeInfluence + eclipticInfluence;
     }
 
     @Override
     public float getRainfall(LevelReader levelReader, BlockPos pos) {
         if (!(levelReader instanceof Level level)) {
-            // Worldgen fallback
             Biome biome = levelReader.getBiome(pos).value();
             return biome.getPrecipitationAt(pos) != Biome.Precipitation.NONE ? 250f : 80f;
         }
@@ -67,11 +62,5 @@ public class EclipticSeasonsClimateModel implements TimeInvariantClimateModel {
             FirmaCompat.LOGGER.warn("Failed to get rainfall at {}: {}", pos, e.getMessage());
             return 180.0f;
         }
-    }
-
-    // Optional: You can keep this if you want, but it's no longer used much
-    private float getVanillaLikeTemperature(LevelReader levelReader, BlockPos pos) {
-        Biome biome = levelReader.getBiome(pos).value();
-        return FirmaCompat.CLIMATE_NORMALIZER.getNormalized(biome, Level.OVERWORLD);
     }
 }

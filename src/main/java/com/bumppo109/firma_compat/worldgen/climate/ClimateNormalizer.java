@@ -8,47 +8,51 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.dimension.LevelStem;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ClimateNormalizer {
 
-    // Per-dimension calibration data
-    private final Map<ResourceKey<net.minecraft.world.level.Level>, NormalizerData> dataMap = new HashMap<>();
+    // Dimension → (Biome → normalized temperature)
+    private final Map<ResourceKey<Level>, Map<Biome, Float>> dimensionBiomeCache = new HashMap<>();
 
-    private static class NormalizerData {
-        float rawMin = Float.MAX_VALUE;
-        float rawMax = Float.MIN_VALUE;
-        float rawMean = 0f;
-        int sampleCount = 0;
-        boolean calibrated = false;
-    }
+    private boolean fullyCalibrated = false;
 
-    public void calibrateForDimension(RegistryAccess registryAccess, ResourceKey<net.minecraft.world.level.Level> dimension) {
-        NormalizerData data = dataMap.computeIfAbsent(dimension, k -> new NormalizerData());
-        if (data.calibrated) return;
+    public void calibrateAll(RegistryAccess registryAccess) {
+        if (fullyCalibrated) return;
 
-        Registry<Biome> registry = registryAccess.registryOrThrow(Registries.BIOME);
+        Registry<LevelStem> dimensionRegistry = registryAccess.registryOrThrow(Registries.LEVEL_STEM);
+        Registry<Biome> biomeRegistry = registryAccess.registryOrThrow(Registries.BIOME);
 
-        for (Holder.Reference<Biome> holder : registry.holders().toList()) {
-            Biome biome = holder.value();
-            String ns = holder.key().location().getNamespace();
-            if (ns.equals("tfc") || ns.equals("firmalife")) continue;
+        for (ResourceKey<LevelStem> dimKey : dimensionRegistry.registryKeySet()) {
+            ResourceKey<Level> levelKey = ResourceKey.create(Registries.DIMENSION, dimKey.location());
 
-            float temp = getBestBaseTemp(biome);
+            Map<Biome, Float> dimMap = new HashMap<>();
 
-            data.rawMin = Math.min(data.rawMin, temp);
-            data.rawMax = Math.max(data.rawMax, temp);
-            data.rawMean += temp;
-            data.sampleCount++;
+            for (Holder.Reference<Biome> holder : biomeRegistry.holders().toList()) {
+                Biome biome = holder.value();
+                String ns = holder.key().location().getNamespace();
+
+                if (ns.equals("tfc")) continue;
+
+                float rawTemp = getBestBaseTemp(biome);
+                float normalized = normalizeRaw(rawTemp);
+
+                dimMap.put(biome, normalized);
+            }
+
+            dimensionBiomeCache.put(levelKey, dimMap);
+
+            FirmaCompat.LOGGER.info("Calibrated normalization for dimension {} — {} biomes",
+                    levelKey.location(), dimMap.size());
         }
 
-        if (data.sampleCount > 0) data.rawMean /= data.sampleCount;
-        data.calibrated = true;
-
-        FirmaCompat.LOGGER.info("ClimateNormalizer calibrated for {} ({} biomes)", dimension.location(), data.sampleCount);
+        fullyCalibrated = true;
     }
 
     private float getBestBaseTemp(Biome biome) {
@@ -59,32 +63,38 @@ public class ClimateNormalizer {
         return biome.getBaseTemperature();
     }
 
-    // ===================================================================
-    // New normalization: Squish extremes → Smooth transitions
-    // ===================================================================
-    public float normalize(float rawTemp, ResourceKey<net.minecraft.world.level.Level> dimension) {
-        NormalizerData data = dataMap.get(dimension);
-        if (data == null || !data.calibrated || data.sampleCount < 5) {
-            return rawTemp * 27f; // fallback
-        }
+    /**
+     * Core normalization: Squish extremes + smooth mid-range
+     */
+    private float normalizeRaw(float rawTemp) {
+        // Strong squishing of extremes
+        float squished = (float) Math.tanh(rawTemp * 2.9f);
 
-        // Step 1: Squish extremes using tanh
-        float range = (data.rawMax - data.rawMin) + 0.0001f;
-        float centered = (rawTemp - data.rawMean) / (range * 0.5f);
-        float squished = (float) Math.tanh(centered * 2.6f);   // higher = stronger squish
+        // Reduced scale to bring everything down
+        float baseTemp = squished * 24.5f;     // was 27–28, now 24.5
 
-        // Step 2: Map squished value (-1..1) to a reasonable temperature range
-        float baseTemp = squished * 26.0f;   // -26 to +26 range
-
-        // Step 3: Gentle smoothing curve in the comfortable zone
-        if (baseTemp > -8 && baseTemp < 26) {
-            baseTemp = baseTemp * 0.88f;     // dampen mid-range for smoother feel
+        // Smoothing in the main habitable range
+        if (baseTemp > -11 && baseTemp < 28) {
+            baseTemp *= 0.91f;                 // stronger smoothing
         }
 
         return baseTemp;
     }
 
-    public float normalize(float rawTemp, net.minecraft.world.level.Level level) {
-        return normalize(rawTemp, level.dimension());
+    // ==================== Retrieval ====================
+
+    public float getNormalized(Biome biome, ResourceKey<Level> dimension) {
+        Map<Biome, Float> map = dimensionBiomeCache.get(dimension);
+        if (map == null) return 18.0f; // safe default
+
+        return map.getOrDefault(biome, 18.0f);
+    }
+
+    public float getNormalized(Biome biome, Level level) {
+        return getNormalized(biome, level.dimension());
+    }
+
+    public boolean isCalibrated() {
+        return fullyCalibrated;
     }
 }
