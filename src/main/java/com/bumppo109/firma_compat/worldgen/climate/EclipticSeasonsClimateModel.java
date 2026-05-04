@@ -4,6 +4,7 @@ import com.bumppo109.firma_compat.FirmaCompat;
 import com.teamtea.eclipticseasons.api.util.EclipticUtil;
 import com.teamtea.eclipticseasons.api.constant.solar.SolarTerm;
 import com.teamtea.eclipticseasons.common.core.biome.BiomeClimateManager;
+import net.dries007.tfc.util.climate.Climate;
 import net.dries007.tfc.util.climate.ClimateModelType;
 import net.dries007.tfc.util.climate.TimeInvariantClimateModel;
 import net.minecraft.core.BlockPos;
@@ -23,25 +24,13 @@ public class EclipticSeasonsClimateModel implements TimeInvariantClimateModel {
 
     @Override
     public float getTemperature(LevelReader levelReader, BlockPos pos) {
+        Biome biome = levelReader.getBiome(pos).value();
         if (!(levelReader instanceof Level level)) {
             // Worldgen fallback
-            Biome biome = levelReader.getBiome(pos).value();
             return FirmaCompat.CLIMATE_NORMALIZER.getNormalized(biome, Level.OVERWORLD);
         }
 
-        try {
-            Biome biome = level.getBiome(pos).value();
-            SolarTerm term = EclipticUtil.getNowSolarTerm(level);
-
-            float normalizedBase = FirmaCompat.CLIMATE_NORMALIZER.getNormalized(biome, level);
-            float seasonalOffset = EclipticSeasonalAdjuster.getSeasonalOffset(term);
-
-            return normalizedBase + seasonalOffset;
-
-        } catch (Exception e) {
-            FirmaCompat.LOGGER.error("Failed to get temperature at {}: {}", pos, e.getMessage());
-            return 15.0f; // safe default
-        }
+        return EclipticUtil.getTemperatureFloat(level, biome, pos);
     }
 
     @Override
@@ -67,11 +56,5 @@ public class EclipticSeasonsClimateModel implements TimeInvariantClimateModel {
             FirmaCompat.LOGGER.warn("Failed to get rainfall at {}: {}", pos, e.getMessage());
             return 180.0f;
         }
-    }
-
-    // Optional: You can keep this if you want, but it's no longer used much
-    private float getVanillaLikeTemperature(LevelReader levelReader, BlockPos pos) {
-        Biome biome = levelReader.getBiome(pos).value();
-        return FirmaCompat.CLIMATE_NORMALIZER.getNormalized(biome, Level.OVERWORLD);
     }
 }
