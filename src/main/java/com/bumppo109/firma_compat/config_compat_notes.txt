@@ -1,6 +1,16 @@
 TFC
-    - disable thirst bar
-    - set thirst modifier to 0
+    - client -> display
+        - disable thirst bar
+    - server -> mechanics -> player
+        - set thirst modifier to 0
+    - common -> general
+        - set default overworld to: "minecraft:overworld"
 
 Legendary Survival Overhaul
-    - (if used with Ecliptic Seasons) - disable Ecliptic Integration
+    - common
+        - (if used with Ecliptic Seasons) - disable Ecliptic Integration
+
+Ecliptic Seasons
+    - common
+        - set term days to 4
+        - set starting term to 10

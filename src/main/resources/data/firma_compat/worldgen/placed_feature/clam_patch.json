@@ -1,0 +1,17 @@
+{
+  "feature": "firma_compat:clam_patch",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 6
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "firma_compat:climate",
+      "min_temperature": -30,
+      "max_temperature": 20
+    }
+  ]
+}

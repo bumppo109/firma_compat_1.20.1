@@ -1,0 +1,27 @@
+{
+  "type": "tfc:soil_disc",
+  "config": {
+    "min_radius": 1,
+    "max_radius": 3,
+    "height": 2,
+    "integrity": 0.9,
+    "states": [
+      {
+        "replace": "minecraft:grass_block",
+        "with": "firma_compat:cassiterite_gravel_deposit"
+      },
+      {
+        "replace": "minecraft:dirt",
+        "with": "firma_compat:native_copper_gravel_deposit"
+      },
+      {
+        "replace": "minecraft:mud",
+        "with": "firma_compat:native_copper_gravel_deposit"
+      },
+      {
+        "replace": "minecraft:gravel",
+        "with": "firma_compat:native_copper_gravel_deposit"
+      }
+    ]
+  }
+}

@@ -8,7 +8,6 @@ import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.item.ModItems;
-import net.dries007.tfc.common.blocks.wood.Wood;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -41,23 +40,23 @@ public class ModItemModelProvider extends ItemModelProvider {
             ResourceLocation planksTexture = mcLoc("block/" + woodName + "_planks");
             ResourceLocation axleCasingFrontTexture = modLoc("block/template/axle_casing_front");
 
-            Block twigBlock = woodMap.get(Wood.BlockType.TWIG).get();
-            Block logFenceBlock = woodMap.get(Wood.BlockType.LOG_FENCE).get();
+            Block twigBlock = woodMap.get(CompatWood.BlockType.TWIG).get();
+            Block logFenceBlock = woodMap.get(CompatWood.BlockType.LOG_FENCE).get();
             Item supportBlockItem = woodSupportMap.get();
-            Block toolRackBlock = woodMap.get(Wood.BlockType.TOOL_RACK).get();
-            Block sluiceBlock = woodMap.get(Wood.BlockType.SLUICE).get();
-            Block barrelBlock = woodMap.get(Wood.BlockType.BARREL).get();
-            Block loomBlock = woodMap.get(Wood.BlockType.LOOM).get();
-            Block scribingTableBlock = woodMap.get(Wood.BlockType.SCRIBING_TABLE).get();
-            Block sewingTableBlock = woodMap.get(Wood.BlockType.SEWING_TABLE).get();
-            Block shelfBlock = woodMap.get(Wood.BlockType.JAR_SHELF).get();
-            Block bladedAxleBlock = woodMap.get(Wood.BlockType.BLADED_AXLE).get();
-            Block axleBlock = woodMap.get(Wood.BlockType.AXLE).get();
-            Block encasedAxleBlock = woodMap.get(Wood.BlockType.ENCASED_AXLE).get();
-            Block clutchBlock = woodMap.get(Wood.BlockType.CLUTCH).get();
-            Block gearBoxBlock = woodMap.get(Wood.BlockType.GEAR_BOX).get();
-            Block waterWheelBlock = woodMap.get(Wood.BlockType.WATER_WHEEL).get();
-            //Block windmillBlock = woodMap.get(Wood.BlockType.WINDMILL).get();
+            Block toolRackBlock = woodMap.get(CompatWood.BlockType.TOOL_RACK).get();
+            Block sluiceBlock = woodMap.get(CompatWood.BlockType.SLUICE).get();
+            Block barrelBlock = woodMap.get(CompatWood.BlockType.BARREL).get();
+            Block loomBlock = woodMap.get(CompatWood.BlockType.LOOM).get();
+            Block scribingTableBlock = woodMap.get(CompatWood.BlockType.SCRIBING_TABLE).get();
+            Block sewingTableBlock = woodMap.get(CompatWood.BlockType.SEWING_TABLE).get();
+            Block shelfBlock = woodMap.get(CompatWood.BlockType.SHELF).get();
+            Block bladedAxleBlock = woodMap.get(CompatWood.BlockType.BLADED_AXLE).get();
+            Block axleBlock = woodMap.get(CompatWood.BlockType.AXLE).get();
+            Block encasedAxleBlock = woodMap.get(CompatWood.BlockType.ENCASED_AXLE).get();
+            Block clutchBlock = woodMap.get(CompatWood.BlockType.CLUTCH).get();
+            Block gearBoxBlock = woodMap.get(CompatWood.BlockType.GEAR_BOX).get();
+            Block waterWheelBlock = woodMap.get(CompatWood.BlockType.WATER_WHEEL).get();
+            //Block windmillBlock = woodMap.get(CompatWood.BlockType.WINDMILL).get();
 
             Item lumberItem = woodLumberMap.get();
 

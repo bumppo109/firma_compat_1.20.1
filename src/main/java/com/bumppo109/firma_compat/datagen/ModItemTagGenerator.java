@@ -10,7 +10,6 @@ import com.bumppo109.firma_compat.item.ModItems;
 import com.bumppo109.firma_compat.util.ModTags;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.TFCBlocks;
-import net.dries007.tfc.common.blocks.wood.Wood;
 import net.dries007.tfc.util.Metal;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -34,13 +33,13 @@ public class ModItemTagGenerator extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider pProvider) {
         for (CompatWood wood : CompatWood.VALUES) {
             tag(ItemTags.WOODEN_FENCES)
-                    .add(ModBlocks.WOODS.get(wood).get(Wood.BlockType.LOG_FENCE).get().asItem());
+                    .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get().asItem());
             tag(ItemTags.FENCES)
-                    .add(ModBlocks.WOODS.get(wood).get(Wood.BlockType.LOG_FENCE).get().asItem());
+                    .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get().asItem());
             tag(ModTags.Items.TWIGS)
-                    .add(ModBlocks.WOODS.get(wood).get(Wood.BlockType.TWIG).get().asItem());
+                    .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.TWIG).get().asItem());
             tag(ModTags.Items.BARRELS)
-                    .add(ModBlocks.WOODS.get(wood).get(Wood.BlockType.BARREL).get().asItem());
+                    .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.BARREL).get().asItem());
             tag(ModTags.Items.LUMBER)
                     .add(ModItems.LUMBER.get(wood).get());
             tag(ModTags.Items.SUPPORT_BEAMS)

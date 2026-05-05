@@ -1,7 +1,6 @@
 package com.bumppo109.firma_compat.block;
 
 import com.bumppo109.firma_compat.FirmaCompat;
-import com.bumppo109.firma_compat.addons.firmaciv.CompatWatercraftMaterial;
 import com.bumppo109.firma_compat.fluid.ModFluids;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.google.common.base.Suppliers;
@@ -36,41 +35,16 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.bumppo109.firma_compat.block.CompatWood.shouldRegisterBlockType;
-
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(Registries.BLOCK, FirmaCompat.MODID);
 
     //Wood
-    public static final Map<CompatWood, Map<Wood.BlockType, RegistryObject<Block>>> WOODS = Helpers.mapOfKeys(CompatWood.class, wood ->
-            Helpers.mapOfKeys(Wood.BlockType.class, type ->
+    public static final Map<CompatWood, Map<CompatWood.BlockType, RegistryObject<Block>>> WOODS = Helpers.mapOfKeys(CompatWood.class, wood ->
+            Helpers.mapOfKeys(CompatWood.BlockType.class, type ->
                     register(getWoodBlockName(wood, type), type.create(wood), type.createBlockItem(wood, new Item.Properties()))
             )
     );
-    /*
-    public static final Map<CompatWood, Map<Wood.BlockType, RegistryObject<Block>>> WOODS = new HashMap<>();
-
-    static {
-        for (CompatWood wood : CompatWood.VALUES) {
-            Map<Wood.BlockType, RegistryObject<Block>> woodMap = new HashMap<>();
-
-            for (Wood.BlockType type : Wood.BlockType.values()) {
-                // Only register the block types you want
-                if (shouldRegisterBlockType(type)) {
-                    RegistryObject<Block> block = register(
-                            getWoodBlockName(wood, type),
-                            type.create(wood),
-                            type.createBlockItem(wood, new Item.Properties())
-                    );
-                    woodMap.put(type, block);
-                }
-            }
-
-            WOODS.put(wood, woodMap);
-        }
-    }
-     */
 
     /* TODO - hanging signs
     private static <B extends SignBlock> Map<CompatWood, Map<Metal.Default, RegistryObject<B>>> registerHangingSigns(String variant, BiFunction<ExtendedProperties, WoodType, B> factory)
@@ -223,7 +197,7 @@ public class ModBlocks {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.PODZOL)));
 
     // Helper methods
-    private static String getWoodBlockName(CompatWood wood, Wood.BlockType type) {
+    private static String getWoodBlockName(CompatWood wood, CompatWood.BlockType type) {
         String woodName = wood.getSerializedName();
         String typeName = type.name().toLowerCase(Locale.ROOT);
 

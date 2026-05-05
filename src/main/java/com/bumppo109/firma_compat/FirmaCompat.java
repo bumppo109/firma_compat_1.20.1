@@ -13,12 +13,11 @@ import com.bumppo109.firma_compat.item.ModItems;
 import com.bumppo109.firma_compat.loot.ModLootModifiers;
 import com.bumppo109.firma_compat.worldgen.ModFeatures;
 import com.bumppo109.firma_compat.util.chunkData.ModNetworking;
-import com.bumppo109.firma_compat.util.climate.ClimateNormalizer;
 import com.bumppo109.firma_compat.util.climate.models.ModClimateModels;
+import com.bumppo109.firma_compat.worldgen.feature.ModPlacement;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,8 +39,6 @@ public class FirmaCompat
     public static boolean isEclipticLoaded = false;
     public static boolean isLSOLoaded = false;
 
-    public static final ClimateNormalizer CLIMATE_NORMALIZER = new ClimateNormalizer();
-
     public FirmaCompat(FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
@@ -58,6 +55,7 @@ public class FirmaCompat
         ModLootModifiers.register(modEventBus);
         ModFeatures.register(modEventBus);
         ModClimateModels.registerVanillaModel();
+        ModPlacement.PLACEMENT_MODIFIERS.register(modEventBus);
 
         if(ModList.get().isLoaded("eclipticseasons") && ModList.get().isLoaded("legendarysurvivaloverhaul")){
             ModClimateModels.registerEclipticLsoModel();
@@ -102,13 +100,6 @@ public class FirmaCompat
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
 
-    }
-
-    @SubscribeEvent
-    public void onServerAboutToStart(ServerAboutToStartEvent event) {
-        LOGGER.info("Starting Climate Normalizer");
-        FirmaCompat.CLIMATE_NORMALIZER.calibrateAll(event.getServer().registryAccess());
-        LOGGER.info("Finished Climate Normalizer");
     }
 
     @SubscribeEvent

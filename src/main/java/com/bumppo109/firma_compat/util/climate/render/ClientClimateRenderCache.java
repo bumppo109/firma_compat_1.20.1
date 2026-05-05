@@ -1,4 +1,4 @@
-package com.bumppo109.firma_compat.util.climate;
+package com.bumppo109.firma_compat.util.climate.render;
 
 import com.bumppo109.firma_compat.util.chunkData.ClimateData;
 import net.minecraft.world.level.ChunkPos;

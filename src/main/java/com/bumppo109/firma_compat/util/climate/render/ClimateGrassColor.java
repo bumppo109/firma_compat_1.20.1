@@ -1,4 +1,4 @@
-package com.bumppo109.firma_compat.util.climate;
+package com.bumppo109.firma_compat.util.climate.render;
 
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.core.BlockPos;

@@ -5,6 +5,7 @@ import com.bumppo109.firma_compat.util.chunkData.ClimateData;
 import com.bumppo109.firma_compat.util.chunkData.ServerClimateCache;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -15,13 +16,17 @@ import net.minecraft.world.level.levelgen.RandomState;
 public class VanillaClimateHelper {
 
     public static float tempScale = 27.5f;
+    public static float rainScale = 250f;
+
+    public static float maxElevationChange = 17.822f;
+    public static float elevationModifier = 0.16225F;
 
     public static float getTemperature(LevelReader level, BlockPos pos) {
         ClimateData data = getClimateData(level, pos);
 
         if (data == null) return 0f;
 
-        return data.temperature * tempScale;
+        return getAdjustedAverageTempByElevation(pos.getY(), (data.temperature * tempScale));
     }
 
     public static float getRainfall(LevelReader level, BlockPos pos) {
@@ -29,7 +34,31 @@ public class VanillaClimateHelper {
 
         if (data == null) return 0f;
 
-        return (data.vegetation + 1f) * 250f;
+        return (data.vegetation + 1f) * rainScale;
+    }
+
+    public static float getAdjustedAverageTempByElevation(int y, float averageTemperature) {
+        if ((float)y > 63.0F) {
+            float elevationTemperature = Mth.clamp(((float)y - 63.0F) * elevationModifier, 0.0F, maxElevationChange);
+            return averageTemperature - elevationTemperature;
+        } else {
+            return averageTemperature;
+        }
+    }
+
+    public static float getTemperatureWorldgen(LevelReader level, BlockPos pos) {
+        float raw = getRawTemperature(level, pos);
+        if (Float.isNaN(raw)) return 0f;
+
+        float scaled = raw * tempScale;
+        return getAdjustedAverageTempByElevation(pos.getY(), scaled);
+    }
+
+    public static float getRainfallWorldgen(LevelReader level, BlockPos pos) {
+        float raw = getRawVegetation(level, pos);
+        if (Float.isNaN(raw)) return 0f;
+
+        return (raw + 1f) * rainScale;
     }
 
     public static ClimateData getClimateData(LevelReader level, BlockPos pos) {

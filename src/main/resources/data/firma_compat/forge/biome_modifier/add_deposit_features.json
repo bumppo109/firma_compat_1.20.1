@@ -1,0 +1,11 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_river",
+  "features": [
+    "firma_compat:cassiterite_deposit",
+    "firma_compat:native_gold_deposit",
+    "firma_compat:native_silver_deposit",
+    "firma_compat:native_copper_deposit"
+  ],
+  "step": "underground_decoration"
+}

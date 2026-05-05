@@ -7,7 +7,6 @@ import com.bumppo109.firma_compat.addons.rnr.CompatRnRItems;
 import com.bumppo109.firma_compat.block.*;
 import com.bumppo109.firma_compat.item.ModItems;
 import net.dries007.tfc.common.blocks.rock.Ore;
-import net.dries007.tfc.common.blocks.wood.Wood;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -120,11 +119,11 @@ public class ModLang extends LanguageProvider {
             //add(supportItem.getDescriptionId(), supportName);
 
             //WOODS
-            for (Wood.BlockType blockType : Wood.BlockType.values()) {
+            for (CompatWood.BlockType blockType : CompatWood.BlockType.values()) {
                 Block block = ModBlocks.WOODS.get(wood).get(blockType).get();
                 String blockName;
 
-                if(blockType.equals(Wood.BlockType.VERTICAL_SUPPORT) || blockType.equals(Wood.BlockType.HORIZONTAL_SUPPORT)){
+                if(blockType.equals(CompatWood.BlockType.VERTICAL_SUPPORT) || blockType.equals(CompatWood.BlockType.HORIZONTAL_SUPPORT)){
                     blockName = supportName;
                 } else {
                     blockName = getBlockDisplayName(block);

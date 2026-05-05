@@ -15,7 +15,6 @@ import com.therighthon.rnr.common.block.RNRBlocks;
 import com.therighthon.rnr.common.item.RNRItems;
 import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.common.blocks.rock.Ore;
-import net.dries007.tfc.common.blocks.wood.Wood;
 import net.dries007.tfc.util.Metal;
 import net.mehvahdjukaar.every_compat.api.SimpleEntrySet;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
@@ -1080,7 +1079,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
     }
 
     protected void collapse(CachedOutput cache, @Nullable String recipeSuffix, Block input, Block output) {
-        ResourceLocation inputRes = ResourceLocation.parse(BuiltInRegistries.BLOCK.getKey(input).getPath());
+        String inputRes = BuiltInRegistries.BLOCK.getKey(input).getPath();
         String outputPath = "";
 
         JsonObject json = new JsonObject();
@@ -1091,7 +1090,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         if(recipeSuffix != null){
             outputPath = inputRes + "_" + recipeSuffix;
         } else {
-            outputPath = inputRes.toString();
+            outputPath = inputRes;
         }
 
         saveRecipe(cache, "collapse/" + outputPath, json);
@@ -1319,7 +1318,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void logFenceRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.LOG_FENCE).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 fencePattern,
@@ -1371,7 +1370,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void toolRackRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.TOOL_RACK).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.TOOL_RACK).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 toolRackPattern,
@@ -1380,7 +1379,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void loomRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.LOOM).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOOM).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 loomPattern,
@@ -1389,7 +1388,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void sluiceRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.SLUICE).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.SLUICE).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 sluicePattern,
@@ -1398,7 +1397,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void barrelRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.BARREL).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.BARREL).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 barrelPattern,
@@ -1407,7 +1406,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void sewingTableRecipe(CachedOutput cache, CompatWood wood) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.SEWING_TABLE).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.SEWING_TABLE).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 sewingPattern,
@@ -1416,7 +1415,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void scribingTableRecipe(CachedOutput cache, CompatWood wood) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.SCRIBING_TABLE).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.SCRIBING_TABLE).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 scribingPattern,
@@ -1425,7 +1424,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void shelfRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.JAR_SHELF).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.SHELF).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 shelfPattern,
@@ -1434,7 +1433,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void axleRecipe(CachedOutput cache, CompatWood wood) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.AXLE).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 axlePattern,
@@ -1443,8 +1442,8 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void bladedAxleRecipe(CachedOutput cache, CompatWood wood) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.BLADED_AXLE).get().asItem();
-        Item axle = ModBlocks.WOODS.get(wood).get(Wood.BlockType.AXLE).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.BLADED_AXLE).get().asItem();
+        Item axle = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 bladedAxlePattern,
@@ -1453,8 +1452,8 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void encasedAxleRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.ENCASED_AXLE).get().asItem();
-        Item axle = ModBlocks.WOODS.get(wood).get(Wood.BlockType.AXLE).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.ENCASED_AXLE).get().asItem();
+        Item axle = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 encasedAxlePattern,
@@ -1463,8 +1462,8 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void clutchRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.CLUTCH).get().asItem();
-        Item axle = ModBlocks.WOODS.get(wood).get(Wood.BlockType.AXLE).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.CLUTCH).get().asItem();
+        Item axle = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 clutchPattern,
@@ -1473,8 +1472,8 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void clutchStemRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.CLUTCH).get().asItem();
-        Item axle = ModBlocks.WOODS.get(wood).get(Wood.BlockType.AXLE).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.CLUTCH).get().asItem();
+        Item axle = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 clutchPattern,
@@ -1483,7 +1482,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void gearBoxRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.GEAR_BOX).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.GEAR_BOX).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 gearBoxPattern,
@@ -1492,8 +1491,8 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 null);
     }
     protected void waterWheelRecipe(CachedOutput cache, CompatWood wood, Item lumber) {
-        Item outputItem = ModBlocks.WOODS.get(wood).get(Wood.BlockType.WATER_WHEEL).get().asItem();
-        Item axle = ModBlocks.WOODS.get(wood).get(Wood.BlockType.AXLE).get().asItem();
+        Item outputItem = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.WATER_WHEEL).get().asItem();
+        Item axle = ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.AXLE).get().asItem();
 
         vanillaShaped(cache, outputItem,
                 waterWheelPattern,

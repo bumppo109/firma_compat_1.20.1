@@ -12,7 +12,6 @@ import com.bumppo109.firma_compat.util.ModTags;
 import com.eerussianguy.firmalife.common.FLTags;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.rock.Ore;
-import net.dries007.tfc.common.blocks.wood.Wood;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -40,19 +39,19 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         for (CompatWood wood : CompatWood.VALUES) {
-            for (Wood.BlockType blockType : Wood.BlockType.values()) {
+            for (CompatWood.BlockType blockType : CompatWood.BlockType.values()) {
                 tag(BlockTags.MINEABLE_WITH_AXE)
                         .add(ModBlocks.WOODS.get(wood).get(blockType).get());
             }
             tag(BlockTags.WOODEN_FENCES)
-                    .add(ModBlocks.WOODS.get(wood).get(Wood.BlockType.LOG_FENCE).get());
+                    .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get());
             tag(BlockTags.FENCES)
-                    .add(ModBlocks.WOODS.get(wood).get(Wood.BlockType.LOG_FENCE).get());
+                    .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get());
             tag(ModTags.Blocks.TWIGS)
-                    .add(ModBlocks.WOODS.get(wood).get(Wood.BlockType.TWIG).get());
+                    .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.TWIG).get());
             tag(ModTags.Blocks.SUPPORT_BEAMS)
-                    .add(ModBlocks.WOODS.get(wood).get(Wood.BlockType.HORIZONTAL_SUPPORT).get())
-                    .add(ModBlocks.WOODS.get(wood).get(Wood.BlockType.VERTICAL_SUPPORT).get());
+                    .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.HORIZONTAL_SUPPORT).get())
+                    .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.VERTICAL_SUPPORT).get());
         }
 
         for(CompatRock rock : CompatRock.VALUES) {

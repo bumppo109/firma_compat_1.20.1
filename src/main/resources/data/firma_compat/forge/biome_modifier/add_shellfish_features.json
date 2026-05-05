@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_ocean",
+  "features": [
+    "firma_compat:clam_patch",
+    "firma_compat:mussel_patch",
+    "firma_compat:mollusk_patch"
+  ],
+  "step": "underground_decoration"
+}

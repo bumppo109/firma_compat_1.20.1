@@ -1,0 +1,32 @@
+{
+  "values": [
+    "#firma_compat:loose_rocks",
+    "#firma_compat:twigs",
+    "tfc:ore/small_native_copper",
+    "tfc:ore/small_tetrahedrite",
+    "tfc:ore/small_malachite",
+    "tfc:ore/small_limonite",
+    "tfc:ore/small_hematite",
+    "tfc:ore/small_magnetite",
+    "tfc:ore/small_garnierite",
+    "tfc:ore/small_sphalerite",
+    "tfc:ore/small_bismuthinite",
+    "tfc:ore/small_native_gold",
+    "tfc:ore/small_native_silver",
+    "tfc:ore/small_cassiterite",
+    {
+      "id": "firmalife:ore/small_chromite",
+      "required": false
+    },
+    "tfc:groundcover/pinecone",
+    "tfc:groundcover/driftwood",
+    "tfc:groundcover/guano",
+    "tfc:groundcover/humus",
+    "tfc:groundcover/pumice",
+    "tfc:groundcover/seaweed",
+    "tfc:groundcover/clam",
+    "tfc:groundcover/mollusk",
+    "tfc:groundcover/mussel",
+    "tfc:groundcover/sea_urchin"
+  ]
+}
