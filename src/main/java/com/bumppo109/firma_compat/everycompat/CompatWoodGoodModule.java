@@ -253,8 +253,8 @@ public final class CompatWoodGoodModule extends EveryCompatModule {
                 .build();
         this.addEntry(SEWING_TABLE);
 
-        JAR_SHELF = SimpleEntrySet.builder(WoodType.class, "jar_shelf",
-                        getModBlock("oak_jar_shelf"), () -> VanillaWoodTypes.OAK,
+        JAR_SHELF = SimpleEntrySet.builder(WoodType.class, "shelf",
+                        getModBlock("oak_shelf"), () -> VanillaWoodTypes.OAK,
                         w -> new
                                 JarShelfBlock(ExtendedProperties.of().noOcclusion().strength(2.5f).flammableLikePlanks().blockEntity(TFCBlockEntities.JARS))
                 )

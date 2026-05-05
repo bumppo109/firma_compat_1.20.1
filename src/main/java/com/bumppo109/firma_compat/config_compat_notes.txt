@@ -1,0 +1,6 @@
+TFC
+    - disable thirst bar
+    - set thirst modifier to 0
+
+Legendary Survival Overhaul
+    - (if used with Ecliptic Seasons) - disable Ecliptic Integration

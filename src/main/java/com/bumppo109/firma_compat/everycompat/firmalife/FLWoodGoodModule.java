@@ -169,10 +169,13 @@ public final class FLWoodGoodModule extends SimpleModule {
         this.addEntry(BARREL_PRESS);
     }
 
+    /*
     @Override
     public boolean isEntryAlreadyRegistered(String entrySetId, ResourceLocation blockId, BlockType blockType, Registry<?> registry) {
         return false;
     }
+
+     */
 
     @Override
     public void addDynamicClientResources(Consumer<ResourceGenTask> executor) {

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "minecraft:smelts_to_glass"
+    },
+    {
+      "tag": "minecraft:smelts_to_glass"
+    },
+    {
+      "tag": "minecraft:smelts_to_glass"
+    },
+    {
+      "item": "minecraft:green_dye"
+    },
+    {
+      "tag": "tfc:glassworking_potash"
+    },
+    {
+      "item": "tfc:powder/lime"
+    }
+  ],
+  "result": {
+    "item": "tfc:olivine_glass_batch",
+    "count": 4
+  }
+}

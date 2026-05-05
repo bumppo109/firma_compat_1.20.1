@@ -43,30 +43,9 @@ public class ModEvents
         bus.addListener(ModEvents::onPackFinder);
     }
 
-    public static void initFLCompat()
-    {
-        final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        bus.addListener(ModEvents::setupFLCompat);
-        //bus.addListener(ModEvents::onFLCompatPackFinder);
-        //bus.addListener(ModEvents::onFLCompatDataPackFinder);
-
-        if (FMLEnvironment.dist == Dist.CLIENT)
-        {
-            //bus.addListener(...);
-        }
-    }
-
     private static void setup(FMLCommonSetupEvent event)
     {
         event.enqueueWork(ModEvents::modifyBlockEntityTypes);
-    }
-
-    private static void setupFLCompat(FMLCommonSetupEvent event)
-    {
-        event.enqueueWork(() -> {
-            //modifyFLBlockEntityTypes();
-        });
     }
 
     // ====================== BLOCK ENTITY MODIFICATIONS ======================
@@ -80,7 +59,7 @@ public class ModEvents
 
         // Special single blocks (chests)
         modifyBlockEntityType(TFCBlockEntities.CHEST.get(), ModBlocks.COMPAT_CHEST.get());
-        modifyBlockEntityType(TFCBlockEntities.CHEST.get(), ModBlocks.COMPAT_TRAPPED_CHEST.get());  // Note: trapped chests usually use the same BE as normal chests in TFC
+        modifyBlockEntityType(TFCBlockEntities.TRAPPED_CHEST.get(), ModBlocks.COMPAT_TRAPPED_CHEST.get());  // Note: trapped chests usually use the same BE as normal chests in TFC
         modifyBlockEntityType(TFCBlockEntities.TICK_COUNTER.get(), ModBlocks.DRYING_MUD_BRICK.get());  // Note: trapped chests usually use the same BE as normal chests in TFC
 
         addDynamicBlocksByName();
@@ -230,6 +209,4 @@ public class ModEvents
             FirmaCompat.LOGGER.error("Failed to inject Firma Compat resource pack", e);
         }
     }
-
-    // onFLCompatPackFinder and onFLCompatDataPackFinder can stay as-is for now, or be cleaned similarly if needed
 }

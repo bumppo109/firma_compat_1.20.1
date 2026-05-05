@@ -1,4 +1,4 @@
-package com.bumppo109.firma_compat.worldgen.climate;
+package com.bumppo109.firma_compat.util.climate;
 
 import com.bumppo109.firma_compat.FirmaCompat;
 import com.teamtea.eclipticseasons.common.core.biome.BiomeClimateManager;

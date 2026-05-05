@@ -6,20 +6,16 @@ import com.bumppo109.firma_compat.addons.rnr.CompatRnRItems;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.config.FirmaCompatConfig;
 import com.bumppo109.firma_compat.event.ModEvents;
-import com.bumppo109.firma_compat.everycompat.CompatStoneZoneModule;
 import com.bumppo109.firma_compat.everycompat.EveryCompatHandler;
 import com.bumppo109.firma_compat.fluid.ModFluids;
 import com.bumppo109.firma_compat.item.ModCreativeModeTab;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.bumppo109.firma_compat.loot.ModLootModifiers;
 import com.bumppo109.firma_compat.worldgen.ModFeatures;
-import com.bumppo109.firma_compat.worldgen.climate.ClimateNormalizer;
-import com.bumppo109.firma_compat.worldgen.climate.ModClimateModels;
+import com.bumppo109.firma_compat.util.chunkData.ModNetworking;
+import com.bumppo109.firma_compat.util.climate.ClimateNormalizer;
+import com.bumppo109.firma_compat.util.climate.models.ModClimateModels;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.level.biome.BiomeSource;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -41,12 +37,17 @@ public class FirmaCompat
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 
+    public static boolean isEclipticLoaded = false;
+    public static boolean isLSOLoaded = false;
+
     public static final ClimateNormalizer CLIMATE_NORMALIZER = new ClimateNormalizer();
 
     public FirmaCompat(FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
         ModEvents.init();
+
+        ModNetworking.register();
 
         ModCreativeModeTab.register(modEventBus);
         FirmaCompatConfig.register();
@@ -62,8 +63,6 @@ public class FirmaCompat
             ModClimateModels.registerEclipticLsoModel();
         } else if (ModList.get().isLoaded("eclipticseasons")) {
             ModClimateModels.registerEclipticModel();
-        } else if (ModList.get().isLoaded("legendarysurvivaloverhaul")) {
-            ModClimateModels.registerLsoModel();
         }
 
 
@@ -82,10 +81,16 @@ public class FirmaCompat
         if(ModList.get().isLoaded("everycomp") || ModList.get().isLoaded("stonezone") || ModList.get().isLoaded("gemsrealm")){
             EveryCompatHandler.registerModules();
         }
+        this.modIntegration(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
 
+    }
+
+    private void modIntegration(IEventBus forgeBus) {
+        isEclipticLoaded = ModList.get().isLoaded("eclipticseasons");
+        isLSOLoaded = ModList.get().isLoaded("legendarysurvivaloverhaul");
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)

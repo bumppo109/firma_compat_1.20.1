@@ -190,6 +190,23 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
             //collapse
             collapse(cache, ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE_COBBLE).get(), null, rock);
 
+            //graded ore collapse
+            var gradedOres = ModBlocks.GRADED_ORES.get(rock);
+            if (gradedOres != null) {
+                gradedOres.forEach((ore, gradeMap) -> {
+                    Supplier<Block> poorOre = gradeMap.get(CompatOre.Grade.POOR);
+                    Supplier<Block> normalOre = gradeMap.get(CompatOre.Grade.NORMAL);
+                    Supplier<Block> richOre = gradeMap.get(CompatOre.Grade.RICH);
+
+                    if (richOre != null && normalOre != null) {
+                        collapse(cache, null, richOre.get(), normalOre.get());
+                    }
+                    if (normalOre != null && poorOre != null) {
+                        collapse(cache, null, normalOre.get(), poorOre.get());
+                    }
+                });
+            }
+
             //landslide
             selfLandslide(cache, ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE_COBBLE).get());
         }
@@ -1063,7 +1080,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
     }
 
     protected void collapse(CachedOutput cache, @Nullable String recipeSuffix, Block input, Block output) {
-        ResourceLocation inputRes = BuiltInRegistries.BLOCK.getKey(input);
+        ResourceLocation inputRes = ResourceLocation.parse(BuiltInRegistries.BLOCK.getKey(input).getPath());
         String outputPath = "";
 
         JsonObject json = new JsonObject();

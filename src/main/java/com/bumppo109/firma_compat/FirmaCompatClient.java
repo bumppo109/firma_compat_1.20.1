@@ -4,12 +4,7 @@ import com.bumppo109.firma_compat.addons.firmalife.CompatFLBlocks;
 import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
-import com.bumppo109.firma_compat.fluid.ModFluids;
-import com.bumppo109.firma_compat.item.ModItems;
-import net.dries007.tfc.client.ClientEventHandler;
-import net.dries007.tfc.client.render.blockentity.PlacedItemBlockEntityRenderer;
 import net.dries007.tfc.common.blocks.rock.Ore;
-import net.dries007.tfc.common.fluids.TFCFluids;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
@@ -22,7 +17,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.dries007.tfc.client.model.entity.HorseChestLayer;
 import net.dries007.tfc.util.Helpers;
 
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.bumppo109.firma_compat.block.ModBlocks.GRADED_ORES;
@@ -36,6 +30,19 @@ public class FirmaCompatClient
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event)
     {
+        //adjusts grass colors to match climate model - too much lag
+        /*
+        Minecraft.getInstance().getBlockColors().register(
+                new ClimateGrassColor(),
+                Blocks.GRASS_BLOCK,
+                Blocks.GRASS,
+                Blocks.TALL_GRASS,
+                Blocks.FERN,
+                Blocks.LARGE_FERN
+        );
+
+         */
+
         // Render Types
         final RenderType cutout = RenderType.cutout();
 

@@ -1,4 +1,4 @@
-package com.bumppo109.firma_compat.worldgen.climate;
+package com.bumppo109.firma_compat.util.climate.models;
 
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.climate.Climate;
@@ -16,9 +16,6 @@ public final class ModClimateModels {
     public static final Supplier<ClimateModelType> VANILLA_BASED =
             register("vanilla_based", VanillaClimateModel::new);
 
-    public static final Supplier<ClimateModelType> LSO_BASED =
-            register("lso_based", LSOClimateModel::new);
-
     public static final Supplier<ClimateModelType> ECLIPTIC_LSO_BASED =
             register("ecliptic_lso_based", EclipticLSOClimateModel::new);
 
@@ -27,9 +24,6 @@ public final class ModClimateModels {
     }
     public static void registerEclipticModel() {
         ECLIPTIC_BASED.get();
-    }
-    public static void registerLsoModel() {
-        LSO_BASED.get();
     }
     public static void registerEclipticLsoModel() {
         ECLIPTIC_LSO_BASED.get();
