@@ -1,0 +1,11 @@
+{
+  "entries": [
+    {
+      "item": "firma_compat:lamp",
+      "light": 12,
+      "predicate": {
+        "nbt": "{firma_fuel:{\">\":0}}"
+      }
+    }
+  ]
+}

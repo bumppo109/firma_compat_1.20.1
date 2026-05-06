@@ -124,55 +124,59 @@ public class ModCreativeModeTab {
                         });
 
                         //Firmalife
-                        for (CompatWood wood : CompatWood.VALUES){
-                            accept(output, CompatFLBlocks.FOOD_SHELVES.get(wood));
-                            accept(output, CompatFLBlocks.WINE_SHELVES.get(wood));
-                            accept(output, CompatFLBlocks.JARBNETS.get(wood));
-                            accept(output, CompatFLBlocks.HANGERS.get(wood));
-                            accept(output, CompatFLBlocks.BIG_BARRELS.get(wood));
-                            accept(output, CompatFLBlocks.STOMPING_BARRELS.get(wood));
-                            accept(output, CompatFLBlocks.BARREL_PRESSES.get(wood));
-                        }
-                        for (CompatRock rock : CompatRock.VALUES){
-                            accept(output, CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.POOR));
-                            accept(output, CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.NORMAL));
-                            accept(output, CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.RICH));
+                        if(FirmaCompat.isFirmalifeLoaded){
+                            for (CompatWood wood : CompatWood.VALUES){
+                                accept(output, CompatFLBlocks.FOOD_SHELVES.get(wood));
+                                accept(output, CompatFLBlocks.WINE_SHELVES.get(wood));
+                                accept(output, CompatFLBlocks.JARBNETS.get(wood));
+                                accept(output, CompatFLBlocks.HANGERS.get(wood));
+                                accept(output, CompatFLBlocks.BIG_BARRELS.get(wood));
+                                accept(output, CompatFLBlocks.STOMPING_BARRELS.get(wood));
+                                accept(output, CompatFLBlocks.BARREL_PRESSES.get(wood));
+                            }
+                            for (CompatRock rock : CompatRock.VALUES){
+                                accept(output, CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.POOR));
+                                accept(output, CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.NORMAL));
+                                accept(output, CompatFLBlocks.CHROMITE_ORES.get(rock).get(Ore.Grade.RICH));
+                            }
                         }
 
                         //RnR
-                        accept(output, CompatRnRItems.GRAVEL_FILL);
-                        accept(output, CompatRnRBlocks.TAMPED_DIRT);
-                        accept(output, CompatRnRBlocks.TAMPED_MUD);
-                        accept(output, CompatRnRBlocks.OVER_HEIGHT_GRAVEL);
-                        accept(output, CompatRnRBlocks.GRAVEL_ROAD);
-                        accept(output, CompatRnRBlocks.GRAVEL_ROAD_STAIRS);
-                        accept(output, CompatRnRBlocks.GRAVEL_ROAD_SLAB);
-                        accept(output, CompatRnRBlocks.MACADAM_ROAD);
-                        accept(output, CompatRnRBlocks.MACADAM_ROAD_STAIRS);
-                        accept(output, CompatRnRBlocks.MACADAM_ROAD_SLAB);
+                        if(FirmaCompat.isRnRLoaded){
+                            accept(output, CompatRnRItems.GRAVEL_FILL);
+                            accept(output, CompatRnRBlocks.TAMPED_DIRT);
+                            accept(output, CompatRnRBlocks.TAMPED_MUD);
+                            accept(output, CompatRnRBlocks.OVER_HEIGHT_GRAVEL);
+                            accept(output, CompatRnRBlocks.GRAVEL_ROAD);
+                            accept(output, CompatRnRBlocks.GRAVEL_ROAD_STAIRS);
+                            accept(output, CompatRnRBlocks.GRAVEL_ROAD_SLAB);
+                            accept(output, CompatRnRBlocks.MACADAM_ROAD);
+                            accept(output, CompatRnRBlocks.MACADAM_ROAD_STAIRS);
+                            accept(output, CompatRnRBlocks.MACADAM_ROAD_SLAB);
 
-                        CompatRnRBlocks.ROCK_BLOCKS.forEach((rock, typeMap) -> {
-                            accept(output, CompatRnRItems.FLAGSTONE.get(rock));
-                            typeMap.forEach((road, blockSupplier) -> {
-                                accept(output, blockSupplier);
+                            CompatRnRBlocks.ROCK_BLOCKS.forEach((rock, typeMap) -> {
+                                accept(output, CompatRnRItems.FLAGSTONE.get(rock));
+                                typeMap.forEach((road, blockSupplier) -> {
+                                    accept(output, blockSupplier);
+                                });
                             });
-                        });
-                        CompatRnRBlocks.ROCK_STAIRS.forEach((rock, typeMap) -> {
-                            typeMap.forEach((road, blockSupplier) -> {
-                                accept(output, blockSupplier);
+                            CompatRnRBlocks.ROCK_STAIRS.forEach((rock, typeMap) -> {
+                                typeMap.forEach((road, blockSupplier) -> {
+                                    accept(output, blockSupplier);
+                                });
                             });
-                        });
-                        CompatRnRBlocks.ROCK_SLABS.forEach((rock, typeMap) -> {
-                            typeMap.forEach((road, blockSupplier) -> {
-                                accept(output, blockSupplier);
+                            CompatRnRBlocks.ROCK_SLABS.forEach((rock, typeMap) -> {
+                                typeMap.forEach((road, blockSupplier) -> {
+                                    accept(output, blockSupplier);
+                                });
                             });
-                        });
 
-                        for (CompatWood wood : CompatWood.VALUES){
-                            accept(output, CompatRnRItems.WOOD_SHINGLE.get(wood));
-                            accept(output, CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood));
-                            accept(output, CompatRnRBlocks.WOOD_SHINGLE_ROOF_STAIRS.get(wood));
-                            accept(output, CompatRnRBlocks.WOOD_SHINGLE_ROOF_SLABS.get(wood));
+                            for (CompatWood wood : CompatWood.VALUES){
+                                accept(output, CompatRnRItems.WOOD_SHINGLE.get(wood));
+                                accept(output, CompatRnRBlocks.WOOD_SHINGLE_ROOFS.get(wood));
+                                accept(output, CompatRnRBlocks.WOOD_SHINGLE_ROOF_STAIRS.get(wood));
+                                accept(output, CompatRnRBlocks.WOOD_SHINGLE_ROOF_SLABS.get(wood));
+                            }
                         }
 
                     })

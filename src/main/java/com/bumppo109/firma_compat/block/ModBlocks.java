@@ -7,6 +7,7 @@ import com.google.common.base.Suppliers;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.*;
 import net.dries007.tfc.common.blocks.devices.DryingBricksBlock;
+import net.dries007.tfc.common.blocks.devices.LampBlock;
 import net.dries007.tfc.common.blocks.rock.AqueductBlock;
 import net.dries007.tfc.common.blocks.rock.RockAnvilBlock;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
@@ -14,6 +15,7 @@ import net.dries007.tfc.common.blocks.wood.TFCChestBlock;
 import net.dries007.tfc.common.blocks.wood.TFCTrappedChestBlock;
 import net.dries007.tfc.common.blocks.wood.Wood;
 import net.dries007.tfc.common.items.ChestBlockItem;
+import net.dries007.tfc.common.items.LampBlockItem;
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.registry.RegistrationHelpers;
 import net.minecraft.core.registries.Registries;
@@ -25,6 +27,7 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +41,17 @@ import java.util.function.Supplier;
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(Registries.BLOCK, FirmaCompat.MODID);
+
+    //Lamp Block
+    public static final RegistryObject<Block> LAMP = register("lamp",
+            () -> new LampBlock(
+                    ExtendedProperties.of().mapColor(MapColor.COLOR_BLACK)
+                            .noOcclusion().sound(SoundType.LANTERN)
+                            .strength(4.0F, 10.0F)
+                            .randomTicks().pushReaction(PushReaction.DESTROY)
+                            .lightLevel((state) -> (Boolean)state.getValue(LampBlock.LIT) ? 15 : 0)
+                            .blockEntity(TFCBlockEntities.LAMP))
+    );
 
     //Wood
     public static final Map<CompatWood, Map<CompatWood.BlockType, RegistryObject<Block>>> WOODS = Helpers.mapOfKeys(CompatWood.class, wood ->

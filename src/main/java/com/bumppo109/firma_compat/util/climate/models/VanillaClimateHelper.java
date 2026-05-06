@@ -1,32 +1,57 @@
 package com.bumppo109.firma_compat.util.climate.models;
 
+import com.bumppo109.firma_compat.config.FirmaCompatConfig;
 import com.bumppo109.firma_compat.util.chunkData.ClientClimateCache;
 import com.bumppo109.firma_compat.util.chunkData.ClimateData;
 import com.bumppo109.firma_compat.util.chunkData.ServerClimateCache;
+import net.dries007.tfc.util.climate.Climate;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.RandomState;
 
+import static org.joml.Math.lerp;
+
 public class VanillaClimateHelper {
 
-    public static float tempScale = 27.5f;
-    public static float rainScale = 250f;
+    public static double tempScale = FirmaCompatConfig.COMMON.tempScale.get();
+    public static double tempShift = FirmaCompatConfig.COMMON.tempShift.get();
+    public static boolean doTempLerp = FirmaCompatConfig.COMMON.doTempLerp.get();
+
+    public static double rainScale = FirmaCompatConfig.COMMON.tempLerpValue.get();
+    public static double biomeInfluence = FirmaCompatConfig.COMMON.tempLerpValue.get();
 
     public static float maxElevationChange = 17.822f;
     public static float elevationModifier = 0.16225F;
 
     public static float getTemperature(LevelReader level, BlockPos pos) {
         ClimateData data = getClimateData(level, pos);
+        Holder<Biome> biomeHolder = level.getBiome(pos);
+        float biomeTemp = biomeHolder.value().getBaseTemperature();
+        float biomeScaled = biomeTemp * (float) tempScale;
+        float noiseTemp;
+        float adjTemp;
 
-        if (data == null) return 0f;
+        if (data == null){
+            noiseTemp = 0f;
+        } else {
+            noiseTemp = (data.temperature * (float) tempScale) + (float) tempShift;
+        }
 
-        return getAdjustedAverageTempByElevation(pos.getY(), (data.temperature * tempScale));
+        if(doTempLerp){
+            adjTemp = lerp(noiseTemp, biomeScaled, (float) biomeInfluence);
+        } else {
+            adjTemp = noiseTemp;
+        }
+
+        return getAdjustedAverageTempByElevation(pos.getY(), adjTemp);
     }
 
     public static float getRainfall(LevelReader level, BlockPos pos) {
@@ -34,7 +59,7 @@ public class VanillaClimateHelper {
 
         if (data == null) return 0f;
 
-        return (data.vegetation + 1f) * rainScale;
+        return (data.vegetation + 1f) * (float) rainScale;
     }
 
     public static float getAdjustedAverageTempByElevation(int y, float averageTemperature) {
@@ -50,7 +75,7 @@ public class VanillaClimateHelper {
         float raw = getRawTemperature(level, pos);
         if (Float.isNaN(raw)) return 0f;
 
-        float scaled = raw * tempScale;
+        float scaled = raw * (float) tempScale;
         return getAdjustedAverageTempByElevation(pos.getY(), scaled);
     }
 
@@ -58,7 +83,7 @@ public class VanillaClimateHelper {
         float raw = getRawVegetation(level, pos);
         if (Float.isNaN(raw)) return 0f;
 
-        return (raw + 1f) * rainScale;
+        return (raw + 1f) * (float) rainScale;
     }
 
     public static ClimateData getClimateData(LevelReader level, BlockPos pos) {

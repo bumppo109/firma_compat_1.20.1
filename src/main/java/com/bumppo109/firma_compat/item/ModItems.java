@@ -6,14 +6,15 @@ import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.fluid.ModFluids;
+import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.common.entities.TFCEntities;
-import net.dries007.tfc.common.items.JarItem;
 import net.dries007.tfc.common.items.TFCMinecartItem;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.Metal;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -23,6 +24,10 @@ import java.util.function.Supplier;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, FirmaCompat.MODID);
+
+    public static final RegistryObject<Item> LAMP = register("lamp",
+            () -> new FirmaLampItem(ModBlocks.LAMP.get(), new Item.Properties().stacksTo(1), 250)
+    );
 
     //Food
     /*

@@ -52,17 +52,20 @@ public class ClimatePlacement extends PlacementModifier {
     }
 
     private boolean isValid(WorldGenLevel level, BlockPos pos) {
+
+        float temp = VanillaClimateHelper.getTemperature(
+                level, pos
+        );
+
+        float rain = VanillaClimateHelper.getRainfall(
+                level, pos
+        );
+
         int elevation = pos.getY();
 
-        // ✅ WORLDGEN SAFE climate sampling
-        float temperature = VanillaClimateHelper.getTemperatureWorldgen(level, pos);
-        float rainfall = VanillaClimateHelper.getRainfallWorldgen(level, pos);
-
-        boolean elevationOk = elevation >= minElevation && elevation <= maxElevation;
-        boolean tempOk = temperature >= minTemp && temperature <= maxTemp;
-        boolean rainOk = rainfall >= minRainfall && rainfall <= maxRainfall;
-
-        return elevationOk && tempOk && rainOk;
+        return elevation >= minElevation && elevation <= maxElevation
+                && temp >= minTemp && temp <= maxTemp
+                && rain >= minRainfall && rain <= maxRainfall;
     }
 
     @Override

@@ -542,16 +542,7 @@ public class CompatStoneZoneModule extends StoneZoneModule {
             // Create a single tag JSON with all placed feature references + conditional loading
             JsonObject tagJson = new JsonObject();
 
-            // === ADD CONDITIONAL LOADING ===
-            JsonArray conditionsArray = new JsonArray();
-
-            JsonObject modLoadedCondition = new JsonObject();
-            modLoadedCondition.addProperty("type", "forge:mod_loaded");
-            modLoadedCondition.addProperty("modid", "stonezone");   // ← Change this if the modid is different
-
-            conditionsArray.add(modLoadedCondition);
-
-            tagJson.add("forge:conditions", conditionsArray);
+            tagJson.addProperty("replace", true);
 
             // Add the values (placed features)
             JsonArray valuesArray = new JsonArray();

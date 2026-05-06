@@ -23,7 +23,7 @@ public class EclipticClimateHelper {
         SolarTerm solarTerm = EclipticSeasonsApi.getInstance().getSolarTerm(level);
 
         float baseTemp = VanillaClimateHelper.getTemperature(level, pos);
-        float seasonalOffset = solarTerm.getTemperatureChange() * VanillaClimateHelper.tempScale;
+        float seasonalOffset = solarTerm.getTemperatureChange() * (float) VanillaClimateHelper.tempScale;
 
         return baseTemp + seasonalOffset;
     }

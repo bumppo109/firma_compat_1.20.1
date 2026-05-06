@@ -1,7 +1,7 @@
 {
   "type": "tfc:if_then",
   "config": {
-    "if": "firma_compat:clay_disc",
+    "if": "firma_compat:kaolin_clay_disc",
     "then": "firma_compat:clay_indicator"
   }
 }

@@ -9,6 +9,7 @@ TFC
 Legendary Survival Overhaul
     - common
         - (if used with Ecliptic Seasons) - disable Ecliptic Integration
+        - decrease wetness modifier
 
 Ecliptic Seasons
     - common

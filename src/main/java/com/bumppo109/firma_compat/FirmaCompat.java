@@ -39,6 +39,9 @@ public class FirmaCompat
     public static boolean isEclipticLoaded = false;
     public static boolean isLSOLoaded = false;
 
+    public static boolean isFirmalifeLoaded = false;
+    public static boolean isRnRLoaded = false;
+
     public FirmaCompat(FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
@@ -89,6 +92,8 @@ public class FirmaCompat
     private void modIntegration(IEventBus forgeBus) {
         isEclipticLoaded = ModList.get().isLoaded("eclipticseasons");
         isLSOLoaded = ModList.get().isLoaded("legendarysurvivaloverhaul");
+        isFirmalifeLoaded = ModList.get().isLoaded("firmalife");
+        isRnRLoaded = ModList.get().isLoaded("rnr");
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
