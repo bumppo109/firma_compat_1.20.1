@@ -25,10 +25,6 @@ import java.util.function.Supplier;
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, FirmaCompat.MODID);
 
-    public static final RegistryObject<Item> LAMP = register("lamp",
-            () -> new FirmaLampItem(ModBlocks.LAMP.get(), new Item.Properties().stacksTo(1), 250)
-    );
-
     //Food
     /*
     public static final RegistryObject<Item> SWEET_BERRIES_JAR = register("sweet_berries_jar",
@@ -106,6 +102,13 @@ public class ModItems {
                                     () -> type.create(metal)
                             )
                     )
+            );
+
+    public static final Map<Metal.Default, RegistryObject<Item>> UNFINISHED_LANTERNS =
+            Helpers.mapOfKeys(
+                    Metal.Default.class,
+                    Metal.Default::hasUtilities,                    // Filter: only metals with utilities
+                    metal -> register("unfinished_" + metal.getSerializedName() + "_lantern")
             );
 
     /*

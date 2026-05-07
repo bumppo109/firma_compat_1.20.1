@@ -9,6 +9,7 @@ import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.bumppo109.firma_compat.util.ModTags;
 import net.dries007.tfc.common.TFCTags;
+import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.util.Metal;
 import net.minecraft.core.HolderLookup;
@@ -31,6 +32,14 @@ public class ModItemTagGenerator extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
+        tag(ModTags.Items.LAMPS).add(ModBlocks.LANTERN.get().asItem());
+
+        for (Metal.Default metal : Metal.Default.values()) {
+            if(metal.hasUtilities()) {
+                tag(ModTags.Items.LAMPS).add(ModBlocks.COMPAT_LANTERNS.get(metal).get().asItem());
+            }
+        }
+
         for (CompatWood wood : CompatWood.VALUES) {
             tag(ItemTags.WOODEN_FENCES)
                     .add(ModBlocks.WOODS.get(wood).get(CompatWood.BlockType.LOG_FENCE).get().asItem());

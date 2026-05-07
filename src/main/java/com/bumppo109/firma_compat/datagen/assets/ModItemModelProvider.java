@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -152,6 +153,22 @@ public class ModItemModelProvider extends ItemModelProvider {
     public void wallItem(Supplier<? extends WallBlock> block, Supplier<Block> baseBlock) {
         this.withExistingParent(Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block.get())).getPath(), mcLoc("block/wall_inventory"))
                 .texture("wall", ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "block/" + ForgeRegistries.BLOCKS.getKey(baseBlock.get()).getPath()));
+    }
+    /**
+     * Creates an item model with two layers (base + overlay)
+     *
+     * @param item          The item to generate the model for
+     * @param baseTexture   Full texture location for the bottom layer (e.g. modid:item/unfinished_lantern)
+     * @param overlayTexture Full texture location for the top layer (e.g. modid:item/lantern_overlay)
+     */
+    public void overlayItem(Item item, ResourceLocation baseTexture, ResourceLocation overlayTexture)
+    {
+        ResourceLocation itemRes = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item));
+
+        getBuilder(itemRes.toString())
+                .parent(new ModelFile.UncheckedModelFile("item/generated"))
+                .texture("layer0", baseTexture)      // Bottom layer
+                .texture("layer1", overlayTexture);  // Top layer (rendered on top)
     }
 
     private String blockPathName(Block block) {

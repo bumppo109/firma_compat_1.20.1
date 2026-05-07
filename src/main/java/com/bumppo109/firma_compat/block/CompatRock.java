@@ -185,6 +185,19 @@ public enum CompatRock implements ModRegistryRock {
         };
     }
 
+    public Supplier<Block> looseCobbleBlock() {
+        return () -> ModBlocks.ROCK_BLOCKS.get(this).get(BlockType.LOOSE_COBBLE).get();
+    }
+
+
+    public Supplier<Block> hardenedCobbleBlock() {
+        return switch (this) {
+            case DEEPSLATE -> () -> Blocks.COBBLED_DEEPSLATE;
+            case STONE -> () -> Blocks.COBBLESTONE;
+            default -> () -> ModBlocks.ROCK_BLOCKS.get(this).get(BlockType.HARDENED_COBBLE).get();
+        };
+    }
+
     public Item brickItem() {
         if (this == NETHERRACK) {
             return Items.NETHER_BRICK;

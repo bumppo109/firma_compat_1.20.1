@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "firma_compat:item/unfinished_lantern_frame",
+    "layer1": "firma_compat:item/lantern_on"
+  }
+}

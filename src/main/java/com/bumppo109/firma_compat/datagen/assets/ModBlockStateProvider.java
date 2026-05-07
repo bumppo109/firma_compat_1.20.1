@@ -15,6 +15,7 @@ import net.dries007.tfc.common.blocks.devices.SluiceBlock;
 import net.dries007.tfc.common.blocks.devices.BarrelBlock;
 import net.dries007.tfc.common.blocks.rock.LooseRockBlock;
 import net.dries007.tfc.common.blocks.rock.Ore;
+import net.dries007.tfc.util.Metal;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -45,6 +46,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         FirmaCompat.LOGGER.info("Starting blockstate and model generation for Firma Compat...");
+
 
         if(ModList.get().isLoaded("firmalife")) {
             for (CompatWood wood : CompatWood.VALUES) {

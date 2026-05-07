@@ -4,11 +4,15 @@ import com.bumppo109.firma_compat.addons.firmalife.CompatFLBlocks;
 import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
+import com.bumppo109.firma_compat.item.FirmaLampItem;
+import com.bumppo109.firma_compat.item.ModItems;
 import net.dries007.tfc.common.blocks.rock.Ore;
+import net.dries007.tfc.util.Metal;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -40,8 +44,26 @@ public class FirmaCompatClient
                 Blocks.FERN,
                 Blocks.LARGE_FERN
         );
-
          */
+
+        //lantern item
+        ItemProperties.register(
+                ModBlocks.LANTERN.get().asItem(),
+                new ResourceLocation("lit"),
+                (stack, level, entity, seed) ->
+                        FirmaLampItem.isLit(stack) ? 1.0F : 0.0F
+        );
+
+        for (Metal.Default metal : Metal.Default.values()) {
+            if(metal.hasUtilities()) {
+                ItemProperties.register(
+                        ModBlocks.COMPAT_LANTERNS.get(metal).get().asItem(),
+                        new ResourceLocation("lit"),
+                        (stack, level, entity, seed) ->
+                                FirmaLampItem.isLit(stack) ? 1.0F : 0.0F
+                );
+            }
+        }
 
         // Render Types
         final RenderType cutout = RenderType.cutout();

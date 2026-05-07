@@ -2,6 +2,7 @@ package com.bumppo109.firma_compat.block;
 
 import com.bumppo109.firma_compat.FirmaCompat;
 import com.bumppo109.firma_compat.fluid.ModFluids;
+import com.bumppo109.firma_compat.item.FirmaLampItem;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.google.common.base.Suppliers;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
@@ -17,6 +18,7 @@ import net.dries007.tfc.common.blocks.wood.Wood;
 import net.dries007.tfc.common.items.ChestBlockItem;
 import net.dries007.tfc.common.items.LampBlockItem;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.Metal;
 import net.dries007.tfc.util.registry.RegistrationHelpers;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -43,15 +45,36 @@ public class ModBlocks {
             DeferredRegister.create(Registries.BLOCK, FirmaCompat.MODID);
 
     //Lamp Block
-    public static final RegistryObject<Block> LAMP = register("lamp",
+    public static final RegistryObject<LampBlock> LANTERN = register("lantern",
             () -> new LampBlock(
                     ExtendedProperties.of().mapColor(MapColor.COLOR_BLACK)
                             .noOcclusion().sound(SoundType.LANTERN)
                             .strength(4.0F, 10.0F)
                             .randomTicks().pushReaction(PushReaction.DESTROY)
                             .lightLevel((state) -> (Boolean)state.getValue(LampBlock.LIT) ? 15 : 0)
-                            .blockEntity(TFCBlockEntities.LAMP))
+                            .blockEntity(TFCBlockEntities.LAMP)),
+            block -> new FirmaLampItem(block, new Item.Properties().stacksTo(1))
     );
+
+    public static final Map<Metal.Default, RegistryObject<LampBlock>> COMPAT_LANTERNS =
+            Helpers.mapOfKeys(
+                    Metal.Default.class,
+                    Metal.Default::hasUtilities,                    // Filter: only metals with utilities
+                    metal -> register(metal.getSerializedName() + "_lantern",
+                            () -> new LampBlock(
+                                    ExtendedProperties.of()
+                                            .mapColor(metal.mapColor())
+                                            .noOcclusion()
+                                            .sound(SoundType.LANTERN)
+                                            .strength(4.0F, 10.0F)
+                                            .randomTicks()
+                                            .pushReaction(PushReaction.DESTROY)
+                                            .lightLevel(state -> state.getValue(LampBlock.LIT) ? 15 : 0)
+                                            .blockEntity(TFCBlockEntities.LAMP)
+                            ),
+                            block -> new FirmaLampItem(block, new Item.Properties().stacksTo(1))
+                    )
+            );
 
     //Wood
     public static final Map<CompatWood, Map<CompatWood.BlockType, RegistryObject<Block>>> WOODS = Helpers.mapOfKeys(CompatWood.class, wood ->

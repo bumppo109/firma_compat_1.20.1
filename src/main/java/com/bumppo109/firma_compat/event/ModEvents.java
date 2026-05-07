@@ -1,10 +1,12 @@
 package com.bumppo109.firma_compat.event;
 
 import com.bumppo109.firma_compat.FirmaCompat;
-import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
+import com.bumppo109.firma_compat.item.FirmaLampItem;
 import com.bumppo109.firma_compat.mixin.BlockEntityTypeAccessor;
 import com.eerussianguy.firmalife.common.blockentities.FLBlockEntities;
+import net.dries007.tfc.util.Metal;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -13,12 +15,10 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.forgespi.locating.IModFile;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -41,6 +41,7 @@ public class ModEvents
 
         bus.addListener(ModEvents::setup);
         bus.addListener(ModEvents::onPackFinder);
+        bus.addListener(ModEvents::onDataPackFinder);
     }
 
     private static void setup(FMLCommonSetupEvent event)
@@ -59,8 +60,15 @@ public class ModEvents
 
         // Special single blocks (chests)
         modifyBlockEntityType(TFCBlockEntities.CHEST.get(), ModBlocks.COMPAT_CHEST.get());
-        modifyBlockEntityType(TFCBlockEntities.TRAPPED_CHEST.get(), ModBlocks.COMPAT_TRAPPED_CHEST.get());  // Note: trapped chests usually use the same BE as normal chests in TFC
-        modifyBlockEntityType(TFCBlockEntities.TICK_COUNTER.get(), ModBlocks.DRYING_MUD_BRICK.get());  // Note: trapped chests usually use the same BE as normal chests in TFC
+        modifyBlockEntityType(TFCBlockEntities.TRAPPED_CHEST.get(), ModBlocks.COMPAT_TRAPPED_CHEST.get());
+        modifyBlockEntityType(TFCBlockEntities.TICK_COUNTER.get(), ModBlocks.DRYING_MUD_BRICK.get());
+        modifyBlockEntityType(TFCBlockEntities.LAMP.get(), ModBlocks.LANTERN.get());
+
+        for (Metal.Default metal : Metal.Default.values()) {
+            if(metal.hasUtilities()) {
+                modifyBlockEntityType(TFCBlockEntities.LAMP.get(), ModBlocks.COMPAT_LANTERNS.get(metal).get());
+            }
+        }
 
         addDynamicBlocksByName();
 
@@ -207,6 +215,50 @@ public class ModEvents
         catch (IOException e)
         {
             FirmaCompat.LOGGER.error("Failed to inject Firma Compat resource pack", e);
+        }
+    }
+
+    public static void onDataPackFinder(AddPackFindersEvent event)
+    {
+        if (event.getPackType() != PackType.SERVER_DATA) return;
+
+        try
+        {
+            final IModFile modFile = ModList.get().getModFileById(FirmaCompat.MODID).getFile();
+
+            try (PathPackResources pack = new PathPackResources(modFile.getFileName() + ":data_overrides", true, modFile.getFilePath())
+            {
+                private final IModFile file = ModList.get().getModFileById(FirmaCompat.MODID).getFile();
+
+                @NotNull
+                @Override
+                protected Path resolve(String @NotNull ... paths)
+                {
+                    return file.findResource(paths);
+                }
+            })
+            {
+                final PackMetadataSection metadata = pack.getMetadataSection(PackMetadataSection.TYPE);
+                if (metadata != null)
+                {
+                    FirmaCompat.LOGGER.info("Injecting Firma Compat data override pack (TOP priority)");
+                    event.addRepositorySource(consumer ->
+                            consumer.accept(Pack.readMetaAndCreate(
+                                    "firma_compat_data_override",
+                                    Component.literal("Firma Compat Data Overrides"),
+                                    true,
+                                    id -> pack,
+                                    PackType.SERVER_DATA,
+                                    Pack.Position.TOP,           // This is what you want
+                                    PackSource.BUILT_IN
+                            ))
+                    );
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            FirmaCompat.LOGGER.error("Failed to inject Firma Compat data override pack", e);
         }
     }
 }

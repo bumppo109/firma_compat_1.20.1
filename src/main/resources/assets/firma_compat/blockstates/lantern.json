@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "hanging=false,lit=false": {
+      "model": "firma_compat:block/lantern_off"
+    },
+    "hanging=true,lit=false": {
+      "model": "firma_compat:block/lantern_hanging_off"
+    },
+    "hanging=false,lit=true": {
+      "model": "firma_compat:block/lantern_on"
+    },
+    "hanging=true,lit=true": {
+      "model": "firma_compat:block/lantern_hanging_on"
+    }
+  }
+}

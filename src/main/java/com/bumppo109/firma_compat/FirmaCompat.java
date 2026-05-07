@@ -79,6 +79,7 @@ public class FirmaCompat
 
         modEventBus.addListener(FirmaCompatClient::clientSetup);
 
+
         if(ModList.get().isLoaded("everycomp") || ModList.get().isLoaded("stonezone") || ModList.get().isLoaded("gemsrealm")){
             EveryCompatHandler.registerModules();
         }

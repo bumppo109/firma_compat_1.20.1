@@ -1,17 +1,16 @@
 package com.bumppo109.firma_compat.datagen.recipes;
 
-import com.bumppo109.firma_compat.FirmaCompat;
 import com.bumppo109.firma_compat.block.CompatMetal;
+import com.bumppo109.firma_compat.block.CompatOre;
+import com.bumppo109.firma_compat.block.CompatRock;
+import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.fluid.ModFluids;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import net.dries007.tfc.common.fluids.TFCFluids;
+import net.dries007.tfc.common.recipes.ChiselRecipe;
 import net.dries007.tfc.util.Metal;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
@@ -21,18 +20,21 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public abstract class TFCRecipeBuilder implements DataProvider {
 
-    private static final Gson GSON = new GsonBuilder()
+    protected final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .disableHtmlEscaping()
             .create();
@@ -45,200 +47,180 @@ public abstract class TFCRecipeBuilder implements DataProvider {
         this.modId = modId;
     }
 
+    // =========================================================
+    //                    MOD CONDITIONS
+    // =========================================================
+
     /**
-     * Generates a custom "rnr:block_mod" recipe JSON file.
-     *
-     * @param cache          The CachedOutput from your RecipeProvider
-     * @param suffix     optional recipe suffix
-     * @param inputItem      The input item (e.g. rnr:wood/shingle/acacia)
-     * @param inputBlock     The input block (e.g. rnr:roof_frame)
-     * @param outputBlock    The resulting output block (e.g. rnr:wood/shingles/acacia)
+     * Creates a Forge "mod_loaded" condition array.
      */
-    protected void blockModRecipe(CachedOutput cache,
-                                  @Nullable String suffix,
-                                  Item inputItem,
-                                  Block inputBlock,
-                                  Block outputBlock) {
+    @Nullable
+    protected JsonArray modLoadedCondition(@Nullable String modid) {
+        if (modid == null || modid.isEmpty()) return null;
 
-        String recipeName = BuiltInRegistries.BLOCK.getKey(outputBlock).getPath();
+        JsonObject condition = new JsonObject();
+        condition.addProperty("type", "forge:mod_loaded");
+        condition.addProperty("modid", modid);
 
-        ResourceLocation inputItemRes = BuiltInRegistries.ITEM.getKey(inputItem);
-        ResourceLocation inputBlockRes = BuiltInRegistries.BLOCK.getKey(inputBlock);
-        ResourceLocation outputRes = BuiltInRegistries.BLOCK.getKey(outputBlock);
-
-        JsonObject json = new JsonObject();
-
-        json.addProperty("type", "rnr:block_mod");
-
-        // input_item object
-        JsonObject inputItemObj = new JsonObject();
-        inputItemObj.addProperty("item", inputItemRes.getNamespace() + ":" + inputItemRes.getPath());
-        json.add("input_item", inputItemObj);
-
-        // input_block as string
-        json.addProperty("input_block", inputBlockRes.getNamespace() + ":" + inputBlockRes.getPath());
-
-        // output_block as string
-        json.addProperty("output_block", outputRes.getNamespace() + ":" + outputRes.getPath());
-
-        if(suffix == null){
-            recipeName = recipeName;
-        } else {
-            recipeName = recipeName + "_" + suffix;
-        }
-
-        // Save the recipe
-        saveRecipe(cache, "block_mod/" + recipeName, json);
+        JsonArray array = new JsonArray();
+        array.add(condition);
+        return array;
     }
 
     /**
-     * Creates a TFC heating recipe that turns raw food into cooked food
-     * Example: beef → cooked_beef at 200°C
+     * Injects conditions into a recipe JSON if present.
      */
-    public void generateFoodHeatingRecipe(CachedOutput cache, Item inputFood, Item outputFood) {
-        ResourceLocation inputKey = BuiltInRegistries.ITEM.getKey(inputFood);
-        ResourceLocation outputKey = BuiltInRegistries.ITEM.getKey(outputFood);
+    protected void applyConditions(JsonObject json, @Nullable JsonArray conditions) {
+        if (conditions != null && conditions.size() > 0) {
+            json.add("conditions", conditions);
+        }
+    }
 
-        JsonObject root = new JsonObject();
-        root.addProperty("type", "tfc:heating");
+    // =========================================================
+    //                    SAVE PIPELINE (UPDATED)
+    // =========================================================
 
-        // Ingredient with not_rotten wrapper
+    protected void saveRecipe(CachedOutput cache, String path, JsonObject recipeJson) {
+        saveRecipe(cache, path, recipeJson, null);
+    }
+
+    protected void saveRecipe(CachedOutput cache, String path, JsonObject recipeJson, @Nullable JsonArray conditions) {
+
+        applyConditions(recipeJson, conditions);
+
+        Path targetPath = output.getOutputFolder(PackOutput.Target.DATA_PACK)
+                .resolve(modId)
+                .resolve("recipes")
+                .resolve(path + ".json");
+
+        String jsonString = GSON.toJson(recipeJson);
+        byte[] data = jsonString.getBytes(StandardCharsets.UTF_8);
+        HashCode hash = Hashing.sha256().hashBytes(data);
+
+        try {
+            cache.writeIfNeeded(targetPath, data, hash);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save TFC recipe: " + path, e);
+        }
+    }
+
+    // =========================================================
+    //                 CORE INGREDIENT HELPERS
+    // =========================================================
+
+    protected JsonObject ingredient(String item) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("item", item);
+        return obj;
+    }
+
+    protected JsonObject ingredient(Item item) {
+        return ingredient(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).toString());
+    }
+
+    protected JsonObject tagIngredient(String tag) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("tag", tag);
+        return obj;
+    }
+
+    protected JsonObject fluidIngredient(Fluid fluid, int amount) {
+        ResourceLocation inputKey = Objects.requireNonNull(BuiltInRegistries.FLUID.getKey(fluid));
+
+        JsonObject ingredient = new JsonObject();
+        ingredient.addProperty("fluid", inputKey.toString());
+        ingredient.addProperty("amount", amount);
+
+        return ingredient;
+    }
+
+    protected JsonObject notRottenIngredient(Item item) {
+        ResourceLocation inputKey = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item));
+
         JsonObject ingredient = new JsonObject();
         ingredient.addProperty("type", "tfc:not_rotten");
         JsonObject inner = new JsonObject();
         inner.addProperty("item", inputKey.toString());
         ingredient.add("ingredient", inner);
-        root.add("ingredient", ingredient);
 
-        // Result item with copy_food modifier
+        return ingredient;
+    }
+
+    protected JsonObject copyFoodIngredient(Item item) {
+        ResourceLocation inputKey = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item));
+
         JsonObject resultItem = new JsonObject();
         JsonObject stack = new JsonObject();
-        stack.addProperty("item", outputKey.toString());
+        stack.addProperty("item", inputKey.toString());
         resultItem.add("stack", stack);
 
         JsonArray modifiers = new JsonArray();
         modifiers.add("tfc:copy_food");
         resultItem.add("modifiers", modifiers);
-        root.add("result_item", resultItem);
 
-        root.addProperty("temperature", 200);
-
-        saveRecipe(cache, "heating/food" + inputKey.getPath(), root);
+        return resultItem;
     }
 
-    /**
-     * Creates a TFC heating recipe that melts a tool into molten metal
-     * Example: bismuth_bronze axe → 100mb bismuth bronze at 985°C
-     */
-    public void generateToolMeltingRecipe(CachedOutput cache, CompatMetal metal, Item input, int amount) {
-        ResourceLocation inputKey = BuiltInRegistries.ITEM.getKey(input);
-        ResourceLocation moltenKey = BuiltInRegistries.FLUID.getKey(ModFluids.METALS.get(metal).getSource());
+    protected JsonObject simpleResult(Item item, int count) {
+        return simpleResult(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).toString(), count);
+    }
+
+    protected JsonObject simpleResult(String item, int count) {
+        JsonObject result = new JsonObject();
+        result.addProperty("item", item);
+        if (count > 1) result.addProperty("count", count);
+        return result;
+    }
+
+    protected void addBlock(JsonArray array, Supplier<Block> supplier) {
+        if (supplier == null) return;
+        ResourceLocation key = ForgeRegistries.BLOCKS.getKey(supplier.get());
+        if (key != null) array.add(key.toString());
+    }
+
+    // =========================================================
+    //            TFC BASE RECIPES
+    // =========================================================
+
+    public void generateAnvilRecipe(CachedOutput cache,
+                                    JsonObject ingredient,
+                                    Item resultItem,
+                                    Integer count,
+                                    int tier,
+                                    String[] rules,
+                                    boolean applyForgingBonus) {
+
+        ResourceLocation resultKey = BuiltInRegistries.ITEM.getKey(resultItem);
 
         JsonObject root = new JsonObject();
-        root.addProperty("type", "tfc:heating");
+        root.addProperty("type", "tfc:anvil");
+        root.add("input", ingredient);
 
-        // Ingredient: metal tool
-        JsonObject ingredient = new JsonObject();
-        ingredient.addProperty("item", inputKey.toString());
-        root.add("ingredient", ingredient);
+        // Result
+        JsonObject result = new JsonObject();
+        result.addProperty("item", resultKey.toString());
+        result.addProperty("count", count);
+        root.add("result", result);
 
-        // Result fluid
-        JsonObject resultFluidObj = new JsonObject();
-        resultFluidObj.addProperty("fluid", moltenKey.toString());
-        resultFluidObj.addProperty("amount", amount);
-        root.add("result_fluid", resultFluidObj);
+        root.addProperty("tier", tier);
 
-        root.addProperty("temperature", metal.meltTemp());
-        root.addProperty("use_durability", true);
+        // Rules array
+        JsonArray rulesArray = new JsonArray();
+        for (String rule : rules) {
+            rulesArray.add(rule);
+        }
+        root.add("rules", rulesArray);
 
-        saveRecipe(cache, "heating/" + inputKey.getPath(), root);
+        root.addProperty("apply_forging_bonus", applyForgingBonus);
+
+        saveRecipe(cache, "anvil/" + resultKey.getPath(), root);
     }
 
-    public void generateMeltingRecipe(CachedOutput cache, CompatMetal metal, Item input, int amount) {
-        ResourceLocation inputKey = BuiltInRegistries.ITEM.getKey(input);
-        ResourceLocation moltenKey = BuiltInRegistries.FLUID.getKey(ModFluids.METALS.get(metal).getSource());
-
-        JsonObject root = new JsonObject();
-        root.addProperty("type", "tfc:heating");
-
-        // Ingredient: metal tool
-        JsonObject ingredient = new JsonObject();
-        ingredient.addProperty("item", inputKey.toString());
-        root.add("ingredient", ingredient);
-
-        // Result fluid
-        JsonObject resultFluidObj = new JsonObject();
-        resultFluidObj.addProperty("fluid", moltenKey.toString());
-        resultFluidObj.addProperty("amount", amount);
-        root.add("result_fluid", resultFluidObj);
-
-        root.addProperty("temperature", metal.meltTemp());
-
-        saveRecipe(cache, "heating/" + inputKey.getPath(), root);
-    }
-
-    public void generateMeltingRecipe(CachedOutput cache, Metal.Default metal, Item input, int amount, int temperature) {
-        ResourceLocation inputKey = BuiltInRegistries.ITEM.getKey(input);
-        ResourceLocation moltenKey = BuiltInRegistries.FLUID.getKey(TFCFluids.METALS.get(metal).getSource());
-
-        JsonObject root = new JsonObject();
-        root.addProperty("type", "tfc:heating");
-
-        // Ingredient: metal tool
-        JsonObject ingredient = new JsonObject();
-        ingredient.addProperty("item", inputKey.toString());
-        root.add("ingredient", ingredient);
-
-        // Result fluid
-        JsonObject resultFluidObj = new JsonObject();
-        resultFluidObj.addProperty("fluid", moltenKey.toString());
-        resultFluidObj.addProperty("amount", amount);
-        root.add("result_fluid", resultFluidObj);
-
-        root.addProperty("temperature", temperature);
-
-        saveRecipe(cache, "heating/" + inputKey.getPath(), root);
-    }
-
-    public void generateMeltingRecipe(CachedOutput cache, CompatMetal metal, CompatMetal.ItemType itemType) {
-        ResourceLocation inputKey = BuiltInRegistries.ITEM.getKey(ModItems.METAL_ITEMS.get(metal).get(itemType).get());
-        ResourceLocation moltenKey = BuiltInRegistries.FLUID.getKey(ModFluids.METALS.get(metal).getSource());
-
-        JsonObject root = new JsonObject();
-        root.addProperty("type", "tfc:heating");
-
-        // Ingredient: metal tool
-        JsonObject ingredient = new JsonObject();
-        ingredient.addProperty("item", inputKey.toString());
-        root.add("ingredient", ingredient);
-
-        // Result fluid
-        JsonObject resultFluidObj = new JsonObject();
-        resultFluidObj.addProperty("fluid", moltenKey.toString());
-        resultFluidObj.addProperty("amount", itemType.metalAmount());
-        root.add("result_fluid", resultFluidObj);
-
-        root.addProperty("temperature", metal.meltTemp());
-
-        saveRecipe(cache, "heating/" + inputKey.getPath(), root);
-    }
-
-    /**
-     * Generates a TFC Welding recipe.
-     *
-     * Example: Unfinished bismuth bronze chestplate + double sheet → finished chestplate
-     *
-     * @param cache          cache
-     * @param inputA    Item ID of the first input (usually the unfinished piece)
-     * @param inputB   Item ID of the second input (usually the double sheet)
-     * @param tier          Welding tier (1 = stone anvil, 2 = bronze, 3 = wrought iron, 4 = steel, 5 = black steel, 6 = blue/red steel)
-     * @param result        Resulting item ID
-     */
-    public void generateWeldingRecipe(CachedOutput cache,
-                                       Item inputA,
-                                       Item inputB,
-                                       int tier,
-                                       Item result) {
+    public void weldingRecipe(CachedOutput cache,
+                                      Item inputA,
+                                      Item inputB,
+                                      int tier,
+                                      Item result) {
 
         ResourceLocation inputAKey = BuiltInRegistries.ITEM.getKey(inputA);
         ResourceLocation inputBKey = BuiltInRegistries.ITEM.getKey(inputB);
@@ -267,91 +249,112 @@ public abstract class TFCRecipeBuilder implements DataProvider {
         saveRecipe(cache, "welding/" + resultKey.getPath(), root);
     }
 
-    /**
-     *
-     * @param cache
-     * @param inputTag
-     * @param resultItem
-     * @param tier
-     * @param rules
-     * @param applyForgingBonus
-     */
-    public void generateAnvilRecipe(CachedOutput cache,
-                                     String inputTag,
-                                     Item resultItem,
-                                     int tier,
-                                     String[] rules,
-                                     boolean applyForgingBonus) {
+    protected void heatingRecipe(CachedOutput cache, String name, String resultType, JsonObject ingredient, JsonObject result, int temperature, @Nullable String suffix, @Nullable String requiredMod) {
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "tfc:heating");
 
-        ResourceLocation resultKey = BuiltInRegistries.ITEM.getKey(resultItem);
+        json.add("ingredient", ingredient);
+        json.add(resultType, result);
+        json.addProperty("temperature", temperature);
 
-        JsonObject root = new JsonObject();
-        root.addProperty("type", "tfc:anvil");
-
-        // Input Tag
-        JsonObject input = new JsonObject();
-        input.addProperty("tag", inputTag);
-        root.add("input", input);
-
-        // Result
-        JsonObject result = new JsonObject();
-        result.addProperty("item", resultKey.toString());
-        root.add("result", result);
-
-        root.addProperty("tier", tier);
-
-        // Rules array
-        JsonArray rulesArray = new JsonArray();
-        for (String rule : rules) {
-            rulesArray.add(rule);
-        }
-        root.add("rules", rulesArray);
-
-        root.addProperty("apply_forging_bonus", applyForgingBonus);
-
-        saveRecipe(cache, "anvil/" + resultKey.getPath(), root);
+        saveRecipe(cache, "heating/" + name, json, modLoadedCondition(requiredMod));
     }
 
-    public void generateAnvilRecipe(CachedOutput cache,
-                                    String inputTag,
-                                    Item resultItem,
-                                    int resultCount,
-                                    int tier,
-                                    String[] rules,
-                                    boolean applyForgingBonus) {
+    protected void chisel(CachedOutput cache,
+                          Block ingredient,           // Changed: now simple string
+                          Block result,               // Changed: now simple string
+                          ChiselRecipe.Mode mode,
+                          @Nullable ItemLike extraDrop,
+                          @Nullable String recipeSuffix,
+                          @Nullable String requiredMod) {
 
-        ResourceLocation resultKey = BuiltInRegistries.ITEM.getKey(resultItem);
+        ResourceLocation ingredientRes = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(ingredient));
+        ResourceLocation resultRes = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(result));
+        String name = resultRes.getPath();
 
-        JsonObject root = new JsonObject();
-        root.addProperty("type", "tfc:anvil");
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "tfc:chisel");
 
-        // Input Tag
-        JsonObject input = new JsonObject();
-        input.addProperty("tag", inputTag);
-        root.add("input", input);
+        json.addProperty("ingredient", ingredientRes.toString());
+        json.addProperty("result", resultRes.toString());
+        json.addProperty("mode", mode.getSerializedName());
 
-        // Result with optional count
-        JsonObject result = new JsonObject();
-        result.addProperty("item", resultKey.toString());
+        JsonObject extra = new JsonObject();
 
-        if (resultCount > 1) {
-            result.addProperty("count", resultCount);
+        if (extraDrop != null) {
+            extra.addProperty("item", Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(extraDrop.asItem())).toString());
+            json.add("extra_drop", extra);
         }
-        root.add("result", result);
 
-        root.addProperty("tier", tier);
-
-        // Rules array
-        JsonArray rulesArray = new JsonArray();
-        for (String rule : rules) {
-            rulesArray.add(rule);
+        if(recipeSuffix != null){
+            name = name + "_" + recipeSuffix;
         }
-        root.add("rules", rulesArray);
 
-        root.addProperty("apply_forging_bonus", applyForgingBonus);
+        saveRecipe(cache, "chisel/" + mode.getSerializedName() + "/" + name, json, modLoadedCondition(requiredMod));
+    }
 
-        // Save the recipe
-        saveRecipe(cache, "anvil/" + resultKey.getPath(), root);
+    protected void damageInputsShapeless(CachedOutput cache, JsonElement[] itemArray, Item result, Integer count, @Nullable String suffix, @Nullable String requiredMod) {
+        ResourceLocation resultRes = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(result));
+        String name = resultRes.getPath();
+
+        if(suffix != null) {
+            name = name + "_" + suffix;
+        }
+
+        JsonObject innerRecipe = vanillaShapelessJson(itemArray, result, count, null);
+
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "tfc:damage_inputs_shapeless_crafting");
+        json.add("recipe", innerRecipe);
+
+        saveRecipe(cache, "crafting/" + name, json, modLoadedCondition(requiredMod));
+    }
+
+    protected void advancedShaped(CachedOutput cache,
+                                  String name,
+                                  String[] pattern,
+                                  Map<Character, JsonElement> key,
+                                  JsonObject result,
+                                  int row,
+                                  int col,
+                                  @Nullable String requiredMod) {
+
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "tfc:advanced_shaped_crafting");
+
+        JsonArray patternArray = new JsonArray();
+        for (String p : pattern) patternArray.add(p);
+        json.add("pattern", patternArray);
+
+        JsonObject keyObj = new JsonObject();
+        key.forEach((c, v) -> keyObj.add(c.toString(), v));
+        json.add("key", keyObj);
+
+        json.add("result", result);
+        json.addProperty("input_row", row);
+        json.addProperty("input_column", col);
+
+        saveRecipe(cache, "crafting/" + name, json, modLoadedCondition(requiredMod));
+    }
+
+    protected void advancedShapeless(CachedOutput cache,
+                                     String name,
+                                     JsonArray ingredients,
+                                     JsonObject result,
+                                     @Nullable JsonElement primary,
+                                     @Nullable String requiredMod) {
+
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "tfc:advanced_shapeless_crafting");
+
+        json.add("ingredients", ingredients);
+        json.add("result", result);
+
+        if (primary != null) {
+            json.add("primary_ingredient", primary);
+        }
+
+        saveRecipe(cache, "crafting/" + name, json, modLoadedCondition(requiredMod));
     }
 
     /**
@@ -371,375 +374,208 @@ public abstract class TFCRecipeBuilder implements DataProvider {
      * @param result      Result block ID as string (e.g. "tfc:rock/cobble/andesite")
      */
     protected void collapseOrLandslide(CachedOutput cache, String recipeType, String recipeName, @Nullable String recipeSuffix,
-                                       JsonElement ingredient, String result) {
+                                       JsonElement ingredient, String result, @Nullable String requiredMod) {
+
+        if(recipeSuffix != null) {
+            recipeName = recipeName + "_" + recipeSuffix;
+        }
 
         JsonObject json = new JsonObject();
         json.addProperty("type", "tfc:" + recipeType);
         json.add("ingredient", ingredient);
         json.addProperty("result", result);
 
-        saveRecipe(cache,recipeType + "/" + recipeName, json);
+        saveRecipe(cache,recipeType + "/" + recipeName, json, modLoadedCondition(requiredMod));
     }
 
-    protected void landslide(CachedOutput cache, String name, String ingredient, String result, @Nullable String recipeSuffix) {
-        collapseOrLandslide(cache, "landslide", name, recipeSuffix, new com.google.gson.JsonPrimitive(ingredient), result);
+    protected void collapseOrLandslide(CachedOutput cache, String recipeType, Block input, Block output, @Nullable String suffix, @Nullable String requiredMod) {
+
+        ResourceLocation inputRes =  Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(input));
+        ResourceLocation outputRes =  Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(output));
+        String recipeName = inputRes.getPath();
+
+        JsonPrimitive ingredient = new JsonPrimitive(Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(input)).toString());
+
+        collapseOrLandslide(cache, recipeType, recipeName, suffix, ingredient, outputRes.toString(), requiredMod);
     }
 
-    // ====================== Crafting ======================
+    protected void blockModRecipe(CachedOutput cache,
+                                  Item inputItem,
+                                  Block inputBlock,
+                                  Block outputBlock,
+                                  @Nullable String suffix,
+                                  @Nullable String requiredMod) {
 
-    /**
-     * Base method for tfc:advanced_shaped_crafting
-     */
-    protected void advancedShaped(CachedOutput cache, String name,
-                                  String[] pattern,
-                                  Map<Character, JsonElement> key,
-                                  JsonObject resultProvider,
-                                  int inputRow, int inputColumn) {
+        String recipeName = BuiltInRegistries.BLOCK.getKey(outputBlock).getPath();
+
+        ResourceLocation inputItemRes = BuiltInRegistries.ITEM.getKey(inputItem);
+        ResourceLocation inputBlockRes = BuiltInRegistries.BLOCK.getKey(inputBlock);
+        ResourceLocation outputRes = BuiltInRegistries.BLOCK.getKey(outputBlock);
 
         JsonObject json = new JsonObject();
-        json.addProperty("type", "tfc:advanced_shaped_crafting");
+        json.addProperty("type", "rnr:block_mod");
 
-        JsonArray patternArray = new JsonArray();
-        for (String row : pattern) patternArray.add(row);
-        json.add("pattern", patternArray);
+        // input_item object
+        JsonObject inputItemObj = new JsonObject();
+        inputItemObj.addProperty("item", inputItemRes.getNamespace() + ":" + inputItemRes.getPath());
+        json.add("input_item", inputItemObj);
 
-        JsonObject keyObj = new JsonObject();
-        key.forEach((ch, ing) -> keyObj.add(ch.toString(), ing));
-        json.add("key", keyObj);
+        // input_block as string
+        json.addProperty("input_block", inputBlockRes.getNamespace() + ":" + inputBlockRes.getPath());
 
-        json.add("result", resultProvider);
-        json.addProperty("input_row", inputRow);
-        json.addProperty("input_column", inputColumn);
+        // output_block as string
+        json.addProperty("output_block", outputRes.getNamespace() + ":" + outputRes.getPath());
 
-        saveRecipe(cache, "crafting/" + name, json);
-    }
-
-    /**
-     * Base method for tfc:advanced_shapeless_crafting
-     */
-    protected void advancedShapeless(CachedOutput cache, String name,
-                                     JsonArray ingredients,
-                                     JsonObject resultProvider,
-                                     JsonElement primaryIngredient) {   // can be null
-
-        JsonObject json = new JsonObject();
-        json.addProperty("type", "tfc:advanced_shapeless_crafting");
-
-        json.add("ingredients", ingredients);
-        json.add("result", resultProvider);
-
-        if (primaryIngredient != null) {
-            json.add("primary_ingredient", primaryIngredient);
+        if(suffix != null){
+            recipeName = recipeName + "_" + suffix;
         }
 
-        saveRecipe(cache, "crafting/" + name, json);
+        // Save the recipe
+        saveRecipe(cache, "block_mod/" + recipeName, json, modLoadedCondition(requiredMod));
     }
 
-    /**
-     * tfc:damage_inputs_shaped_crafting  ← CORRECTED
-     */
-    protected void damageInputsShaped(CachedOutput cache, String name,
-                                      String[] pattern,
-                                      Map<Character, JsonElement> key,
-                                      JsonObject result) {   // Usually simpleResult()
-
-        JsonObject innerRecipe = new JsonObject();
-        innerRecipe.addProperty("type", "minecraft:crafting_shaped");
-
-        JsonArray patternArray = new JsonArray();
-        for (String row : pattern) patternArray.add(row);
-        innerRecipe.add("pattern", patternArray);
-
-        JsonObject keyObj = new JsonObject();
-        key.forEach((ch, ing) -> keyObj.add(ch.toString(), ing));
-        innerRecipe.add("key", keyObj);
-
-        innerRecipe.add("result", result);
+    protected void mattockRecipe(CachedOutput cache,
+                                 String name,
+                                 String ingredient,
+                                 String result,
+                                 ChiselRecipe.Mode mode,
+                                 @Nullable JsonElement itemIngredient,
+                                 @Nullable JsonObject extraDrop,
+                                 @Nullable String recipeSuffix,
+                                 @Nullable String requiredMod) {
 
         JsonObject json = new JsonObject();
-        json.addProperty("type", "tfc:damage_inputs_shaped_crafting");
-        json.add("recipe", innerRecipe);
+        json.addProperty("type", "rnr:mattock");
+        json.addProperty("ingredient", ingredient);
+        json.addProperty("result", result);
+        json.addProperty("mode", mode.getSerializedName());
 
-        saveRecipe(cache, "crafting/" + name, json);
+        if (itemIngredient != null) json.add("item_ingredient", itemIngredient);
+        if (extraDrop != null) json.add("extra_drop", extraDrop);
+
+        String finalName = (recipeSuffix == null) ? name : name + "_" + recipeSuffix;
+
+        saveRecipe(cache, "mattock/" + mode.getSerializedName() + "/" + finalName, json, modLoadedCondition(requiredMod));
     }
 
-    /**
-     * tfc:damage_inputs_shapeless_crafting  ← CORRECTED
-     */
-    protected void damageInputsShapeless(CachedOutput cache, String name,
-                                         JsonArray ingredients,
-                                         JsonObject result) {   // Usually simpleResult()
+    // =========================================================
+    //                VANILLA CRAFTING
+    // =========================================================
 
-        JsonObject innerRecipe = new JsonObject();
-        innerRecipe.addProperty("type", "minecraft:crafting_shapeless");
-        innerRecipe.add("ingredients", ingredients);
-        innerRecipe.add("result", result);
+    protected void vanillaShapeless(CachedOutput cache, JsonElement[] itemArray, Item result, Integer count, @Nullable String group, @Nullable String suffix, @Nullable String requiredMod) {
+        ResourceLocation resultRes = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(result));
+        String name = resultRes.getPath();
 
-        JsonObject json = new JsonObject();
-        json.addProperty("type", "tfc:damage_inputs_shapeless_crafting");
-        json.add("recipe", innerRecipe);
+        if(suffix != null) {
+            name = name + "_" + suffix;
+        }
 
-        saveRecipe(cache, "crafting/" + name, json);
+        JsonObject recipeJson = vanillaShapelessJson(itemArray, result, count, group);
+
+        saveRecipe(cache, "crafting/" + name, recipeJson, modLoadedCondition(requiredMod));
     }
 
-    /**
-     * Base method for vanilla minecraft:crafting_shaped
-     */
-    protected void vanillaShaped(CachedOutput cache, Item item,
-                                 @Nullable String suffix,
-                                 String[] pattern,
-                                 Map<Character, JsonElement> key,
-                                 JsonObject result,
-                                 @Nullable String group) {
-
-        String itemPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
-
-        JsonObject json = new JsonObject();
-        json.addProperty("type", "minecraft:crafting_shaped");
-
-        JsonArray patternArray = new JsonArray();
-        for (String row : pattern) {
-            patternArray.add(row);
-        }
-        json.add("pattern", patternArray);
-
-        JsonObject keyObj = new JsonObject();
-        key.forEach((ch, ing) -> keyObj.add(ch.toString(), ing));
-        json.add("key", keyObj);
-
-        json.add("result", result);
-
-        if (group != null && !group.isEmpty()) {
-            json.addProperty("group", group);
-        }
-
-        saveRecipe(cache, "crafting/" + itemPath + "_" + suffix, json);
-    }
-
-    protected void vanillaShaped(CachedOutput cache, Item item,
-                                 String[] pattern,
-                                 Map<Character, JsonElement> key,
-                                 JsonObject result,
-                                 @Nullable String group) {
-
-        String itemPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
-
-        JsonObject json = new JsonObject();
-        json.addProperty("type", "minecraft:crafting_shaped");
-
-        JsonArray patternArray = new JsonArray();
-        for (String row : pattern) {
-            patternArray.add(row);
-        }
-        json.add("pattern", patternArray);
-
-        JsonObject keyObj = new JsonObject();
-        key.forEach((ch, ing) -> keyObj.add(ch.toString(), ing));
-        json.add("key", keyObj);
-
-        json.add("result", result);
-
-        if (group != null && !group.isEmpty()) {
-            json.addProperty("group", group);
-        }
-
-        saveRecipe(cache, "crafting/" + itemPath, json);
-    }
-
-    /**
-     * Base method for vanilla minecraft:crafting_shapeless
-     */
-    protected void vanillaShapeless(CachedOutput cache, Item item,
-                                    @Nullable String suffix,
-                                    JsonArray ingredients,
-                                    JsonObject result,
-                                    @Nullable String group) {
-
-        String itemPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
+    protected JsonObject vanillaShapelessJson(JsonElement[] itemArray, Item result, Integer count, @Nullable String group) {
+        ResourceLocation outputRes = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(result));
 
         JsonObject json = new JsonObject();
         json.addProperty("type", "minecraft:crafting_shapeless");
 
+        JsonArray ingredients = new JsonArray();
+
+        for (JsonElement item : itemArray) {
+            ingredients.add(item);
+        }
+
+        JsonObject resultObj = new JsonObject();
+        resultObj.addProperty("item", outputRes.toString());
+        resultObj.addProperty("count", count);
+
         json.add("ingredients", ingredients);
-        json.add("result", result);
+        json.add("result", resultObj);
 
         if (group != null && !group.isEmpty()) {
             json.addProperty("group", group);
         }
 
-        saveRecipe(cache, "crafting/" + itemPath, json);
+        return json;
     }
 
-    // ========================= Chisel =============================
+    protected void vanillaShaped(CachedOutput cache, String[] pattern, Map<Character, JsonElement> key, Item result, Integer count, @Nullable String requiredMod) {
 
-    /**
-     * Base method for tfc:chisel
-     */
-    protected void chisel(CachedOutput cache, String name,
-                          String ingredient,           // Changed: now simple string
-                          String result,               // Changed: now simple string
-                          ChiselMode mode,
-                          @Nullable JsonElement itemIngredient,
-                          @Nullable JsonObject extraDrop,
-                          @Nullable String recipeSuffix) {
+        Map<Character, JsonElement> finalKey = new HashMap<>(key);
+
+        vanillaShaped(cache, pattern, finalKey, result, count,null, null, requiredMod);
+    }
+
+    protected void vanillaShaped(CachedOutput cache, String[] pattern, Map<Character, JsonElement> key, Item result, Integer count,
+                                           @Nullable String group, @Nullable String suffix, @Nullable String requiredMod) {
+        ResourceLocation resultRes = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(result));
+        String name = resultRes.getPath();
+
+        if(suffix != null) {
+            name = name + "_" + suffix;
+        }
+
+        JsonObject recipeJson = vanillaShapedJson(pattern, key, result, count, group);
+
+        saveRecipe(cache, "crafting/" + name, recipeJson, modLoadedCondition(requiredMod));
+    }
+
+    protected JsonObject vanillaShapedJson(String[] pattern, Map<Character, JsonElement> key, Item result, Integer count,
+                                           @Nullable String group) {
+
+        ResourceLocation outputRes = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(result));
 
         JsonObject json = new JsonObject();
-        json.addProperty("type", "tfc:chisel");
+        json.addProperty("type", "minecraft:crafting_shaped");
 
-        json.addProperty("ingredient", ingredient);   // ← Now a string, not object
-        json.addProperty("result", result);           // ← Now a string
-        json.addProperty("mode", mode.getSerializedName());
+        JsonArray patternArray = new JsonArray();
+        for (String row : pattern) patternArray.add(row);
+        json.add("pattern", patternArray);
 
-        if (itemIngredient != null) {
-            json.add("item_ingredient", itemIngredient);
+        JsonObject keyObj = new JsonObject();
+        key.forEach((ch, ing) -> keyObj.add(ch.toString(), ing));
+        json.add("key", keyObj);
+
+        JsonObject resultObj = new JsonObject();
+        resultObj.addProperty("item", outputRes.toString());
+        resultObj.addProperty("count", count);
+
+
+        json.add("result", resultObj);
+
+        if (group != null && !group.isEmpty()) {
+            json.addProperty("group", group);
         }
-        if (extraDrop != null) {
-            json.add("extra_drop", extraDrop);
-        }
 
-        if(recipeSuffix == null){
-            name = name;
-        } else {
-            name = name + "_" + recipeSuffix;
-        }
-
-        saveRecipe(cache, "chisel/" + mode.getSerializedName() + "/" + name, json);
+        return json;
     }
 
-    // ========================= Collapse/Landslide =============================
-
-    /**
-     * Base method for tfc:collapse
-     */
-    protected void collapse(CachedOutput cache, String name,
-                            JsonElement blockInput,
-                            JsonElement blockResult,
-                            boolean copyInput) {
+    protected void stonecutting(CachedOutput cache, ItemLike input, ItemLike result, Integer count, @Nullable String requiredMod) {
+        ResourceLocation inputRes = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(input.asItem()));
+        ResourceLocation outputRes = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(result.asItem()));
+        String recipeName = outputRes.getPath() + "_from_" + inputRes.getPath() + "_stonecutting";
 
         JsonObject json = new JsonObject();
-        json.addProperty("type", "tfc:collapse");
-        json.add("ingredient", blockInput);
-        if (copyInput) {
-            json.addProperty("copy_input", true);
-        } else {
-            json.add("result", blockResult);
-        }
+        json.addProperty("type", "minecraft:stonecutting");
 
-        saveRecipe(cache, "collapse/" + name, json);
+        JsonObject ingredients = new JsonObject();
+        ingredients.addProperty("item", inputRes.toString());
+
+        json.add("ingredient", ingredients);
+        json.addProperty("result", outputRes.toString());
+        json.addProperty("count", count);
+
+        saveRecipe(cache, "stonecutting/" + recipeName, json, modLoadedCondition(requiredMod));
     }
 
-    /**
-     * Base method for tfc:landslide
-     */
-    protected void landslide(CachedOutput cache, String name,
-                            JsonElement blockInput,
-                            JsonElement blockResult,
-                            boolean copyInput) {
-
-        JsonObject json = new JsonObject();
-        json.addProperty("type", "tfc:landslide");
-        json.add("ingredient", blockInput);
-        if (copyInput) {
-            json.addProperty("copy_input", true);
-        } else {
-            json.add("result", blockResult);
-        }
-
-        saveRecipe(cache, "landslide/" + name, json);
-    }
-
-    // ====================== Helpers ======================
-
-    protected JsonObject ingredient(String item) {
-        JsonObject obj = new JsonObject();
-        obj.addProperty("item", item);
-        return obj;
-    }
-    protected JsonObject ingredient(Item item) {
-        String itemName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).toString();
-
-        JsonObject obj = new JsonObject();
-        obj.addProperty("item", itemName);
-        return obj;
-    }
-
-    protected JsonObject tagIngredient(String tag) {
-        JsonObject obj = new JsonObject();
-        obj.addProperty("tag", tag);
-        return obj;
-    }
-
-    protected JsonObject simpleResult(String item, int count) {
-        JsonObject result = new JsonObject();
-        result.addProperty("item", item);
-        if (count > 1) result.addProperty("count", count);
-        return result;
-    }
-
-    protected JsonObject simpleResult(Item item, int count) {
-        String itemName = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).toString();
-
-        JsonObject result = new JsonObject();
-        result.addProperty("item", itemName);
-        if (count > 1) result.addProperty("count", count);
-        return result;
-    }
-
-    protected JsonObject copyInputResult(String item, int count) {
-        JsonObject result = new JsonObject();
-        result.addProperty("item", item);
-        if (count > 1) result.addProperty("count", count);
-
-        JsonArray modifiers = new JsonArray();
-        modifiers.add(modifier("tfc:copy_heat"));
-        modifiers.add(modifier("tfc:copy_forging_bonus"));
-        result.add("modifiers", modifiers);
-        return result;
-    }
-
-    protected JsonObject modifier(String type) {
-        JsonObject mod = new JsonObject();
-        mod.addProperty("type", type);
-        return mod;
-    }
-
-    protected JsonObject blockIngredient(String block) {
-
-        JsonObject obj = new JsonObject();
-        obj.addProperty("block", block);   // or use "tag" for tags
-        return obj;
-    }
-
-    // ====================== Save Method (1.20.1 compatible) ======================
-
-    protected void saveRecipe(CachedOutput cache, String path, JsonObject recipeJson) {
-        Path targetPath = output.getOutputFolder(PackOutput.Target.DATA_PACK)
-                .resolve(modId)
-                .resolve("recipes")
-                .resolve(path + ".json");
-
-        String jsonString = GSON.toJson(recipeJson);
-        byte[] data = jsonString.getBytes(StandardCharsets.UTF_8);
-        HashCode hash = Hashing.sha256().hashBytes(data);
-
-        try {
-            cache.writeIfNeeded(targetPath, data, hash);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save TFC recipe: " + path, e);
-        }
-    }
+    // =========================================================
+    //                GENERIC SAVE IDENTITY
+    // =========================================================
 
     @Override
     public String getName() {
         return modId + " TFC Recipes";
-    }
-
-    // Optional enum for chisel mode
-    public enum ChiselMode {
-        SMOOTH, STAIR, SLAB;
-
-        public String getSerializedName() {
-            return name().toLowerCase();
-        }
     }
 }
