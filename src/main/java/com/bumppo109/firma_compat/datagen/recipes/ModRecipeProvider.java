@@ -153,6 +153,14 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
             chisel(cache, wood.planks(), wood.stair(), ChiselRecipe.Mode.STAIR);
             chisel(cache, wood.planks(), wood.slab(), ChiselRecipe.Mode.SLAB, ModItems.LUMBER.get(wood).get(), null, null);
         }
+        //Wood Extra
+        damageInputsShapeless(cache,
+                new JsonElement[]{tagIngredient("minecraft:bamboo_blocks"), tagIngredient("tfc:saws")},
+                Items.BAMBOO_PLANKS, 4, "_from_log", null);
+        chisel(cache, Blocks.BAMBOO_PLANKS, Blocks.BAMBOO_STAIRS, ChiselRecipe.Mode.STAIR);
+        chisel(cache, Blocks.BAMBOO_PLANKS, Blocks.BAMBOO_SLAB, ChiselRecipe.Mode.SLAB, Items.BAMBOO, null, null);
+        chisel(cache, Blocks.BAMBOO_MOSAIC, Blocks.BAMBOO_MOSAIC_STAIRS, ChiselRecipe.Mode.STAIR);
+        chisel(cache, Blocks.BAMBOO_MOSAIC, Blocks.BAMBOO_MOSAIC_SLAB, ChiselRecipe.Mode.SLAB, Items.BAMBOO, null, null);
 
         for (CompatRock rock : CompatRock.VALUES) {
             Item brickItem;

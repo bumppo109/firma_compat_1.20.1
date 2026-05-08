@@ -8,9 +8,11 @@ import net.dries007.tfc.util.climate.Climate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.DensityFunction;
@@ -25,8 +27,8 @@ public class VanillaClimateHelper {
     public static double tempShift = FirmaCompatConfig.COMMON.tempShift.get();
     public static boolean doTempLerp = FirmaCompatConfig.COMMON.doTempLerp.get();
 
-    public static double rainScale = FirmaCompatConfig.COMMON.tempLerpValue.get();
-    public static double biomeInfluence = FirmaCompatConfig.COMMON.tempLerpValue.get();
+    public static double rainScale = FirmaCompatConfig.COMMON.rainScale.get();
+    public static double tempLerpValue = FirmaCompatConfig.COMMON.tempLerpValue.get();
 
     public static float maxElevationChange = 17.822f;
     public static float elevationModifier = 0.16225F;
@@ -46,7 +48,7 @@ public class VanillaClimateHelper {
         }
 
         if(doTempLerp){
-            adjTemp = lerp(noiseTemp, biomeScaled, (float) biomeInfluence);
+            adjTemp = lerp(noiseTemp, biomeScaled, (float) tempLerpValue);
         } else {
             adjTemp = noiseTemp;
         }
@@ -75,8 +77,7 @@ public class VanillaClimateHelper {
         float raw = getRawTemperature(level, pos);
         if (Float.isNaN(raw)) return 0f;
 
-        float scaled = raw * (float) tempScale;
-        return getAdjustedAverageTempByElevation(pos.getY(), scaled);
+        return (raw * (float) tempScale) + (float) tempShift;
     }
 
     public static float getRainfallWorldgen(LevelReader level, BlockPos pos) {
@@ -137,7 +138,17 @@ public class VanillaClimateHelper {
     }
 
     private static float sampleNoise(LevelReader level, BlockPos pos, boolean isTemperature) {
-        if (level instanceof ServerLevel serverLevel) {
+
+        ServerLevel serverLevel = null;
+
+        if (level instanceof ServerLevel sl) {
+            serverLevel = sl;
+        } else if (level instanceof WorldGenLevel wgl) {
+            serverLevel = wgl.getLevel();
+        }
+
+        if (serverLevel != null) {
+
             ChunkGenerator generator = serverLevel.getChunkSource().getGenerator();
 
             if (generator instanceof NoiseBasedChunkGenerator) {
@@ -157,7 +168,8 @@ public class VanillaClimateHelper {
 
                         return (float) value;
                     }
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
         }
 

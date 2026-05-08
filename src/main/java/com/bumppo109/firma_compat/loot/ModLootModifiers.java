@@ -18,6 +18,8 @@ public class ModLootModifiers {
     public static final RegistryObject<Codec<? extends IGlobalLootModifier>> SWAP_ITEM =
             LOOT_MODIFIER_SERIALIZERS.register("swap_item", ReplaceItemModifier.CODEC);
 
+    public static final RegistryObject<Codec<? extends IGlobalLootModifier>> ADD_ITEM_CHANCE =
+            LOOT_MODIFIER_SERIALIZERS.register("add_item_chance", ChanceDropModifier.CODEC);
 
     public static void register(IEventBus eventBus) {
         LOOT_MODIFIER_SERIALIZERS.register(eventBus);

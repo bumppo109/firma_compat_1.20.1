@@ -377,7 +377,6 @@ public class CompatStoneZoneModule extends StoneZoneModule {
 
             for (StoneType stone : StoneTypeRegistry.INSTANCE) {
                 String loosePath = Utils.getID(LOOSE.blocks.get(stone)).getPath();
-                String looseNamespace = Utils.getID(LOOSE.blocks.get(stone)).getNamespace();
 
                 if(LOOSE.blocks.get(stone) != null){
                     String featurePath = FirmaCompat.MODID + ":loose/" + loosePath;
@@ -548,13 +547,27 @@ public class CompatStoneZoneModule extends StoneZoneModule {
             JsonArray valuesArray = new JsonArray();
 
             for (CompatVein vein : CompatVein.values()) {
-                String veinName = vein.name().toLowerCase(Locale.ROOT);
+                if(vein.ore != CompatOre.MAGNETITE && vein.ore != CompatOre.LIMONITE
+                    && vein.ore != CompatOre.TETRAHEDRITE && vein.ore != CompatOre.NATIVE_COPPER) {
+                    //copper & iron placed separately
+                    String veinName = vein.name().toLowerCase(Locale.ROOT);
 
-                String veinPatchFeature = "stonezone/vein/" + veinName;
-                String featurePath = FirmaCompat.MODID + ":" + veinPatchFeature;
+                    String veinPatchFeature = "stonezone/vein/" + veinName;
+                    String featurePath = FirmaCompat.MODID + ":" + veinPatchFeature;
 
-                valuesArray.add(featurePath);
+                    valuesArray.add(featurePath);
+                }
             }
+
+            JsonObject flDeepObj = new JsonObject();
+            flDeepObj.addProperty("id","firma_compat:stonezone/firmalife/vein/deep_chromite");
+            flDeepObj.addProperty("required",false);
+            JsonObject flObj = new JsonObject();
+            flObj.addProperty("id","firma_compat:stonezone/firmalife/vein/normal_chromite");
+            flObj.addProperty("required",false);
+
+            valuesArray.add(flDeepObj);
+            valuesArray.add(flObj);
 
             tagJson.add("values", valuesArray);
 
@@ -568,6 +581,95 @@ public class CompatStoneZoneModule extends StoneZoneModule {
 
             sink.addJson(tagPath, tagJson, ResType.GENERIC);
             FirmaCompat.LOGGER.info("Generated conditional placed feature tag: {}", tagPath);
+
+        // REMOVED - Create random selector features for iron & copper
+            /*
+            //placed feature
+            JsonArray emptyArray = new JsonArray();
+
+            JsonObject copperPlacer = new JsonObject();
+            copperPlacer.addProperty("feature", FirmaCompat.MODID + ":stonezone/copper_placer");
+            copperPlacer.add("placement", emptyArray);
+
+            ResourceLocation copperPlacerRes = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "worldgen/placed_feature/stonezone/copper_placer.json");
+            //sink.addJson(copperPlacerRes, copperPlacer, ResType.GENERIC);
+
+            JsonObject ironPlacer = new JsonObject();
+            ironPlacer.addProperty("feature", FirmaCompat.MODID + ":stonezone/iron_placer");
+            ironPlacer.add("placement", emptyArray);
+
+            ResourceLocation ironPlacerRes = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "worldgen/placed_feature/stonezone/iron_placer.json");
+            //sink.addJson(ironPlacerRes, ironPlacer, ResType.GENERIC);
+
+            //copper configured feature
+            JsonObject copperRandomSelect = new JsonObject();
+            JsonArray featureArray = new JsonArray();
+            JsonObject config = new JsonObject();
+
+            JsonObject objA = new JsonObject();
+            objA.addProperty("chance", 0.175);
+            objA.addProperty("feature", "firma_compat:stonezone/vein/normal_malachite");
+            JsonObject objB = new JsonObject();
+            objB.addProperty("chance", 0.175);
+            objB.addProperty("feature", "firma_compat:stonezone/vein/normal_tetrahedrite");
+            JsonObject objC = new JsonObject();
+            objC.addProperty("chance", 0.175);
+            objC.addProperty("feature", "firma_compat:stonezone/vein/surface_malachite");
+            JsonObject objD = new JsonObject();
+            objD.addProperty("chance", 0.175);
+            objD.addProperty("feature", "firma_compat:stonezone/vein/surface_tetrahedrite");
+            JsonObject objE = new JsonObject();
+            objE.addProperty("chance", 0.175);
+            objE.addProperty("feature", "firma_compat:stonezone/vein/surface_native_copper");
+
+            JsonObject defObj = new JsonObject();
+            defObj.addProperty("feature", "minecraft:twisting_vines");
+            defObj.add("placement", emptyArray);
+
+            featureArray.add(objA);
+            featureArray.add(objB);
+            featureArray.add(objC);
+            featureArray.add(objD);
+            featureArray.add(objE);
+
+            config.add("features", featureArray);
+            config.add("default", defObj);
+
+            copperRandomSelect.addProperty("type", "minecraft:random_selector");
+            copperRandomSelect.add("config", config);
+
+            ResourceLocation copperFeatureRes = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "worldgen/configured_feature/stonezone/copper_placer.json");
+            //sink.addJson(copperFeatureRes, copperRandomSelect, ResType.GENERIC);
+
+            //iron configured feature
+            JsonObject ironRandomSelect = new JsonObject();
+            JsonArray ironFeatureArray = new JsonArray();
+            JsonObject ironConfig = new JsonObject();
+
+            JsonObject ironObjA = new JsonObject();
+            ironObjA.addProperty("chance", 0.3);
+            ironObjA.addProperty("feature", "firma_compat:stonezone/vein/surface_limonite");
+            JsonObject ironObjB = new JsonObject();
+            ironObjB.addProperty("chance", 0.3);
+            ironObjB.addProperty("feature", "firma_compat:stonezone/vein/surface_magnetite");
+            JsonObject ironObjC = new JsonObject();
+            ironObjC.addProperty("chance", 0.3);
+            ironObjC.addProperty("feature", "firma_compat:stonezone/vein/surface_hematite");
+
+            ironFeatureArray.add(ironObjA);
+            ironFeatureArray.add(ironObjB);
+            ironFeatureArray.add(ironObjC);
+
+            ironConfig.add("features", ironFeatureArray);
+            ironConfig.add("default", defObj);
+
+            ironRandomSelect.addProperty("type", "minecraft:random_selector");
+            ironRandomSelect.add("config", ironConfig);
+
+            ResourceLocation ironFeatureRes = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID, "worldgen/configured_feature/stonezone/iron_placer.json");
+            //sink.addJson(ironFeatureRes, ironRandomSelect, ResType.GENERIC);
+
+             */
         });
     }
 

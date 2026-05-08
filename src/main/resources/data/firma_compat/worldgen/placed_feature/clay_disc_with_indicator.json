@@ -1,5 +1,5 @@
 {
-  "feature": "firma_compat:kaolin_clay_disc_with_indicator",
+  "feature": "firma_compat:clay_disc_with_indicator",
   "placement": [
     {
       "type": "minecraft:in_square"
@@ -11,7 +11,7 @@
     {
       "type": "firma_compat:climate",
       "min_rainfall": 100,
-      "min_temperature": 15,
+      "min_temperature": 10,
       "max_elevation": 125
     }
   ]

@@ -53,11 +53,11 @@ public class ClimatePlacement extends PlacementModifier {
 
     private boolean isValid(WorldGenLevel level, BlockPos pos) {
 
-        float temp = VanillaClimateHelper.getTemperature(
+        float temp = VanillaClimateHelper.getTemperatureWorldgen(
                 level, pos
         );
 
-        float rain = VanillaClimateHelper.getRainfall(
+        float rain = VanillaClimateHelper.getRainfallWorldgen(
                 level, pos
         );
 

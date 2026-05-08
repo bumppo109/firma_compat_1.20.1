@@ -7,27 +7,27 @@
     "states": [
       {
         "replace": "minecraft:dirt",
-        "with": "firma_compat:kaolin_clay_dirt"
+        "with": "firma_compat:clay_dirt"
       },
       {
         "replace": "minecraft:coarse_dirt",
-        "with": "firma_compat:kaolin_clay_dirt"
+        "with": "firma_compat:clay_dirt"
       },
       {
         "replace": "minecraft:mud",
-        "with": "firma_compat:kaolin_clay_dirt"
+        "with": "firma_compat:clay_dirt"
       },
       {
         "replace": "minecraft:grass_block",
-        "with": "firma_compat:kaolin_clay_grass_block"
+        "with": "firma_compat:clay_grass_block"
       },
       {
         "replace": "minecraft:podzol",
-        "with": "firma_compat:kaolin_clay_podzol"
+        "with": "firma_compat:clay_podzol"
       },
       {
         "replace": "minecraft:mycelium",
-        "with": "firma_compat:kaolin_clay_podzol"
+        "with": "firma_compat:clay_podzol"
       }
     ]
   }

@@ -324,24 +324,6 @@ public class FLStoneZoneModule extends StoneZoneModule {
             sink.addJson(tagPath, tagJson, ResType.GENERIC);
             FirmaCompat.LOGGER.info("Generated placed feature tag: {}", tagPath);
 
-        //Biome Modifier File
-            JsonObject biomeModifier = new JsonObject();
-
-            String placedFeatureTag = FirmaCompat.MODID + ":stonezone_firmalife_veins";
-
-            biomeModifier.addProperty("type", "neoforge:add_features");
-            biomeModifier.addProperty("biomes", "#c:is_overworld");
-            biomeModifier.addProperty("features", "#" + placedFeatureTag);
-            biomeModifier.addProperty("step", "underground_ores");
-
-            // Write individual placed feature
-            ResourceLocation biomeModifierPath = ResourceLocation.fromNamespaceAndPath(FirmaCompat.MODID,
-                    "neoforge/biome_modifier/add_stonezone_firmalife_veins.json"
-            );
-
-            sink.addJson(biomeModifierPath, biomeModifier, ResType.GENERIC);
-            FirmaCompat.LOGGER.info("Generated biome modifier: {}", biomeModifierPath);
-
         // Generate individual loot tables for EVERY ore block variant
             record ChromiteOre(ResourceLocation resLoc, Item oreItem) {}
 
