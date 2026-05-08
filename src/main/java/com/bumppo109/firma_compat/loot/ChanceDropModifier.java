@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 
 public class ChanceDropModifier extends LootModifier {
 
+    //TODO - not sure this works, need to test
     public static final Supplier<Codec<ChanceDropModifier>> CODEC = Suppliers.memoize(() ->
             RecordCodecBuilder.create(inst -> codecStart(inst).and(
                     inst.group(

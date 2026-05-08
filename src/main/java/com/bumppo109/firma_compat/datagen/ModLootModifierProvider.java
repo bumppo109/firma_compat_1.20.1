@@ -40,18 +40,6 @@ public class ModLootModifierProvider extends GlobalLootModifierProvider {
     @Override
     protected void start() {
 
-        ModBlocks.GRADED_ORES.forEach((rock, oreMap) -> {
-            oreMap.forEach((ore, gradeMap) -> {
-                gradeMap.forEach((grade, blockSupplier) -> {
-                    ResourceLocation blockRes = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(blockSupplier.get()));
-                    String gradeName = grade.name().toLowerCase(Locale.ROOT);
-                    if(ore.equals(CompatOre.HEMATITE)){
-                        chanceItem(blockSupplier.get(), TFCBlocks.SMALL_ORES.get(Ore.MAGNETITE).get().asItem(), 0.2f);
-                    }
-                });
-            });
-        });
-
         //food
         replaceItem(Blocks.MELON, Items.MELON, TFCBlocks.MELON.get().asItem(), 1, null);
         replaceItem(Blocks.PUMPKIN, Items.PUMPKIN, TFCBlocks.PUMPKIN.get().asItem(), 1, null);
