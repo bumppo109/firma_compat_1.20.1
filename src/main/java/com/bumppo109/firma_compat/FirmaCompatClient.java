@@ -34,6 +34,9 @@ public class FirmaCompatClient
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event)
     {
+        // Render Types
+        final RenderType cutout = RenderType.cutout();
+
         //adjusts grass colors to match climate model - too much lag
         /*
         Minecraft.getInstance().getBlockColors().register(
@@ -53,6 +56,7 @@ public class FirmaCompatClient
                 (stack, level, entity, seed) ->
                         FirmaLampItem.isLit(stack) ? 1.0F : 0.0F
         );
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.LANTERN.get(), cutout);
 
         for (Metal.Default metal : Metal.Default.values()) {
             if(metal.hasUtilities()) {
@@ -62,11 +66,10 @@ public class FirmaCompatClient
                         (stack, level, entity, seed) ->
                                 FirmaLampItem.isLit(stack) ? 1.0F : 0.0F
                 );
+                ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMPAT_LANTERNS.get(metal).get(), cutout);
             }
         }
 
-        // Render Types
-        final RenderType cutout = RenderType.cutout();
 
         ModBlocks.WOODS.values().forEach(map -> {
             Stream.of(TWIG, BARREL, SCRIBING_TABLE, JAR_SHELF, ENCASED_AXLE, CLUTCH, GEAR_BOX, SEWING_TABLE)

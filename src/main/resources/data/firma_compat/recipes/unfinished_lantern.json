@@ -1,0 +1,15 @@
+{
+  "type": "tfc:anvil",
+  "input": {
+    "tag": "forge:ingots/cast_iron"
+  },
+  "result": {
+    "item": "firma_compat:unfinished_lantern"
+  },
+  "tier": 2,
+  "rules": [
+    "bend_last",
+    "bend_second_last",
+    "draw_third_last"
+  ]
+}

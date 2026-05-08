@@ -100,14 +100,25 @@ public class LampItemEventHandler {
             // Must be your lamp block
             if (!(state.getBlock() instanceof LampBlock)) return;
 
-            // Must be sneaking with empty hand
-            if (!player.isCrouching()) return;
-
             ItemStack held = player.getItemInHand(event.getHand());
             if (!held.isEmpty()) return;
 
+            // Must be sneaking with empty hand
+            if (!player.isCrouching()) {
+                if (state.getValue(LampBlock.LIT)) {
+                    level.setBlock(
+                            pos,
+                            state.setValue(LampBlock.LIT, false),
+                            3
+                    );
+                }
+
+                event.setCanceled(true);
+                return;
+            }
+
             // Must be lit
-            if (!state.getValue(LampBlock.LIT)) return;
+            //if (!state.getValue(LampBlock.LIT)) return;
 
             BlockEntity be = level.getBlockEntity(pos);
 
@@ -119,7 +130,11 @@ public class LampItemEventHandler {
 
             // 🔥 Copy lit state
             if (stack.getItem() instanceof FirmaLampItem) {
-                FirmaLampItem.setLit(stack, true);
+                if(state.getValue(LampBlock.LIT)){
+                    FirmaLampItem.setLit(stack, true);
+                } else {
+                    FirmaLampItem.setLit(stack, false);
+                }
             }
 
             // Remove block

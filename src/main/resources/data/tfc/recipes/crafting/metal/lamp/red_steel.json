@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tfc:lamp_glass"
+    },
+    {
+      "item": "tfc:metal/unfinished_lamp/red_steel"
+    }
+  ],
+  "result": {
+    "item": "firma_compat:red_steel_lantern"
+  }
+}

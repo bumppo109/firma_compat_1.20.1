@@ -29,6 +29,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -55,6 +56,22 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
     //TODO - try overriding the vanilla namespace if fences/fence gates dont remove original recipe with empty recipe provider
     @Override
     public CompletableFuture<?> run(CachedOutput cache) {
+        //remove vanilla recipes
+        falseRecipe(cache, "candle", null);
+        falseRecipe(cache, "dried_kelp", null);
+        for (String recipe : RemoveRecipes.REMOVE_RECIPE) {
+            falseRecipe(cache, recipe, null);
+        }
+        for (DyeColor color : DyeColor.values()) {
+            String colorName = color.getSerializedName();
+
+            falseRecipe(cache, "dye_" + colorName + "_wool", null);
+            falseRecipe(cache, "dye_" + colorName + "_carpet", null);
+            falseRecipe(cache, "dye_" + colorName + "_bed", null);
+            falseRecipe(cache, colorName + "_terracotta", null);
+            falseRecipe(cache, colorName + "_candle", null);
+        }
+
         JsonElement woodenRodIngredient = tagIngredient("forge:rods/wooden");
 
         for (CompatWood wood : CompatWood.VALUES) {
@@ -66,9 +83,15 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
 
             Map<Character, JsonElement> simpleLumberMap = Map.of('X', lumberIngredient);
 
-            damageInputsShapeless(cache,
-                    new JsonElement[]{tagIngredient("minecraft:" + wood.getSerializedName() + "_logs"), tagIngredient("tfc:saws")},
-                    ModItems.LUMBER.get(wood).get(), 4, "_from_log", null);
+            if(wood.equals(CompatWood.WARPED) || wood.equals(CompatWood.CRIMSON)){
+                damageInputsShapeless(cache,
+                        new JsonElement[]{tagIngredient("minecraft:" + wood.getSerializedName() + "_stems"), tagIngredient("tfc:saws")},
+                        ModItems.LUMBER.get(wood).get(), 8, "_from_log", null);
+            } else {
+                damageInputsShapeless(cache,
+                        new JsonElement[]{tagIngredient("minecraft:" + wood.getSerializedName() + "_logs"), tagIngredient("tfc:saws")},
+                        ModItems.LUMBER.get(wood).get(), 8, "_from_log", null);
+            }
             damageInputsShapeless(cache,
                     new JsonElement[]{ingredient(wood.planks().asItem()), tagIngredient("tfc:saws")},
                     ModItems.LUMBER.get(wood).get(), 4, "_from_planks", null);
@@ -132,7 +155,12 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         }
 
         for (CompatRock rock : CompatRock.VALUES) {
-            Item brickItem = ModItems.BRICK.get(rock).get();
+            Item brickItem;
+            if (rock == CompatRock.NETHERRACK) {
+                brickItem = Items.NETHER_BRICK;
+            } else {
+                brickItem = rock.brickItem();
+            }
             JsonElement brickIngredient = ingredient(brickItem);
             JsonElement looseIngredient = ingredient(ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.LOOSE).get().asItem());
 
@@ -149,10 +177,12 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
             shapedRecipe(cache, rock.bricksBlock().get().asItem(),4,
                     new String[]{"ABA", "BAB", "ABA"},
                     Map.of('A', brickIngredient,'B', tagIngredient("tfc:mortar")));
-            shapedRecipe(cache, ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.BRICK_AQUEDUCT).get().asItem(),1,
-                    new String[]{"A A", "BAB"},
-                    Map.of('A', brickIngredient,'B', tagIngredient("tfc:mortar")));
+            if(!rock.equals(CompatRock.NETHERRACK)){
+                shapedRecipe(cache, ModBlocks.ROCK_BLOCKS.get(rock).get(CompatRock.BlockType.BRICK_AQUEDUCT).get().asItem(),1,
+                        new String[]{"A A", "BAB"},
+                        Map.of('A', brickIngredient,'B', tagIngredient("tfc:mortar")));
 
+            }
             if(rock != CompatRock.STONE && rock != CompatRock.DEEPSLATE && rock != CompatRock.BLACKSTONE && rock != CompatRock.END_STONE && rock != CompatRock.NETHERRACK){
                 shapedRecipe(cache, rock.getSlab(CompatRock.BlockType.BRICK).get().asItem(),6,
                         new String[]{"AAA"},
@@ -227,10 +257,6 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         shapedRecipe(cache, Items.QUARTZ_BRICKS,4,
                 new String[]{"ABA", "BAB", "ABA"},
                 Map.of('A', ingredient(ModItems.QUARTZ_BRICK.get()),'B', tagIngredient("tfc:mortar")));
-        chiselCrafting(cache, ModItems.BRICK.get(CompatRock.NETHERRACK).get(), Items.NETHER_BRICK);
-        shapedRecipe(cache, Items.NETHER_BRICKS,4,
-                new String[]{"ABA", "BAB", "ABA"},
-                Map.of('A', ingredient(Items.NETHER_BRICK),'B', tagIngredient("tfc:mortar")));
 
         chisel(cache, Blocks.STONE, Blocks.SMOOTH_STONE, ChiselRecipe.Mode.SMOOTH);
         chisel(cache, Blocks.STONE, Blocks.STONE_STAIRS, ChiselRecipe.Mode.STAIR);
@@ -293,8 +319,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         chisel(cache, Blocks.SMOOTH_RED_SANDSTONE, Blocks.SMOOTH_RED_SANDSTONE_SLAB, ChiselRecipe.Mode.SLAB);
         chisel(cache, Blocks.CUT_RED_SANDSTONE, Blocks.CUT_RED_SANDSTONE_SLAB, ChiselRecipe.Mode.SLAB);
 
-        chisel(cache, Blocks.BASALT, Blocks.SMOOTH_BASALT, ChiselRecipe.Mode.SMOOTH);
-        chisel(cache, Blocks.SMOOTH_BASALT, Blocks.POLISHED_BASALT, ChiselRecipe.Mode.SMOOTH);
+        chisel(cache, Blocks.BASALT, Blocks.POLISHED_BASALT, ChiselRecipe.Mode.SMOOTH);
 
         chisel(cache, Blocks.BLACKSTONE, Blocks.POLISHED_BLACKSTONE, ChiselRecipe.Mode.SMOOTH);
         chisel(cache, Blocks.BLACKSTONE, Blocks.BLACKSTONE_STAIRS, ChiselRecipe.Mode.STAIR);
@@ -341,7 +366,7 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         stonecutting(cache, Blocks.DEEPSLATE_BRICKS, Blocks.CHISELED_DEEPSLATE, 1, null);
         stonecutting(cache, Blocks.SANDSTONE, Blocks.SMOOTH_SANDSTONE, 1, null);
         stonecutting(cache, Blocks.RED_SANDSTONE, Blocks.SMOOTH_RED_SANDSTONE, 1, null);
-        stonecutting(cache, Blocks.BASALT, Blocks.SMOOTH_BASALT, 1, null);
+        stonecutting(cache, Blocks.BASALT, Blocks.POLISHED_BASALT, 1, null);
         stonecutting(cache, Blocks.BLACKSTONE, Blocks.POLISHED_BLACKSTONE, 1, null);
         stonecutting(cache, Blocks.POLISHED_BLACKSTONE_BRICKS, Blocks.CHISELED_POLISHED_BLACKSTONE, 1, null);
         stonecutting(cache, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE, 1, null);
@@ -371,14 +396,14 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         chiselCrafting(cache, Blocks.SMOOTH_RED_SANDSTONE, Blocks.CUT_RED_SANDSTONE);
         chiselCrafting(cache, Blocks.CUT_RED_SANDSTONE, Blocks.CHISELED_RED_SANDSTONE);
 
-        chiselCrafting(cache, Blocks.BASALT, Blocks.SMOOTH_BASALT);
-        chiselCrafting(cache, Blocks.SMOOTH_BASALT, Blocks.POLISHED_BASALT);
+        chiselCrafting(cache, Blocks.BASALT, Blocks.POLISHED_BASALT);
 
         chiselCrafting(cache, Blocks.BLACKSTONE, Blocks.POLISHED_BLACKSTONE);
         chiselCrafting(cache, Blocks.POLISHED_BLACKSTONE_BRICKS, Blocks.CHISELED_POLISHED_BLACKSTONE);
         hammerCrafting(cache, Blocks.POLISHED_BLACKSTONE_BRICKS, Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS);
 
         hammerCrafting(cache, Blocks.NETHER_BRICKS, Blocks.CRACKED_NETHER_BRICKS);
+        chiselCrafting(cache, Blocks.NETHER_BRICKS, Blocks.CHISELED_NETHER_BRICKS);
 
         chiselCrafting(cache, Blocks.SMOOTH_QUARTZ, Blocks.QUARTZ_BLOCK);
         chiselCrafting(cache, Blocks.QUARTZ_BRICKS, Blocks.QUARTZ_PILLAR);
@@ -474,6 +499,26 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                     ModItems.METAL_ITEMS.get(metal).get(CompatMetal.ItemType.DOUBLE_SHEET).get()
             );
         }
+        damageInputsShapeless(cache,
+                new JsonElement[]{ingredient(ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.SWORD_BLADE).get()),
+                        tagIngredient("forge:rods/wooden")},
+                Items.NETHERITE_SWORD, 1, null, null);
+        damageInputsShapeless(cache,
+                new JsonElement[]{ingredient(ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.PICKAXE_HEAD).get()),
+                        tagIngredient("forge:rods/wooden")},
+                Items.NETHERITE_PICKAXE, 1, null, null);
+        damageInputsShapeless(cache,
+                new JsonElement[]{ingredient(ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.AXE_HEAD).get()),
+                        tagIngredient("forge:rods/wooden")},
+                Items.NETHERITE_AXE, 1, null, null);
+        damageInputsShapeless(cache,
+                new JsonElement[]{ingredient(ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.SHOVEL_HEAD).get()),
+                        tagIngredient("forge:rods/wooden")},
+                Items.NETHERITE_SHOVEL, 1, null, null);
+        damageInputsShapeless(cache,
+                new JsonElement[]{ingredient(ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.HOE_HEAD).get()),
+                        tagIngredient("forge:rods/wooden")},
+                Items.NETHERITE_HOE, 1, null, null);
 
         weldingRecipe(cache,
                 ModItems.METAL_ITEMS.get(CompatMetal.NETHERITE).get(CompatMetal.ItemType.UNFINISHED_BOOTS).get(),
@@ -506,12 +551,6 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 Items.CHAIN, 16,
                 3,
                 CHAIN_RULES,
-                false);
-        generateAnvilRecipe(cache,
-                tagIngredient("forge:sheets/wrought_iron"),
-                Items.IRON_TRAPDOOR, 1,
-                3,
-                TRAPDOOR_RULES,
                 false);
 
         heatingMetalRecipe(cache, Metal.Default.GOLD, Items.GOLD_BLOCK, 100, 1060);
@@ -602,6 +641,16 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
         vanillaShaped(cache, new String[]{"  X", " XA", "X B"},
                 Map.of('X', tagIngredient("forge:rods/wooden"), 'B', ingredient("minecraft:warped_fungus"), 'A', tagIngredient("forge:string")),
                 Items.WARPED_FUNGUS_ON_A_STICK, 1,
+                null);
+
+        vanillaShaped(cache, new String[]{"XAX", "X X", "X X"},
+                Map.of('X', tagIngredient("tfc:lumber"), 'A', tagIngredient("forge:string")),
+                Items.SCAFFOLDING, 8,
+                null);
+
+        vanillaShaped(cache, planksPattern,
+                Map.of('X', tagIngredient("minecraft:planks")),
+                Items.CRAFTING_TABLE, 1,
                 null);
 
         //RnR
@@ -1096,5 +1145,19 @@ public class ModRecipeProvider extends TFCRecipeBuilder {
                 ),
                 block.asItem(),1,
                 "firmalife");
+    }
+
+    protected void falseRecipe(CachedOutput cache, String resLoc, @Nullable String requiredMod) {
+        JsonObject json = new JsonObject();
+
+        JsonObject falseCondition = new JsonObject();
+        falseCondition.addProperty("type", "forge:false");
+
+        JsonArray falseArray = new JsonArray();
+        falseArray.add(falseCondition);
+
+        json.add("conditions", falseArray);
+
+        saveMCRecipe(cache, resLoc, json, modLoadedCondition(requiredMod));
     }
 }

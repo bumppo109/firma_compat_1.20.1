@@ -1,0 +1,11 @@
+{
+  "entries": [
+    {
+      "item": "firma_compat:lantern",
+      "light": 12,
+      "predicate": {
+        "nbt": "{firma_lit:true}"
+      }
+    }
+  ]
+}

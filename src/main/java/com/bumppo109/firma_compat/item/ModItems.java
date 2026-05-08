@@ -104,12 +104,7 @@ public class ModItems {
                     )
             );
 
-    public static final Map<Metal.Default, RegistryObject<Item>> UNFINISHED_LANTERNS =
-            Helpers.mapOfKeys(
-                    Metal.Default.class,
-                    Metal.Default::hasUtilities,                    // Filter: only metals with utilities
-                    metal -> register("unfinished_" + metal.getSerializedName() + "_lantern")
-            );
+    public static final RegistryObject<Item> UNFINISHED_LANTERN = register("unfinished_lantern");
 
     /*
     public static final Map<CompatMetal, Map<CompatMetal.ItemType, RegistryObject<Item>>> METAL_ITEMS = Helpers.mapOfKeys(CompatMetal.class, metal ->

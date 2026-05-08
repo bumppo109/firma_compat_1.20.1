@@ -7,10 +7,7 @@ import com.bumppo109.firma_compat.addons.rnr.CompatRnRStoneType;
 import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
 import com.bumppo109.firma_compat.block.ModBlocks;
-import com.bumppo109.firma_compat.item.ModItems;
 import com.bumppo109.firma_compat.util.ModTags;
-import com.eerussianguy.firmalife.common.FLTags;
-import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.rock.Ore;
 import net.dries007.tfc.util.Metal;
 import net.minecraft.core.HolderLookup;
@@ -19,17 +16,14 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
 import static net.dries007.tfc.common.TFCTags.Blocks.*;
-import static net.minecraft.tags.BlockTags.MINEABLE_WITH_AXE;
 import static net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE;
 
 public class ModBlockTagGenerator extends BlockTagsProvider {
@@ -39,13 +33,13 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-        tag(ModTags.Blocks.LAMPS).add(ModBlocks.LANTERN.get());
-        tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(ModTags.Blocks.LAMPS);
+        tag(ModTags.Blocks.LANTERNS).add(ModBlocks.LANTERN.get());
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(ModTags.Blocks.LANTERNS);
 
         for (Metal.Default metal : Metal.Default.values()) {
             if(metal.hasUtilities()) {
-                tag(ModTags.Blocks.LAMPS).add(ModBlocks.COMPAT_LANTERNS.get(metal).get());
-                tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(ModTags.Blocks.LAMPS);
+                tag(ModTags.Blocks.LANTERNS).add(ModBlocks.COMPAT_LANTERNS.get(metal).get());
+                tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(ModTags.Blocks.LANTERNS);
             }
         }
 

@@ -7,6 +7,7 @@ import com.bumppo109.firma_compat.addons.rnr.CompatRnRItems;
 import com.bumppo109.firma_compat.block.*;
 import com.bumppo109.firma_compat.item.ModItems;
 import net.dries007.tfc.common.blocks.rock.Ore;
+import net.dries007.tfc.util.Metal;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -229,8 +230,18 @@ public class ModLang extends LanguageProvider {
             String fluidName = getBlockDisplayName(fluidBlock);
 
             add(fluidBlock.getDescriptionId(), fluidName);
-            //TODO - fluid?
         }
+
+        for(Metal.Default metal : Metal.Default.values()){
+            if(metal.hasUtilities()){
+                add("block.firma_compat." + metal.getSerializedName() + "_lantern.empty", cleanUpString(metal.getSerializedName()) + " Lantern");
+                add("block.firma_compat." + metal.getSerializedName() + "_lantern.filled.filled", cleanUpString(metal.getSerializedName()) + " Lantern");
+                add("block.firma_compat." + metal.getSerializedName() + "_lantern.filled.lit", cleanUpString(metal.getSerializedName()) + " Lantern");
+            }
+        }
+        add("block.firma_compat.lantern.empty", "Lantern");
+        add("block.firma_compat.lantern.filled.filled", "Lantern");
+        add("block.firma_compat.lantern.filled.lit", "Lantern");
 
 
 

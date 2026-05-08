@@ -1,0 +1,51 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "name": "loot_pool",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "firma_compat:bismuth_bronze_lantern",
+          "functions": [
+            {
+              "function": "tfc:copy_fluid"
+            },
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{firma_lit:true}",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "firma_compat:bismuth_bronze_lantern",
+                  "properties": {
+                    "lit": "true"
+                  }
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{firma_lit:false}",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "firma_compat:bismuth_bronze_lantern",
+                  "properties": {
+                    "lit": "false"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

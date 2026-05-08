@@ -84,7 +84,7 @@ public class FirmaLampItem extends LampBlockItem {
         // 🔥 CLIENT: particles
         if (level.isClientSide) {
             if (isLit(stack) && hasFuel(stack) && level.random.nextFloat() < 0.3f) {
-                spawnHeldFlame(level, player, selected);
+                //spawnHeldFlame(level, player, selected);
             }
             return;
         }
@@ -103,6 +103,7 @@ public class FirmaLampItem extends LampBlockItem {
     }
 
     // ====================== Particle ======================
+    /*
     private static void spawnHeldFlame(Level level, Player player, boolean mainHand) {
         double offset = mainHand ? 0.3 : -0.3;
 
@@ -118,6 +119,8 @@ public class FirmaLampItem extends LampBlockItem {
         }
     }
 
+     */
+
     // ====================== Placement ======================
     @Override
     protected boolean updateCustomBlockEntityTag(
@@ -132,8 +135,12 @@ public class FirmaLampItem extends LampBlockItem {
         if (!level.isClientSide) {
             BlockState current = level.getBlockState(pos);
 
-            if (current.hasProperty(LampBlock.LIT) && isLit(stack)) {
-                level.setBlock(pos, current.setValue(LampBlock.LIT, true), 3);
+            if (current.hasProperty(LampBlock.LIT)) {
+                level.setBlock(
+                        pos,
+                        current.setValue(LampBlock.LIT, isLit(stack)),
+                        3
+                );
             }
         }
 

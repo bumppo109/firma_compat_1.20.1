@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tfc:lamp_glass"
+    },
+    {
+      "item": "firma_compat:unfinished_lantern"
+    }
+  ],
+  "result": {
+    "item": "firma_compat:lantern"
+  }
+}

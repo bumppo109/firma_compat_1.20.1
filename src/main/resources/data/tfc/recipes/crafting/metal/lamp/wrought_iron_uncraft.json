@@ -1,0 +1,19 @@
+{
+  "type": "tfc:extra_products_shapeless_crafting",
+  "extra_products": [
+    {
+      "item": "tfc:lamp_glass"
+    }
+  ],
+  "recipe": {
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+      {
+        "item": "firma_compat:wrought_iron_lantern"
+      }
+    ],
+    "result": {
+      "item": "tfc:metal/unfinished_lamp/wrought_iron"
+    }
+  }
+}

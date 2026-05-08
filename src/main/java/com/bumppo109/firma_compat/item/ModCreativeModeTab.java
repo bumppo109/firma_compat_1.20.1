@@ -8,9 +8,11 @@ import com.bumppo109.firma_compat.addons.rnr.CompatRnRStoneType;
 import com.bumppo109.firma_compat.block.*;
 import com.bumppo109.firma_compat.util.ModTags;
 import net.dries007.tfc.common.blocks.rock.Ore;
+import net.dries007.tfc.util.Metal;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -106,6 +108,13 @@ public class ModCreativeModeTab {
                                 metalItems.forEach((type, reg) -> {
                                     accept(output, reg);
                                 });
+                            }
+                        }
+
+                        accept(output, ModBlocks.LANTERN);
+                        for (Metal.Default metal : Metal.Default.values()) {
+                            if(metal.hasUtilities()) {
+                                accept(output, ModBlocks.COMPAT_LANTERNS.get(metal));
                             }
                         }
 

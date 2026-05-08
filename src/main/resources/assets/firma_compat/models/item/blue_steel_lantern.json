@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "firma_compat:item/blue_steel_lantern_off"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "lit": 1
+      },
+      "model": "tfc:item/metal/lamp/blue_steel"
+    }
+  ]
+}

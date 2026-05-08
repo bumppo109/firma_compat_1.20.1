@@ -2,7 +2,6 @@
   "type": "forge:add_features",
   "biomes": "#minecraft:is_overworld",
   "features": [
-    "firma_compat:clay_disc_with_indicator",
     "firma_compat:kaolin_clay_disc_with_indicator"
   ],
   "step": "vegetal_decoration"

@@ -104,6 +104,26 @@ public abstract class TFCRecipeBuilder implements DataProvider {
         }
     }
 
+    protected void saveMCRecipe(CachedOutput cache, String path, JsonObject recipeJson, @Nullable JsonArray conditions) {
+
+        applyConditions(recipeJson, conditions);
+
+        Path targetPath = output.getOutputFolder(PackOutput.Target.DATA_PACK)
+                .resolve("minecraft")
+                .resolve("recipes")
+                .resolve(path + ".json");
+
+        String jsonString = GSON.toJson(recipeJson);
+        byte[] data = jsonString.getBytes(StandardCharsets.UTF_8);
+        HashCode hash = Hashing.sha256().hashBytes(data);
+
+        try {
+            cache.writeIfNeeded(targetPath, data, hash);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to override MC Recipe: " + path, e);
+        }
+    }
+
     // =========================================================
     //                 CORE INGREDIENT HELPERS
     // =========================================================

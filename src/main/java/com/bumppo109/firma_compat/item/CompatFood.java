@@ -38,6 +38,7 @@ public enum CompatFood implements StringRepresentable {
     BAKED_POTATO(6, 0.8f, 1.2f, 0.0f, 0.0f, 0.0f, 3.0f, 0.0f, 0.0f),
     BEETROOT(4, 0.5f, 1.8f, 0.0f, 0.0f, 0.0f, 2.0f, 0.0f, 0.0f),
     KELP(1, 0.0f, 2.0f, 0.0f, 0.0f, 0.0f, 2.0f, 0.0f, 0.0f),
+    SUGAR_CANE(0, 0.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
 
     // === GRAINS & BREAD ===
     //BREAD(4, 1.0f, 1.0f, 0.0f, 1.5f, 0.0f, 0.0f, 0.0f, 0.0f),

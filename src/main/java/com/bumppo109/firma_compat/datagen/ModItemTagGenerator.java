@@ -1,7 +1,6 @@
 package com.bumppo109.firma_compat.datagen;
 
 import com.bumppo109.firma_compat.FirmaCompat;
-import com.bumppo109.firma_compat.addons.rnr.CompatRnRBlocks;
 import com.bumppo109.firma_compat.addons.rnr.CompatRnRItems;
 import com.bumppo109.firma_compat.block.CompatRock;
 import com.bumppo109.firma_compat.block.CompatWood;
@@ -9,13 +8,12 @@ import com.bumppo109.firma_compat.block.ModBlocks;
 import com.bumppo109.firma_compat.item.ModItems;
 import com.bumppo109.firma_compat.util.ModTags;
 import net.dries007.tfc.common.TFCTags;
-import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blocks.TFCBlocks;
+import net.dries007.tfc.common.items.TFCItems;
 import net.dries007.tfc.util.Metal;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -32,11 +30,17 @@ public class ModItemTagGenerator extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-        tag(ModTags.Items.LAMPS).add(ModBlocks.LANTERN.get().asItem());
+        tag(ModTags.Items.LANTERNS).add(ModBlocks.LANTERN.get().asItem());
+
+        tag(ModTags.Items.MAKES_SOUL_LANTERN)
+                .addTag(ModTags.Items.LANTERNS);
+
+        tag(ModTags.Items.MAKES_SOUL_TORCH)
+                .add(TFCItems.TORCH.get());
 
         for (Metal.Default metal : Metal.Default.values()) {
             if(metal.hasUtilities()) {
-                tag(ModTags.Items.LAMPS).add(ModBlocks.COMPAT_LANTERNS.get(metal).get().asItem());
+                tag(ModTags.Items.LANTERNS).add(ModBlocks.COMPAT_LANTERNS.get(metal).get().asItem());
             }
         }
 

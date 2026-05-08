@@ -1,15 +1,14 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "firma_compat:item/unfinished_lantern",
-    "layer1": "firma_compat:item/lantern_off"
+    "layer0": "firma_compat:item/lantern_off"
   },
   "overrides": [
     {
       "predicate": {
         "lit": 1
       },
-      "model": "firma_compat:item/lantern_on"
+      "model": "minecraft:item/lantern"
     }
   ]
 }

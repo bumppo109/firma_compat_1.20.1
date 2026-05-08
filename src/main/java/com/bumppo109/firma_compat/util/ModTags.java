@@ -4,7 +4,6 @@ import com.bumppo109.firma_compat.FirmaCompat;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.*;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -22,7 +21,7 @@ public class ModTags {
         public static final TagKey<Block> TWIGS = tag("twigs");
         public static final TagKey<Block> SUPPORT_BEAMS = tag("support_beams");
         public static final TagKey<Block> LOOSE_COBBLE = tag("loose_cobble");
-        public static final TagKey<Block> LAMPS = tag("lamps");
+        public static final TagKey<Block> LANTERNS = tag("lanterns");
 
         public static final TagKey<Block> FLAGSTONE_ROAD_BLOCKS = tag("flagstone_road_blocks");
         public static final TagKey<Block> FLAGSTONE_ROAD_STAIRS = tag("flagstone_road_stairs");
@@ -61,7 +60,7 @@ public class ModTags {
         public static final TagKey<Item> CHAINS = tag("chains");
         public static final TagKey<Item> PREVENT_INTERACTION = tag("prevent_interaction");
         public static final TagKey<Item> PIGLIN_BARTERING_ITEMS = tag("piglin_bartering_items");
-        public static final TagKey<Item> LAMPS = tag("lamps");
+        public static final TagKey<Item> LANTERNS = tag("lanterns");
 
         public static final TagKey<Item> BRICKS = tag("bricks");
         public static final TagKey<Item> TWIGS = tag("twigs");
@@ -69,6 +68,8 @@ public class ModTags {
         public static final TagKey<Item> BARRELS = tag("barrels");
         public static final TagKey<Item> LUMBER = tag("lumber");
         public static final TagKey<Item> SUPPORT_BEAMS = tag("support_beams");
+        public static final TagKey<Item> MAKES_SOUL_LANTERN = tag("makes_soul_lantern");
+        public static final TagKey<Item> MAKES_SOUL_TORCH = tag("makes_soul_torch");
 
         public static final TagKey<Item> MILKING_ITEMS = tag("milking_items");
 
